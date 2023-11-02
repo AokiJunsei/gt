@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% comment %} TODO blockの名称をbaseに合わせる {% endcomment %}
+
+{% load static %}
+{% block title %}管理サイト{% endblock %}
+
+{% block map_list %} active {% endblock %}
+{% comment %} TODO DBに登録済みのマップ情報を一覧表示するリストを記載 {% endcomment %}
+
+
+{%block header%}
+<header class = "">
+    <div class = "">
+        <h1>- マップ情報管理 -</h1>
+        <span class="">サブタイトルをどうぞ</span>
+    </div>
+</header>
+{% endblock %}
+
+
+{% block contents %}
+<div class ="">
+
+    {% comment %} TODO filterするためのInputタグを記載 {% endcomment %}
+
+    {% comment %} マップ情報を一覧表示 {% endcomment %}
+    {% for maps in map_list%}
+    {% comment %} TODO map_listはあとで変数合わせる {% endcomment %}
+
+    <div class = "">
+        <p class = "">{{maps.title}}</p>
+        {% comment %} TODO 以下はDBに保存される内容に合わせる {% endcomment %}
+    </div>
+
+    {% empty %}
+    <p>Nothing</p>
+    {% endfor %}
+
+
+    {% comment %} TODO マップ情報追加ページへのルーティングボタンを追加 {% endcomment %}
+    {% comment %} TODO 利用者情報閲覧ページへのルーティングボタンを追加 {% endcomment %}
+
+
+    {% comment %}ペネトレーション {% endcomment %}
+    {% if is_paginated %}
+    <ul class="pagination">
+        <!-- 前ページへのリンク -->
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+
+        <!-- ページ数表示 -->
+        {% for page_num in page_obj.paginator.page_range %} {% if
+        page_obj.number == page_num %}
+        <li class="page-item active">
+            <a class="page-link" href="#">{{ page_num }}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+        </li>
+        {% endif %} {% endfor %}
+
+        <!-- 次ページへのリンク -->
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}
