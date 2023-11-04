@@ -32,10 +32,13 @@
 
 
     <div class = "">
-                {% comment %} TODO 以下はDBに保存される内容に合わせる {% endcomment %}
+        {% comment %} TODO 以下はDBに保存される内容に合わせる {% endcomment %}
         <p class = "">{{maps.title}}</p>
         <p class = "">{{map.content|truncatechars:20}}</p>
         <a href="{% url 'map:map_detail' map.pk %}">
+
+        <button><a class="btn btn-success mt-5 mb-3" href="{% url 'map:map_update' object.pk %}">変更</a></button>
+        <button><a class="btn btn-danger mt-5 ml-2 mb-3" href="{% url 'map:map_delete' object.pk %}">削除</a></button>
     </div>
 
     {% empty %}
@@ -50,7 +53,7 @@
 
     <div class="">
         {% comment %} TODO 利用者情報閲覧ページへのルーティングボタンを追加 {% endcomment %}
-        <a class="" href="{% url 'map:user_detail' %}">追加する</a>
+        <a class="" href="{% url 'map:user_detail' %}">利用者情報を閲覧する</a>
     </div>
 
 
