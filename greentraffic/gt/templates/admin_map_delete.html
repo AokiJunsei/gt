@@ -12,7 +12,7 @@
             {% csrf_token %}
             <p>本当に削除しますか？</p>
             <button class="btn btn-primary mt-5" type="submit">削除</button>
-            <a class="btn btn-secondary mt-5 ml-2" href="{% url 'map:map_detail' object.pk %}">キャンセル</a>
+            <a class="btn btn-secondary mt-5 ml-2" href="{% url 'gt:map_detail' object.pk %}">キャンセル</a>
         </form>
     </div>
 </div>
@@ -38,7 +38,7 @@
                 <p>削除すると元に戻すことはできません。よろしいでしょうか？</p>
             </div>
             <div class="modal-footer">
-                <form method="POST" action="{% url 'nippo-delete' object.pk %}">{% csrf_token %}
+                <form method="POST" action="{% url 'gt:map_detail' object.pk %}">{% csrf_token %}
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">××</button>
                     <button type="submit" class="btn btn-danger">削除</button>
                 </form>

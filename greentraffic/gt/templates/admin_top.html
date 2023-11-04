@@ -33,11 +33,11 @@
     <div class = "post-preview">
         {% comment %} TODO 以下はDBに保存される内容に合わせる {% endcomment %}
         <p class = "post-title">{{maps.title}}</p>
-        <p class = "post-subtitle">{{map.content|truncatechars:20}}</p>
-        <a href="{% url 'map:map_detail' map.pk %}">
+        <p class = "post-subtitle">{{maps.content|truncatechars:20}}</p>
+        <a href="{% url 'gt:map_detail' map.pk %}">
 
-        <button><a class="btn btn-success mt-5 mb-3" href="{% url 'map:map_update' object.pk %}">変更</a></button>
-        <button><a class="btn btn-danger mt-5 ml-2 mb-3" href="{% url 'map:map_delete' object.pk %}">削除</a></button>
+        <button><a class="btn btn-success mt-5 mb-3" href="{% url 'gt:map_update' object.pk %}">変更</a></button>
+        <button><a class="btn btn-danger mt-5 ml-2 mb-3" href="{% url 'gt:map_delete' object.pk %}">削除</a></button>
     </div>
 
     {% empty %}
@@ -46,13 +46,13 @@
 
     <div class="d-flex justify-content-end mb-4">
         {% comment %} TODO マップ情報追加ページへのルーティングボタンを追加 {% endcomment %}
-        <a class="btn btn-primary float-right" href="{% url 'map:map_register' %}">追加する</a>
+        <a class="btn btn-primary float-right" href="{% url 'gt:map_register' %}">追加する</a>
     </div>
 
 
     <div class="d-flex justify-content-end mb-4">
         {% comment %} TODO 利用者情報閲覧ページへのルーティングボタンを追加 {% endcomment %}
-        <a class="btn btn-primary float-right" href="{% url 'map:user_detail' %}">利用者情報を閲覧する</a>
+        <a class="btn btn-primary float-right" href="{% url 'gt:user_detail' %}">利用者情報を閲覧する</a>
     </div>
 
 
