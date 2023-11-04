@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}登録マップ一覧 | Green Traffic{% endblock %}
+{% block title %}登録マップ詳細 | Green Traffic{% endblock %}
 
 {% block active_map_list %}active{% endblock %}
 
@@ -11,7 +11,7 @@
 <div class="container my-div-style">
     <div class="row">
         <div class="col-3">
-            <strong>タイトル</strong>
+            <strong>場所名</strong>
         </div>
         <div class="col-9">
             {{ object.title }}
@@ -22,10 +22,21 @@
 
     <div class="row">
         <div class="col-3">
-            <strong>本文</strong>
+            <strong>住所</strong>
         </div>
         <div class="col-9">
             {{ object.content|linebreaksbr }}
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-3">
+            <strong>JSON</strong>
+        </div>
+        <div class="col-9">
+            {{ object.json }}
         </div>
     </div>
 
@@ -74,7 +85,11 @@
         </div>
     </div>
 
-    <a class="btn btn-success mt-5 mb-3" href="{% url 'map:map_update' object.pk %}">変更</a>
-    <a class="btn btn-danger mt-5 ml-2 mb-3" href="{% url 'map:map_delete' object.pk %}">削除</a>
+    <button><a class="btn btn-success mt-5 mb-3" href="{% url 'map:map_update' object.pk %}">変更</a></button>
+    {% comment %} <a class="btn btn-danger mt-5 ml-2 mb-3" href="{% url 'map:map_delete' object.pk %}">削除</a> {% endcomment %}
+
+    {% comment %} 下で書けばモーダルウィンドウで開けるかも {% endcomment %}
+    <button type = "button" class = "btn btn-danger btn-sm" data-bs-toggle = "modal" data-bs-target="#deleteModal-{{object.pk}}">削除</button>
+    {% include "map:map_delete" %}
 </div>
 {% endblock %}
