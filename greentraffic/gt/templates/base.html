@@ -24,6 +24,24 @@
                 </ul>
               </div>
               <div id="text"></div>
+              {% if user.is_authenticated %}
+              <div class = "logout">
+                <button ><a href="#">ログアウト</a></button>
+              </div>
+              <div class = "history">
+                <button ><a href="{% url 'gt:account_history' %}">履歴一覧</a></button>
+              </div>
+              <div class = "info">
+                <button ><a href="{% url 'gt:account_info' %}">登録情報</a></button>
+              </div>
+              {% else %}
+              <div class = "sign">
+                <button ><a href="{% url 'gt:sign' %}">新規登録</a></button>
+              </div>
+              <div class = "login">
+                <button ><a href="{% url 'gt:login' %}">ログイン</a></button>
+              </div>
+              {% endif %}
 
               {% endblock content %}
 
@@ -50,24 +68,7 @@
                 });
               </script>
 
-              {% if user.is_authenticated %}
-              <div class = "logout">
-                <button ><a href="#">ログアウト</a></button>
-              </div>
-              <div class = "history">
-                <button ><a href="{% url 'gt:account_history' %}">履歴一覧</a></button>
-              </div>
-              <div class = "info">
-                <button ><a href="{% url 'gt:account_info' %}">登録情報</a></button>
-              </div>
-              {% else %}
-              <div class = "sign">
-                <button ><a href="{% url 'gt:sign' %}">新規登録</a></button>
-              </div>
-              <div class = "login">
-                <button ><a href="{% url 'gt:login' %}">ログイン</a></button>
-              </div>
-              {% endif %}
+              
           </div>
         </div>
       </header>
