@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja">
-{% block head %}
+
 <head>
-    <title>Green Traffic</title>
-    <link rel="stylesheet" href="style.css">
+    <title> {% block title%} Green Traffic {% endblock %}</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
-{% endblock head %}
+
 
 
 <body>
