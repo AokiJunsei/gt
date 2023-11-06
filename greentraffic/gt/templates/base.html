@@ -8,15 +8,15 @@
 <body>
         <header class="site-header">
             <div class="wrapper site-header__wrapper">
-              <a href="#" class="brand">Green Traffic</a>
+              <button><a href="{% url 'Top' %}" class="brand">Green Traffic</a><button>
               <div class="nav">
-                  <button class="nav__item"><a href="#">最短検索</a></button>
-                  <button class="nav__item"><a href="#">最安検索</a></button>
-                  <button class="nav__item"><a href="#">シェアリングサービス</a></button>
-                  <button class="nav__item"><a href="#">バリアフリー検索</a></button>
+                  <button class="nav__item"><a href="{% url 'Shortest search' %}">最短検索</a></button>
+                  <button class="nav__item"><a href="{% url 'Cheapest search' %}">最安検索</a></button>
+                  <button class="nav__item"><a href="{% url 'Sharing service' %}">シェアリングサービス</a></button>
+                  <button class="nav__item"><a href="{% url 'Barrier-free search' %}">バリアフリー検索</a></button>
                   <div class="btn-container">
                     <ul id="btn2" class="hidden">↓
-                    <li>最短</li><li>最安</li>
+                    <li><a href="{% url 'Barrier-free Shortest' %}">最短</a></li><li><a href="{% url 'Barrier-free Cheapest' %}">最安</a></li>
                     </ul>
                   </div>
                   
@@ -35,8 +35,6 @@
                       return text;
                     }
                     
-                    </script>
-                    <script>
                       const btn2 = document.getElementById('btn2');
                     const btn2Text = document.getElementById('btn2-text');
                     btn2.addEventListener('click', () => {
@@ -44,23 +42,24 @@
                     });
                   </script>
 
-                  if 
-                  <div class = "sign">
-                    <button ><a href="#">新規登録</a></button>
-                  </div>
-                  <div class = "login">
-                    <button ><a href="#">ログイン</a></button>
-                  </div>
-                  else if
+                  {% if user.is_authenticated %}
                   <div class = "logout">
                     <button ><a href="#">ログアウト</a></button>
                   </div>
                   <div class = "history">
-                    <button ><a href="#">履歴一覧</a></button>
+                    <button ><a href="{% url 'account_history' %}">履歴一覧</a></button>
                   </div>
                   <div class = "info">
-                    <button ><a href="#">登録情報</a></button>
+                    <button ><a href="{% url 'account_info' %}">登録情報</a></button>
                   </div>
+                  {% else %}
+                  <div class = "sign">
+                    <button ><a href="{% url 'sign' %}">新規登録</a></button>
+                  </div>
+                  <div class = "login">
+                    <button ><a href="{% url 'login' %}">ログイン</a></button>
+                  </div>
+                  {% endif %}
               </div>
             </div>
           </header>
