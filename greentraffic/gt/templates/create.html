@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <body>
+    <form method="POST" action="{% url 'create_account' %}">
+      {% csrf_token %}
+      <label>名前</label>
+      {{ form.name }}
+      {{ form.name.errors }}
+      <label>年齢</label>
+      {{ form.username }}
+      {{ form.username.errors }}
+      <label>住所</label>
+      {{ form.address }}
+      {{ form.address.errors }}
+      <label>メールアドレス</label>
+      {{ form.mail }}
+      {{ form.mail.errors }}
+      <label>歩く速度</label>
+      {{ form.walking_speed }}
+      {{ form.walking_speed.errors }}
+
+      <button type = "submit">確認</button>
+      <button type = "submit">topに戻る</button>
+    </form>
+  </body>
+</html>
