@@ -34,7 +34,7 @@
         {% comment %} TODO 以下はDBに保存される内容に合わせる {% endcomment %}
         <p class = "post-title">{{maps.title}}</p>
         <p class = "post-subtitle">{{maps.content|truncatechars:20}}</p>
-        <a href="{% url 'gt:map_detail' map.pk %}">
+        <a href="{% url 'gt:map_detail' gt.pk %}">
 
         <button><a class="btn btn-success mt-5 mb-3" href="{% url 'gt:map_update' object.pk %}">変更</a></button>
         <button><a class="btn btn-danger mt-5 ml-2 mb-3" href="{% url 'gt:map_delete' object.pk %}">削除</a></button>
