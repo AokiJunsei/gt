@@ -1,0 +1,108 @@
+{% comment %} TODO django対応の記述に変更 {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Green Traffic</title>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap"
+      async
+      defer
+    ></script>
+  </head>
+  <body onload="initMap()">
+    <main>
+      <div>
+        <p>登録したい場所を入力してください</p>
+        <label>
+          登録名
+          <input
+            id="name"
+            type="textbox"
+            placeholder="登録名を入力してください"
+          />
+        </label>
+        <label>
+          住所:
+          <input
+            id="address"
+            type="textbox"
+            value="東京都千代田区神田神保町１丁目５０"
+          />
+        </label>
+        <div>
+          <input
+            type="button"
+            id="confirm"
+            value="検索する"
+            onclick="initMap()"
+          />
+          <input
+            type="button"
+            id="register"
+            value="確認する"
+            onclick="confirm()"
+          />
+        </div>
+      </div>
+      <!-- マップを表示 -->
+      <div id="map" style="width: 500px; height: 480px"></div>
+    </main>
+
+    <script>
+      function initMap() {
+        var target = document.getElementById("map");
+        var address = document.getElementById("address").value;
+        var geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({ address: address }, function (results, status) {
+          if (status === "OK" && results[0]) {
+            var map = new google.maps.Map(target, {
+              center: results[0].geometry.location,
+              zoom: 18,
+            });
+
+            var marker = new google.maps.Marker({
+              position: results[0].geometry.location,
+              map: map,
+              animation: google.maps.Animation.DROP,
+            });
+            document.getElementById("confirm").disabled = false;
+            document.getElementById("register").disabled = false;
+          } else {
+            alert("住所が正しくないか存在しません。");
+            target.style.display = "none";
+          }
+        });
+      }
+
+      function confirm() {}
+      //確認ダイヤログ表示
+
+      //viewsとmodelsで内容を登録
+    </script>
+  </body>
+</html>
+
+{% comment %} 
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}マップ登録 | Green Traffic {% endblock %}
+
+{% block active_map_list %}active{% endblock %}
+
+{% block contents %}
+<div class="container my-div-style">
+    <div class="row">
+        <form method="POST" enctype='multipart/form-data'>
+            {% csrf_token %}
+            <table class="table">
+                {{ form.as_table }}
+            </table>
+            <button class="btn btn-primary" type="submit">作成</button>
+        </form>
+    </div>
+</div>
+{% endblock %} {% endcomment %}
