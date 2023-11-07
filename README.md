@@ -22,10 +22,11 @@ ex) gt:map_update の map_updateの部分を下記に記載します。
 | 関数                    | 最終的な遷移先のHTMLファイルの名称          |
 | ---------------------- | ---------------------------------- |
 | 「admin_map_register.html 内の関数」 |                         |
-| <form method="POST" enctype='multipart/form-data'>
+|   <form method="POST" enctype='multipart/form-data'>
      {% csrf_token %}
          <table class="table">
-           {{ form.as_table }}
+            {{ form.as_table }}
          </table>
          <button class="btn btn-primary" type="submit">作成</button>
-|  </form>  |  admin_top.html              |
+    </form>
+          |  admin_top.html              |
