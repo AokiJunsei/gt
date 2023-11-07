@@ -2,7 +2,7 @@
 
 ### 下記がJSの関数及び遷移先の詳細です。
 
-### url一覧
+### URL一覧
 
 ex) gt:map_update の map_updateの部分を下記に記載します。
 
