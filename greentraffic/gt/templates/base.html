@@ -12,12 +12,12 @@
 {% block content %}
     <header class="site-header">
         <div class="wrapper site-header__wrapper">
-          <button><a href="{% url 'Top' %}" class="brand">Green Traffic</a><button>
+          <button><a href="{% url 'gt:top' %}" class="brand">Green Traffic</a><button>
           <div class="nav">
-              <button class="nav__item"><a href="{% url 'gt:Shortest_search' %}">最短検索</a></button>
+              <button class="nav__item"><a href="{% url 'gt:top' %}">最短検索</a></button>
               <button class="nav__item"><a href="{% url 'gt:Cheapest_search' %}">最安検索</a></button>
               <button class="nav__item"><a href="{% url 'gt:Sharing_service' %}">シェアリングサービス</a></button>
-              <button class="nav__item"><a href="{% url 'gt:Barrier_free_search' %}">バリアフリー検索</a></button>
+              <button class="nav__item">バリアフリー検索</button>
               <div class="btn-container">
                 <ul id="btn2" class="hidden">↓
                 <li><a href="{% url 'gt:Barrier-free_Shortest' %}">最短</a></li><li><a href="{% url 'gt:Barrier-free_Cheapest' %}">最安</a></li>
@@ -26,7 +26,7 @@
               <div id="text"></div>
               {% if user.is_authenticated %}
               <div class = "logout">
-                <button ><a href="#">ログアウト</a></button>
+                <button ><a href="{% url 'gt:logout' %}">ログアウト</a></button>
               </div>
               <div class = "history">
                 <button ><a href="{% url 'gt:account_history' %}">履歴一覧</a></button>
@@ -36,7 +36,7 @@
               </div>
               {% else %}
               <div class = "sign">
-                <button ><a href="{% url 'gt:sign' %}">新規登録</a></button>
+                <button ><a href="{% url 'gt:signUp' %}">新規登録</a></button>
               </div>
               <div class = "login">
                 <button ><a href="{% url 'gt:login' %}">ログイン</a></button>
