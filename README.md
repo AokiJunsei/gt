@@ -2,7 +2,7 @@
 
 ### 下記がJSの関数及び遷移先の詳細です。
 
-### URL一覧
+### URL一覧　画面遷移のみ
 
 ex) gt:map_update の map_updateの部分を下記に記載します。
 
@@ -13,3 +13,19 @@ ex) gt:map_update の map_updateの部分を下記に記載します。
 | map_register           | admin_map_register.html            |
 | user_detail            | adminの利用者情報閲覧ページ         |
 | map_detail   gt.pk     | admin_map_detail.html              |
+
+
+### 関数起動あり
+
+何かしらの関数（フォーム送信等）が起動して、最後に画面遷移するタイプの「関数」と「遷移先」を下記に記します。
+
+| 関数                    | 最終的な遷移先のHTMLファイルの名称          |
+| ---------------------- | ---------------------------------- |
+| 「admin_map_register.html 内の関数」 |                         |
+| <form method="POST" enctype='multipart/form-data'>
+     {% csrf_token %}
+         <table class="table">
+           {{ form.as_table }}
+         </table>
+         <button class="btn btn-primary" type="submit">作成</button>
+|  </form>  |  admin_top.html              |
