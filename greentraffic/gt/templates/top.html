@@ -78,8 +78,6 @@
     <input type="text" id="end" placeholder="Enter end location" />
     <b>Departure Time: </b>
     <input type="datetime-local" id="departure-time" />
-    <b>Arrival Time: </b>
-    <input type="datetime-local" id="arrival-time" />
     <button onclick="getCurrentLocation()">Use Current Location</button>
     <button onclick="calculateAndDisplayRoute()">Search</button>
     <button onclick="toggleDirectionsPanel()">Toggle Panel</button>
@@ -180,7 +178,6 @@
       const start = document.getElementById("start").value;
       const end = document.getElementById("end").value;
       const departureTime = document.getElementById("departure-time").value;
-      const arrivalTime = document.getElementById("arrival-time").value;
 
       const drivingMode = document.getElementById("mode-driving").checked;
       const transitMode = document.getElementById("mode-transit").checked;
@@ -204,7 +201,6 @@
         request.transitOptions = {
           modes: travelModes.slice(1),
           departureTime: new Date(departureTime),
-          arrivalTime: new Date(arrivalTime),
         };
       }
 
