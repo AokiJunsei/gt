@@ -36,7 +36,7 @@
         <p class = "post-subtitle">{{maps.content|truncatechars:20}}</p>
         <a href="{% url 'gt:map_detail' gt.pk %}">
 
-        <button><a class="btn btn-success mt-5 mb-3" href="{% url 'gt:map_update' object.pk %}">変更</a></button>
+        <button><a class="btn btn-success mt-5 mb-3" href="{% url 'gt:map_change' object.pk %}">変更</a></button>
         <button><a class="btn btn-danger mt-5 ml-2 mb-3" href="{% url 'gt:map_delete' object.pk %}">削除</a></button>
     </div>
 
