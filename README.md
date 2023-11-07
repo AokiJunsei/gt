@@ -23,6 +23,7 @@ ex) gt:map_update の map_updateの部分を下記に記載します。
 | --------------------- - | ----------------------------------------- |
 | 「admin_map_register.html 内の関数」 |  admin_top.html               |
 
+```HTML
 <form method="POST" enctype='multipart/form-data'>
     {% csrf_token %}
         <table class="table">
@@ -30,4 +31,5 @@ ex) gt:map_update の map_updateの部分を下記に記載します。
         </table>
         <button class="btn btn-primary" type="submit">作成</button>
 </form>
+```
 
