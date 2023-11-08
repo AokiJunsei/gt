@@ -74,6 +74,10 @@
   <div id="floating-panel">
     <b>Start: </b>
     <input type="text" id="start" placeholder="Enter start location" />
+    <b>Waypoint 1: </b>
+    <input type="text" id="waypoint1" placeholder="Enter waypoint location 1" />
+    <b>Waypoint 2: </b>
+    <input type="text" id="waypoint2" placeholder="Enter waypoint location 2" />
     <b>End: </b>
     <input type="text" id="end" placeholder="Enter end location" />
     <b>Departure Time: </b>
@@ -176,6 +180,8 @@
 
     function calculateAndDisplayRoute() {
       const start = document.getElementById("start").value;
+      const waypoint1 = document.getElementById("waypoint1").value;
+      const waypoint2 = document.getElementById("waypoint2").value;
       const end = document.getElementById("end").value;
       const departureTime = document.getElementById("departure-time").value;
 
@@ -196,6 +202,13 @@
         travelMode: google.maps.TravelMode.DRIVING, // Default mode
       };
 
+      if (waypoint1) {
+        request.waypoints = [{ location: waypoint1 }];
+      }
+      if (waypoint2) {
+        if (!request.waypoints) request.waypoints = [];
+        request.waypoints.push({ location: waypoint2 });
+      }
       if (travelModes.length > 0) {
         request.travelMode = travelModes[0];
         request.transitOptions = {
