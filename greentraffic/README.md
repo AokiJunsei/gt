@@ -4,7 +4,6 @@
 
 ### URL一覧　画面遷移のみ
 
-base.html内のURLを記載してます。
 
 ex) gt:map_update の map_updateの部分を下記に記載します。
 
@@ -16,7 +15,8 @@ ex) gt:map_update の map_updateの部分を下記に記載します。
 | Barrier-free_Shortest  | バリアフリー検索の最短ページ         |
 | Barrier-free_Cheapest  | バリアフリー検索の最安ページ         |
 | logout                 | ログアウトのページ                  |
-| account_history        | 履歴一覧ページ　                    |
+| account_history        | user_log.html　                    |
+| log_detail             | user_log_detail.html               |
 | account_info           | 登録情報閲覧ページ                  |
 | signUp                 | 新規登録ページ                      |
 | login                  | login.html                         |
