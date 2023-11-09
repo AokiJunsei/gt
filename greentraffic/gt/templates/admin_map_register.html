@@ -47,7 +47,7 @@
 
         var geocoder = new google.maps.Geocoder();
 
-        geocoder.geocode({ address: address }, function (results, status)) {
+        geocoder.geocode({ address: address }, function (results, status) {
             if (status === "OK" && results[0]) {
                 var map = new google.maps.Map(target, {
                     center: results[0].geometry.location,
@@ -64,7 +64,7 @@
                 alert("住所が正しくないか存在しません。");
                 target.style.display = "none";
             }
-        }
+        });
     }
 
     // 保存ボタンがクリックされたら確認ダイアログを表示
@@ -80,4 +80,63 @@
     modal.show();
   </script>
 </main>
-{% endblock content %}
+{% endblock %}
+
+<!-- view.py(仮)-->
+<!--
+import requests
+import json
+from django.shortcuts import render, redirect
+from .forms import LocationForm
+from .models import Location
+from django.http import JsonResponse
+
+def save_location(request):
+    if request.method == 'POST':
+        form = LocationForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            address = form.cleaned_data['address']
+
+            # 外部APIを呼び出し、JSONデータを取得
+            api_url = '外部APIのURL'  # 実際のAPIのURLに置き換えてください
+            response = requests.get(api_url, params={'address': address})
+
+            if response.status_code == 200:
+                data = response.json()
+
+                # JSONのシリアライズ
+                json_data = json.dumps(data[0])  # results[0]の部分をJSON化
+
+                # データベースに保存
+                Location.objects.create(name=name, address=address, json_data=json_data)
+
+                # データベース保存成功時の処理
+                success_message = 'データが保存されました'
+                return JsonResponse({'success_message': success_message})
+            else:
+                return JsonResponse({'message': 'APIからデータを取得できませんでした'}, status=400)
+        else:
+            return JsonResponse({'message': 'フォームが無効です'}, status=400)
+    else:
+        form = LocationForm()
+        context = {'form': form}
+        return render(request, 'yourapp/map_with_form.html', context)
+
+def top(request):
+    # TOPページへのリダイレクト
+    return redirect(reverse('top'))
+-->
+
+<!--models.py (仮)-->
+<!--
+from django.db import models
+
+class Location(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.CharField(max_length=200)
+    json_data = models.TextField()
+
+    def __str__(self):
+        return self.name
+-->
