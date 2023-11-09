@@ -92,8 +92,8 @@
     {% endif %}
 
 
-    {% comment %} 削除を確認するモーダル ダイアログ 検討中
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    {% comment %} 削除を確認するモーダル ダイアログ 検討中 {% endcomment %}
+    {% comment %} <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -104,7 +104,7 @@
                     <p>ID: <span id="del_pk"></span> を削除しますか？</p>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-primary" id="del_url">OK</a>
+                    <a href="{% url 'gt:top' %}" class="btn btn-primary" id="del_url">OK</a>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
