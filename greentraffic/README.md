@@ -8,9 +8,7 @@ ex) gt:map_update の map_updateの部分を下記に記載します。
 
 | url                    | 遷移先のHTMLファイルの名称          |
 | ---------------------- | ---------------------------------- |
-| top                    | top.html                           |
-
-
-
-
+| account_info           | user_info.html                     |
+| user_update            | user_update.html                   |
+| user_delete            | user_delete.html                   |
 
