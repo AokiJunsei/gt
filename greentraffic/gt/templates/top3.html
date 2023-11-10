@@ -189,7 +189,8 @@
       function infotable(ido,keido,level){
        document.getElementById('id_ido').innerHTML = ido;
        document.getElementById('id_keido').innerHTML = keido;
-       document.getElementById('id_level').innerHTML = level;
+       document.getElementById('id_address').innerHTML = level;
+       
       }
      
     }
@@ -208,8 +209,8 @@
             addCurrentLocationMarker(currentLocation);
 
             // Set the start input value
-            document.getElementById("start").value = "現在地" ;
-            //document.getElementById("start").value = currentLocation.lat + ", " + currentLocation.lng;
+            //document.getElementById("start").value = "現在地" ;
+            document.getElementById("start").value = currentLocation.lat + ", " + currentLocation.lng;
           },
           () => {
             console.error("Error getting current location");
@@ -329,9 +330,6 @@
       }
     }
 
-   
-     
-     
   </script>
 </body>
 </html>
