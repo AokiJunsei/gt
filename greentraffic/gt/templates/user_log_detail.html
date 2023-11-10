@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}登録マップ詳細 | Green Traffic{% endblock %}
+{% block title %}検索履歴詳細 | Green Traffic{% endblock %}
 
-{% block active_map_list %}active{% endblock %}
+{% block active_log_list %}active{% endblock %}
 
 
 {% block contents %}
@@ -11,10 +11,10 @@
 <div class="container my-div-style">
     <div class="row">
         <div class="col-3">
-            <strong>場所名</strong>
+            <strong>検索の種類</strong>
         </div>
         <div class="col-9">
-            {{ object.title }}
+            {{ object.kinds }}
         </div>
     </div>
 
@@ -22,7 +22,7 @@
 
     <div class="row">
         <div class="col-3">
-            <strong>住所</strong>
+            <strong>検索結果</strong>
         </div>
         <div class="col-9">
             {{ object.content|linebreaksbr }}
@@ -73,23 +73,5 @@
             {{ object.created_at }}
         </div>
     </div>
-
-    <hr>
-
-    <div class="row">
-        <div class="col-3">
-            <strong>更新日時</strong>
-        </div>
-        <div class="col-9">
-            {{ object.updated_at }}
-        </div>
-    </div>
-
-    <button><a class="btn btn-success mt-5 mb-3" href="{% url 'gt:map_change' object.pk %}">変更</a></button>
-    {% comment %} <a class="btn btn-danger mt-5 ml-2 mb-3" href="{% url 'map:map_delete' object.pk %}">削除</a> {% endcomment %}
-
-    {% comment %} 下で書けばモーダルウィンドウで開けるかも {% endcomment %}
-    <button type = "button" class = "btn btn-danger btn-sm" data-bs-toggle = "modal" data-bs-target="#deleteModal-{{object.pk}}">削除</button>
-    {% include "gt:map_delete" %}
 </div>
 {% endblock %}

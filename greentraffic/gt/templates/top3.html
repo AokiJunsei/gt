@@ -70,12 +70,16 @@
     }
   </style>
 </head>
-<body>
+<body onload="initMap()">
   <div id="floating-panel">
     <b>Start: </b>
     <input type="text" id="start" placeholder="Enter start location" />
+    <b>Waypoint 1: </b>
+    <input type="text" id="waypoint1" placeholder="Enter waypoint location 1" />
+    <b>Waypoint 2: </b>
+    <input type="text" id="waypoint2" placeholder="Enter waypoint location 2" />
     <b>End: </b>
-    <input type="text" id="end" placeholder="Enter end location" />
+    <input type="text" id="end" placeholder="Enter end locati" />
     <b>Departure Time: </b>
     <input type="datetime-local" id="departure-time" />
     <button onclick="getCurrentLocation()">Use Current Location</button>
@@ -86,15 +90,18 @@
       <input type="checkbox" id="mode-driving" checked />
       <label for="mode-driving">Driving</label>
 
-      <input type="checkbox" id="mode-transit" checked />
+      <input type="checkbox" id="mode-transit"  />
       <label for="mode-transit">Transit</label>
 
-      <input type="checkbox" id="mode-walking" checked />
+      <input type="checkbox" id="mode-walking"  />
       <label for="mode-walking">Walking</label>
 
-      <input type="checkbox" id="mode-bicycling" checked />
+      <input type="checkbox" id="mode-bicycling"  />
       <label for="mode-bicycling">Bicycling</label>
     </div>
+    <span hidden><div id="id_ido">緯度</div></span>
+    <span hidden><div id="id_keido">経度</div></span>
+    <span hidden><div id="id_address">住所</div></span>
   </div>
   <div id="map-container">
     <div id="map"></div>
@@ -104,7 +111,8 @@
       <div id="content-tab" class="tab-content active"></div>
       <div id="details-tab" class="tab-content"></div>
     </div>
-  </div>
+  <!-- <div id="map_canvas" style="width:100%;height:300px"></div> -->
+</div>
 
   <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
@@ -115,9 +123,11 @@
     let currentLocationMarker;
 
     function initMap() {
+      var Marker;
+
       map = new google.maps.Map(document.getElementById("map"), {
         zoom: 7,
-        center: { lat: 41.85, lng: -87.65 },
+        center: { lat: 35.689, lng: 139.692 },
       });
 
       directionsService = new google.maps.DirectionsService();
@@ -125,6 +135,56 @@
         map: map,
         panel: document.getElementById("content-tab"),
       });
+      //地図クリックイベントの登録
+      google.maps.event.addListener(map, 'click',
+      function(event) {
+       if (Marker){Marker.setMap(null)};
+       Marker = new google.maps.Marker({
+        position: event.latLng,
+        draggable: true,
+        map: map
+       });
+       infotable(Marker.getPosition().lat(),
+       Marker.getPosition().lng(),map.getZoom());
+       geocode();
+       //マーカードラッグイベントの登録
+       google.maps.event.addListener(Marker,'dragend',
+        function(event) {
+        infotable(Marker.getPosition().lat(),
+        Marker.getPosition().lng(),map.getZoom());
+        geocode();
+       })
+       //地図ズームチェンジイベントの登録
+       google.maps.event.addListener(map, 'zoom_changed',
+        function(event) {
+        infotable(Marker.getPosition().lat(),
+        Marker.getPosition().lng(),map.getZoom());
+       })
+      })
+     //ジオコーディング
+      function geocode(){  var geocoder = new google.maps.Geocoder();
+       geocoder.geocode({ 'location': Marker.getPosition()}, 
+          function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK && results[0]){
+          document.getElementById('id_address').innerHTML = 
+              results[0].formatted_address.replace(/^日本, /, '');
+        }else{
+          document.getElementById('id_address').innerHTML = 
+            "Geocode 取得に失敗しました";
+         alert("Geocode 取得に失敗しました reason: "
+                + status);
+        }
+       });
+      }
+     
+     //HTMLtagを更新
+      function infotable(ido,keido,level){
+       document.getElementById('id_ido').innerHTML = ido;
+       document.getElementById('id_keido').innerHTML = keido;
+       document.getElementById('id_address').innerHTML = level;
+       document.getElementById("waypoint1").value =   ido + ","+ keido;
+      }
+     
     }
 
     function getCurrentLocation() {
@@ -141,6 +201,7 @@
             addCurrentLocationMarker(currentLocation);
 
             // Set the start input value
+            //document.getElementById("start").value = "現在地" ;
             document.getElementById("start").value = currentLocation.lat + ", " + currentLocation.lng;
           },
           () => {
@@ -176,17 +237,19 @@
 
     function calculateAndDisplayRoute() {
       const start = document.getElementById("start").value;
+      const waypoint1 = document.getElementById("waypoint1").value;
+      const waypoint2 = document.getElementById("waypoint2").value;
       const end = document.getElementById("end").value;
       const departureTime = document.getElementById("departure-time").value;
 
       const drivingMode = document.getElementById("mode-driving").checked;
-      const transitMode = document.getElementById("mode-transit").checked;
+      // const transitMode = document.getElementById("mode-transit").checked; 
       const walkingMode = document.getElementById("mode-walking").checked;
       const bicyclingMode = document.getElementById("mode-bicycling").checked;
 
       const travelModes = [];
       if (drivingMode) travelModes.push(google.maps.TravelMode.DRIVING);
-      if (transitMode) travelModes.push(google.maps.TravelMode.TRANSIT);
+      // if (transitMode) travelModes.push(google.maps.TravelMode.TRANSIT);
       if (walkingMode) travelModes.push(google.maps.TravelMode.WALKING);
       if (bicyclingMode) travelModes.push(google.maps.TravelMode.BICYCLING);
 
@@ -196,6 +259,13 @@
         travelMode: google.maps.TravelMode.DRIVING, // Default mode
       };
 
+      if (waypoint1) {
+        request.waypoints = [{ location: waypoint1 }];
+      }
+      if (waypoint2) {
+        if (!request.waypoints) request.waypoints = [];
+        request.waypoints.push({ location: waypoint2 });
+      }
       if (travelModes.length > 0) {
         request.travelMode = travelModes[0];
         request.transitOptions = {
@@ -250,7 +320,7 @@
         contentTab.classList.remove("active");
         detailsTab.classList.add("active");
       }
-    }
+    }  
   </script>
 </body>
 </html>

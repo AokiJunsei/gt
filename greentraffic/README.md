@@ -1,0 +1,14 @@
+# ページ遷移の関数
+
+### 下記がJSの関数及び遷移先の詳細です。
+
+### URL一覧　画面遷移のみ
+
+ex) gt:map_update の map_updateの部分を下記に記載します。
+
+| url                    | 遷移先のHTMLファイルの名称          |
+| ---------------------- | ---------------------------------- |
+| account_info           | user_info.html                     |
+| user_update            | user_update.html                   |
+| user_delete            | user_delete.html                   |
+
