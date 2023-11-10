@@ -29,24 +29,3 @@ ex) gt:map_update の map_updateの部分を下記に記載します。
 |                        |                                    |
 | signUp                 | create.html                        |
 | login                  | user_login.html                    |
-
-
-
-### 関数起動あり
-
-何かしらの関数（フォーム送信等）が起動して、最後に画面遷移するタイプの「関数」と「遷移先」を下記に記します。
-
-| 関数                    | 最終的な遷移先のHTMLファイルの名称         |
-| ----------------------- | ----------------------------------------- |
-| 「admin_map_register.html 内の関数」 |  admin_top.html              |
-
-```HTML
-<form method="POST" enctype='multipart/form-data'>
-    {% csrf_token %}
-        <table class="table">
-        {{ form.as_table }}
-        </table>
-        <button class="btn btn-primary" type="submit">作成</button>
-</form>
-```
-
