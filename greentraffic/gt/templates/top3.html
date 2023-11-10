@@ -79,7 +79,7 @@
     <b>Waypoint 2: </b>
     <input type="text" id="waypoint2" placeholder="Enter waypoint location 2" />
     <b>End: </b>
-    <input type="text" id="end" placeholder="Enter end location" />
+    <input type="text" id="end" placeholder="Enter end locati" />
     <b>Departure Time: </b>
     <input type="datetime-local" id="departure-time" />
     <button onclick="getCurrentLocation()">Use Current Location</button>
@@ -99,6 +99,9 @@
       <input type="checkbox" id="mode-bicycling"  />
       <label for="mode-bicycling">Bicycling</label>
     </div>
+    <span hidden><div id="id_ido">緯度</div></span>
+    <span hidden><div id="id_keido">経度</div></span>
+    <span hidden><div id="id_address">住所</div></span>
   </div>
   <div id="map-container">
     <div id="map"></div>
@@ -108,19 +111,8 @@
       <div id="content-tab" class="tab-content active"></div>
       <div id="details-tab" class="tab-content"></div>
     </div>
-  </div>
-  <div class="head-title">Google Maps APIを使ったサンプル。</div>
-  <p>地図座標位置の取得 地図上でクリックで座標・住所の取得</p>
-  <table style="width:100%;border:0">
-  <tr style="background-color:#dddddd">
-  <th style="width:20%">項目</th>
-  <th>情報</th></tr>
-  <tr><td>緯度</td><td id="id_ido"></td></tr>
-  <tr><td>経度</td><td id="id_keido"></td></tr>
-  <tr><td>ズームレベル</td><td id="id_level"></td></tr>
-  <tr><td>住所</td><td id="id_address"></td></tr>
-  </table>
-  <div id="map_canvas" style="width:100%;height:300px"></div>
+  <!-- <div id="map_canvas" style="width:100%;height:300px"></div> -->
+</div>
 
   <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
@@ -190,7 +182,7 @@
        document.getElementById('id_ido').innerHTML = ido;
        document.getElementById('id_keido').innerHTML = keido;
        document.getElementById('id_address').innerHTML = level;
-       
+       document.getElementById("waypoint1").value =   ido + ","+ keido;
       }
      
     }
@@ -328,8 +320,7 @@
         contentTab.classList.remove("active");
         detailsTab.classList.add("active");
       }
-    }
-
+    }  
   </script>
 </body>
 </html>
