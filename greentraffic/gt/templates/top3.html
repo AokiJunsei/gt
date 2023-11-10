@@ -132,7 +132,42 @@
       });
 
       const trafficLayer = new google.maps.TrafficLayer();
+      const iconBase =
+    "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
+  const icons = {
+    parking: {
+      icon: iconBase + "parking_lot_maps.png",
+    },
+    library: {
+      icon: iconBase + "library_maps.png",
+    },
+    info: {
+      icon: iconBase + "info-i_maps.png",
+    },
+  };
+  const features = [
+    {
+      position: new google.maps.LatLng(35.5737851, 139.7626623),
+      type: "library",
+    },
+    {
+      position: new google.maps.LatLng(35.5637851, 139.7626623),
+      type: "parking",
+    },
+    {
+      position: new google.maps.LatLng(35.5937851, 139.7626623),
+      type: "info",
+    }
+    ];
 
+  // Create markers.
+  for (let i = 0; i < features.length; i++) {
+    const marker = new google.maps.Marker({
+      position: features[i].position,
+      icon: icons[features[i].type].icon,
+      map: map,
+    });
+  }
       trafficLayer.setMap(map);
 
       directionsService = new google.maps.DirectionsService();
