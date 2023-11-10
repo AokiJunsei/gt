@@ -13,9 +13,22 @@ ex) gt:map_update の map_updateの部分を下記に記載します。
 | map_register           | admin_map_register.html            |
 | user_detail            | adminの利用者情報閲覧ページ         |
 | map_detail   gt.pk     | admin_map_detail.html              |
+|                        |                                    |
 | account_info           | user_info.html                     |
 | user_update            | user_update.html                   |
 | user_delete            | user_delete.html                   |
+|                        |                                    |
+| top                    | top.html                           |
+| Cheapest_search        | 最安検索のページ                    |
+| Sharing_service        | シェアリングサービス検索のページ     |
+| Barrier-free_Shortest  | バリアフリー検索の最短ページ         |
+| Barrier-free_Cheapest  | バリアフリー検索の最安ページ         |
+| logout                 | ログアウトのページ                  |
+| account_history        | 履歴一覧ページ　                    |
+|                        |                                    |
+| signUp                 | create.html                        |
+| login                  | login.html                         |
+
 
 
 ### 関数起動あり
