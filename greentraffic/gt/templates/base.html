@@ -33,7 +33,7 @@
                 <button ><a href="{% url 'gt:account_history' %}">履歴一覧</a></button>
               </div>
               <div class = "info">
-                <button ><a href="{% url 'gt:account_info' %}">登録情報</a></button>
+                <button ><a href="{% url 'gt:account_info' request.user.id %}">登録情報</a></button>
               </div>
               {% else %}
               <div class = "sign">
