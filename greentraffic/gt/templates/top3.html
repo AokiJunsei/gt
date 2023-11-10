@@ -72,18 +72,19 @@
 </head>
 <body onload="initMap()">
   <div id="floating-panel">
-    <b>Start: </b>
+    <b>出発地: </b>
     <input type="text" id="start" placeholder="Enter start location" />
     <b>Waypoint 1: </b>
     <input type="text" id="waypoint1" placeholder="Enter waypoint location 1" />
     <b>Waypoint 2: </b>
     <input type="text" id="waypoint2" placeholder="Enter waypoint location 2" />
-    <b>End: </b>
+    <b>到着地: </b>
     <input type="text" id="end" placeholder="Enter end locati" />
-    <b>Departure Time: </b>
+    <button onclick="swapStartEnd()">Swap Start/End</button>
+    <b>出発時間: </b>
     <input type="datetime-local" id="departure-time" />
-    <button onclick="getCurrentLocation()">Use Current Location</button>
-    <button onclick="calculateAndDisplayRoute()">Search</button>
+    <button onclick="getCurrentLocation()">現在地</button>
+    <button onclick="calculateAndDisplayRoute()">検索する</button>
     <button onclick="toggleDirectionsPanel()">Toggle Panel</button>
 
     <div class="mode-selector">
@@ -129,6 +130,10 @@
         zoom: 7,
         center: { lat: 35.689, lng: 139.692 },
       });
+
+      const trafficLayer = new google.maps.TrafficLayer();
+
+      trafficLayer.setMap(map);
 
       directionsService = new google.maps.DirectionsService();
       directionsRenderer = new google.maps.DirectionsRenderer({
@@ -321,6 +326,17 @@
         detailsTab.classList.add("active");
       }
     }  
+
+    function swapStartEnd() {
+      const startInput = document.getElementById("start");
+      const endInput = document.getElementById("end");
+
+      // Swap values
+      const temp = startInput.value;
+      startInput.value = endInput.value;
+      endInput.value = temp;
+    }
   </script>
+  
 </body>
 </html>
