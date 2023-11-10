@@ -1,29 +1,7 @@
-{% comment %} {% extends 'base.html' %}
-{% load static %}
-
-{% block title %}マップ情報削除 | Green Traffic{% endblock %}
-
-{% block active_map_list %}active{% endblock %}
-
-{% block contents %}
-<div class="container my-div-style">
-    <div class="row">
-        <form method="POST">
-            {% csrf_token %}
-            <p>本当に削除しますか？</p>
-            <button class="btn btn-primary mt-5" type="submit">削除</button>
-            <a class="btn btn-secondary mt-5 ml-2" href="{% url 'gt:map_detail' object.pk %}">キャンセル</a>
-        </form>
-    </div>
-</div>
-{% endblock %} {% endcomment %}
-
-{% comment %} 上記は画面遷移するver {% endcomment %}
-
 {% comment %} admin_topにてモーダルウィンドウver記載済み {% endcomment %}
 {% comment %} もしくは下記 {% endcomment %}
 
-{% comment %} {% block contents %}
+{% block contents %}
 
 <div class="modal fade" tabindex="-1" role="dialog" id="deleteModal-{{object.pk}}">
     <div class="modal-dialog" role="document">
@@ -39,7 +17,7 @@
             </div>
             <div class="modal-footer">
                 <form method="POST" action="{% url 'gt:map_detail' object.pk %}">{% csrf_token %}
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">××</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
                     <button type="submit" class="btn btn-danger">削除</button>
                 </form>
             </div>
@@ -47,4 +25,4 @@
     </div>
 </div>
 
-{% endblock %} {% endcomment %}
+{% endblock %}
