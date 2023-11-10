@@ -24,10 +24,11 @@ ex) gt:map_update の map_updateの部分を下記に記載します。
 | Barrier-free_Shortest  | バリアフリー検索の最短ページ         |
 | Barrier-free_Cheapest  | バリアフリー検索の最安ページ         |
 | logout                 | ログアウトのページ                  |
-| account_history        | 履歴一覧ページ　                    |
+| account_history        | user_log.html　                    |
+| log_detail             | user_log_detail.html               |
 |                        |                                    |
 | signUp                 | create.html                        |
-| login                  | login.html                         |
+| login                  | user_login.html                    |
 
 
 
