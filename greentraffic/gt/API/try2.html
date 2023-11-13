@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Directions Service</title>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #map-container {
+      position: relative;
+      height: 100vh;
+    }
+
+    #map {
+      height: 100%;
+    }
+
+    #directions-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 30%;
+      max-height: 100vh;
+      overflow-y: auto;
+      background-color: #fff;
+      padding: 10px;
+      box-sizing: border-box;
+      transition: width 0.3s ease;
+    }
+
+    #directions-panel.collapsed {
+      width: 0;
+    }
+
+    #floating-panel {
+      position: absolute;
+      top: 10px;
+      left: 35%; /* 調整した位置 */
+      z-index: 5;
+      background-color: #fff;
+      padding: 5px;
+      border: 1px solid #999;
+      text-align: center;
+      font-family: "Roboto", "sans-serif";
+      line-height: 30px;
+      padding-left: 10px;
+    }
+
+    .mode-selector {
+      margin-top: 10px;
+    }
+
+    .tab {
+      display: inline-block;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="floating-panel">
+    <b>Start: </b>
+    <input type="text" id="start" placeholder="Enter start location" />
+    <b>End: </b>
+    <input type="text" id="end" placeholder="Enter end location" />
+    <b>Departure Time: </b>
+    <input type="datetime-local" id="departure-time" />
+    <b>Arrival Time: </b>
+    <input type="datetime-local" id="arrival-time" />
+    <button onclick="getCurrentLocation()">Use Current Location</button>
+    <button onclick="calculateAndDisplayRoute()">Search</button>
+    <button onclick="toggleDirectionsPanel()">Toggle Panel</button>
+
+    <div class="mode-selector">
+      <input type="checkbox" id="mode-driving" checked />
+      <label for="mode-driving">Driving</label>
+
+      <input type="checkbox" id="mode-transit" checked />
+      <label for="mode-transit">Transit</label>
+
+      <input type="checkbox" id="mode-walking" checked />
+      <label for="mode-walking">Walking</label>
+    </div>
+  </div>
+  <div id="map-container">
+    <div id="map"></div>
+    <div id="directions-panel">
+      <div class="tab" onclick="toggleTab('content')">Content</div>
+      <div class="tab" onclick="toggleTab('details')">Details</div>
+      <div id="content-tab" class="tab-content active"></div>
+      <div id="details-tab" class="tab-content"></div>
+    </div>
+  </div>
+
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
+    defer
+  ></script>
+  <script>
+    let map, directionsService, directionsRenderer;
+    let currentLocationMarker;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 7,
+        center: { lat: 41.85, lng: -87.65 },
+      });
+
+      directionsService = new google.maps.DirectionsService();
+      directionsRenderer = new google.maps.DirectionsRenderer({
+        map: map,
+        panel: document.getElementById("content-tab"),
+      });
+    }
+
+    function getCurrentLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const currentLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+
+            // Set center and add marker
+            map.setCenter(currentLocation);
+            addCurrentLocationMarker(currentLocation);
+
+            // Set the start input value
+            document.getElementById("start").value = currentLocation.lat + ", " + currentLocation.lng;
+          },
+          () => {
+            console.error("Error getting current location");
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser");
+      }
+    }
+
+    function addCurrentLocationMarker(location) {
+      // Remove existing marker if any
+      if (currentLocationMarker) {
+        currentLocationMarker.setMap(null);
+      }
+
+      // Add marker
+      currentLocationMarker = new google.maps.Marker({
+        position: location,
+        map: map,
+        title: "Current Location",
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 10,
+          fillColor: "#4285F4",
+          fillOpacity: 1,
+          strokeColor: "#ffffff",
+          strokeWeight: 2,
+        },
+      });
+    }
+
+    function calculateAndDisplayRoute() {
+      const start = document.getElementById("start").value;
+      const end = document.getElementById("end").value;
+      const departureTime = document.getElementById("departure-time").value;
+      const arrivalTime = document.getElementById("arrival-time").value;
+
+      const drivingMode = document.getElementById("mode-driving").checked;
+      const transitMode = document.getElementById("mode-transit").checked;
+      const walkingMode = document.getElementById("mode-walking").checked;
+
+      const travelModes = [];
+      if (drivingMode) travelModes.push(google.maps.TravelMode.DRIVING);
+      if (transitMode) travelModes.push(google.maps.TravelMode.TRANSIT);
+      if (walkingMode) travelModes.push(google.maps.TravelMode.WALKING);
+
+      const request = {
+        origin: start,
+        destination: end,
+        travelMode: google.maps.TravelMode.DRIVING, // Default mode
+      };
+
+      if (travelModes.length > 0) {
+        request.travelMode = travelModes[0];
+        request.transitOptions = {
+          modes: travelModes.slice(1),
+          departureTime: new Date(departureTime),
+          arrivalTime: new Date(arrivalTime),
+        };
+      }
+
+      directionsService.route(request, (response, status) => {
+        if (status === "OK") {
+          directionsRenderer.setDirections(response);
+          showRouteInformation(response);
+        } else {
+          window.alert("Directions request failed due to " + status);
+        }
+      });
+    }
+
+    function showRouteInformation(response) {
+      const directionsPanel = document.getElementById("details-tab");
+      directionsPanel.innerHTML = "";
+
+      for (let i = 0; i < response.routes.length; i++) {
+        const route = response.routes[i];
+
+        const summary = document.createElement("div");
+        summary.innerHTML = `<b>${route.summary}</b>`;
+        directionsPanel.appendChild(summary);
+
+        const steps = route.legs[0].steps;
+        for (let j = 0; j < steps.length; j++) {
+          const stepInfo = document.createElement("div");
+          stepInfo.innerHTML = steps[j].instructions;
+          directionsPanel.appendChild(stepInfo);
+        }
+      }
+    }
+
+    function toggleDirectionsPanel() {
+      const directionsPanel = document.getElementById("directions-panel");
+      directionsPanel.classList.toggle("collapsed");
+    }
+
+    function toggleTab(tabName) {
+      const contentTab = document.getElementById("content-tab");
+      const detailsTab = document.getElementById("details-tab");
+
+      if (tabName === "content") {
+        contentTab.classList.add("active");
+        detailsTab.classList.remove("active");
+      } else {
+        contentTab.classList.remove("active");
+        detailsTab.classList.add("active");
+      }
+    }
+  </script>
+</body>
+</html>

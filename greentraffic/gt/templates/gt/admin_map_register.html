@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Green Traffic{% endblock %}
+
+{% block content %}
+<main onload="initMap()">
+  <div>
+      <h5 class="card-title">登録したい場所を入力してください</h5>
+      <form method="post" action="{% url 'save-location' %}" id="locationForm">
+          {% csrf_token %}
+          <div class="mb-3">
+              {{ form.name.label_tag }}
+              {{ form.name }}
+          </div>
+          <div class="mb-3">
+              {{ form.address.label_tag }}
+              {{ form.address }}
+          </div>
+          <button type="button" class="btn btn-primary" id="saveButton">登録</button>
+      </form>
+  </div>
+  <!-- マップを表示 -->
+  <div id="map" class="mt-5"></div>
+  <!-- モーダルウィンドウ -->
+  <div class="modal" id="successModal">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">成功しました</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  データが保存されました
+              </div>
+              <div class="modal-footer">
+                  <a href="{% url 'gt:top' %}" class="btn btn-primary">TOPページに戻る</a>
+              </div>
+          </div>
+      </div>
+  </div>
+  <script>
+    function initMap() {
+        var target = document.getElementById("map");
+        var name = "{{ name }}";
+        var address = "{{ address }}";
+        var jsonData = JSON.parse('{{ json_data|escapejs }}');
+
+        var geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({ address: address }, function (results, status) {
+            if (status === "OK" && results[0]) {
+                var map = new google.maps.Map(target, {
+                    center: results[0].geometry.location,
+                    zoom: 18,
+                });
+
+                var marker = new google.maps.Marker({
+                    position: results[0].geometry.location,
+                    map: map,
+                    animation: google.maps.Animation.DROP,
+                    title: name,
+                });
+            } else {
+                alert("住所が正しくないか存在しません。");
+                target.style.display = "none";
+            }
+        });
+    }
+
+    // 保存ボタンがクリックされたら確認ダイアログを表示
+    document.getElementById("saveButton").addEventListener("click", function () {
+        if (confirm("このデータを登録しますか？")) {
+            // フォームを送信
+            document.getElementById("locationForm").submit();
+        }
+    });
+
+    // モーダルウィンドウを表示
+    var modal = new bootstrap.Modal(document.getElementById("successModal"));
+    modal.show();
+  </script>
+</main>
+{% endblock %}
+
+<!-- view.py(仮)-->
+<!--
+import requests
+import json
+from django.shortcuts import render, redirect
+from .forms import LocationForm
+from .models import Location
+from django.http import JsonResponse
+
+def save_location(request):
+    if request.method == 'POST':
+        form = LocationForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            address = form.cleaned_data['address']
+
+            # 外部APIを呼び出し、JSONデータを取得
+            api_url = '外部APIのURL'  # 実際のAPIのURLに置き換えてください
+            response = requests.get(api_url, params={'address': address})
+
+            if response.status_code == 200:
+                data = response.json()
+
+                # JSONのシリアライズ
+                json_data = json.dumps(data[0])  # results[0]の部分をJSON化
+
+                # データベースに保存
+                Location.objects.create(name=name, address=address, json_data=json_data)
+
+                # データベース保存成功時の処理
+                success_message = 'データが保存されました'
+                return JsonResponse({'success_message': success_message})
+            else:
+                return JsonResponse({'message': 'APIからデータを取得できませんでした'}, status=400)
+        else:
+            return JsonResponse({'message': 'フォームが無効です'}, status=400)
+    else:
+        form = LocationForm()
+        context = {'form': form}
+        return render(request, 'yourapp/map_with_form.html', context)
+
+def top(request):
+    # TOPページへのリダイレクト
+    return redirect(reverse('top'))
+-->
+
+<!--models.py (仮)-->
+<!--
+from django.db import models
+
+class Location(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.CharField(max_length=200)
+    json_data = models.TextField()
+
+    def __str__(self):
+        return self.name
+-->
+
+<!--forms.py(仮)-->
+<!--
+
+from django import forms
+
+class LocationForm(forms.Form):
+    name = forms.CharField(label='登録名', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    address = forms.CharField(label='住所', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+-->
