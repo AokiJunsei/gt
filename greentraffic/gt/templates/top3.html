@@ -74,9 +74,9 @@
   <div id="floating-panel">
     <b>出発地: </b>
     <input type="text" id="start" placeholder="Enter start location" />
-    <b>Waypoint 1: </b>
+    <b>中継地点１: </b>
     <input type="text" id="waypoint1" placeholder="Enter waypoint location 1" />
-    <b>Waypoint 2: </b>
+    <b>中継地点２: </b>
     <input type="text" id="waypoint2" placeholder="Enter waypoint location 2" />
     <b>到着地: </b>
     <input type="text" id="end" placeholder="Enter end location" />
@@ -85,20 +85,21 @@
     <input type="datetime-local" id="departure-time" />
     <button onclick="getCurrentLocation()">現在地</button>
     <button onclick="calculateAndDisplayRoute()">検索する</button>
-    <button onclick="toggleDirectionsPanel()">Toggle Panel</button>
+    <button onclick="toggleDirectionsPanel()">トグルパネル</button>
 
+    
     <div class="mode-selector">
       <input type="checkbox" id="mode-driving" checked />
-      <label for="mode-driving">Driving</label>
+      <label for="mode-driving">自動車</label>
 
       <input type="checkbox" id="mode-transit"  />
-      <label for="mode-transit">Transit</label>
+      <label for="mode-transit">電車</label>
 
       <input type="checkbox" id="mode-walking"  />
-      <label for="mode-walking">Walking</label>
+      <label for="mode-walking">徒歩</label>
 
       <input type="checkbox" id="mode-bicycling"  />
-      <label for="mode-bicycling">Bicycling</label>
+      <label for="mode-bicycling">自転車</label>
     </div>
     <span hidden><div id="id_ido">緯度</div></span>
     <span hidden><div id="id_keido">経度</div></span>
@@ -125,12 +126,83 @@
 
     function initMap() {
       var Marker;
+      const uluru = { lat: 35.689, lng: 139.692 };
 
+      setInterval(updateCurrentLocation, 5000);
       map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 7,
-        center: { lat: 35.689, lng: 139.692 },
+        zoom: 17,
+        center: uluru,
       });
 
+      
+      const contentString =
+      '<div id="content">' +
+        '<div id="siteNotice">' +
+        "</div>" +
+        '<h1 id="firstHeading" class="firstHeading">Uluru</h1>' +
+        '<div id="bodyContent">' +
+        "<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large " +
+        "sandstone rock formation in the southern part of the " +
+        "Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) " +
+        "south west of the nearest large town, Alice Springs; 450&#160;km " +
+        "(280&#160;mi) by road. Kata Tjuta and Uluru are the two major " +
+        "features of the Uluru - Kata Tjuta National Park. Uluru is " +
+        "sacred to the Pitjantjatjara and Yankunytjatjara, the " +
+        "Aboriginal people of the area. It has many springs, waterholes, " +
+        "rock caves and ancient paintings. Uluru is listed as a World " +
+        "Heritage Site.</p>" +
+        '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
+        "https://en.wikipedia.org/w/index.php?title=Uluru</a> " +
+        "(last visited June 22, 2009).</p>" +
+        "</div>" +
+        "</div>";
+
+      //1
+      // var xhr = new XMLHttpRequest();
+      //var url = "https://example.com/api/data";
+      
+      //xhr.open("GET", url, true);
+      
+      //xhr.onreadystatechange = function () {
+        //if (xhr.readyState == 4 && xhr.status == 200) {
+          //var jsonData = JSON.parse(xhr.responseText);
+          //console.log(jsonData);
+        //}
+      //};
+      //xhr.send(); 
+
+      //2
+        //var url = "https://example.com/api/data";
+      //fetch(url)
+        //.then(response => {
+          //if (!response.ok) {
+            //throw new Error("Network response was not ok");
+          //}
+          //return response.json();
+        //})
+        //.then(jsonData => {
+        //  console.log(jsonData);
+        //})
+        //.catch(error => {
+        //  console.error("There was a problem with the fetch operation:", error);
+        //});
+
+  const infowindow = new google.maps.InfoWindow({
+    content: contentString,
+    ariaLabel: "Uluru",
+  });
+  const marker = new google.maps.Marker({
+    position: uluru,
+    map,
+    title: "Uluru (Ayers Rock)",
+  });
+
+  marker.addListener("click", () => {
+    infowindow.open({
+      anchor: marker,
+      map,
+    });
+  });
       const trafficLayer = new google.maps.TrafficLayer();
       const iconBase =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
@@ -243,6 +315,7 @@
             // Set the start input value
             //document.getElementById("start").value = "現在地" ;
             document.getElementById("start").value = currentLocation.lat + ", " + currentLocation.lng;
+            document.getElementById("now").value = currentLocation.lat + ", " + currentLocation.lng;
           },
           () => {
             console.error("Error getting current location");
@@ -370,6 +443,51 @@
       const temp = startInput.value;
       startInput.value = endInput.value;
       endInput.value = temp;
+    }
+
+    function updateCurrentLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const currentLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+
+            // Update the marker's position
+            updateCurrentLocationMarker(currentLocation);
+          },
+          () => {
+            console.error("Error getting current location");
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser");
+      }
+    }
+
+    function updateCurrentLocationMarker(location) {
+      // If the marker doesn't exist, create it
+      if (!currentLocationMarker) {
+        currentLocationMarker = new google.maps.Marker({
+          map: map,
+          title: "Current Location",
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 10,
+            fillColor: "#4285F4",
+            fillOpacity: 1,
+            strokeColor: "#ffffff",
+            strokeWeight: 2,
+          },
+        });
+      }
+
+      // Set the new position for the marker
+      currentLocationMarker.setPosition(location);
+
+      // Center the map on the updated location
+      map.setCenter(location);
     }
   </script>
   
