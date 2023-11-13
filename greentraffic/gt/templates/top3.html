@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+{% extends "base.html" %}
+
+{% block title %}Green Traffic{%endblock %}
+
+{% block content %}
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Directions Service</title>
@@ -71,7 +77,9 @@
   </style>
 </head>
 <body onload="initMap()">
+
   <div id="floating-panel">
+    <h1>最短検索</h1>
     <b>出発地: </b>
     <input type="text" id="start" placeholder="Enter start location" />
     <b>中継地点１: </b>
@@ -80,7 +88,7 @@
     <input type="text" id="waypoint2" placeholder="Enter waypoint location 2" />
     <b>到着地: </b>
     <input type="text" id="end" placeholder="Enter end location" />
-    <button onclick="swapStartEnd()">Swap Start/End</button>
+    <button onclick="swapStartEnd()">入れ替える</button>
     <b>出発時間: </b>
     <input type="datetime-local" id="departure-time" />
     <button onclick="getCurrentLocation()">現在地</button>
@@ -124,6 +132,7 @@
     let map, directionsService, directionsRenderer;
     let currentLocationMarker;
 
+    //マップ情報
     function initMap() {
       var Marker;
       const uluru = { lat: 35.689, lng: 139.692 };
@@ -134,14 +143,14 @@
         center: uluru,
       });
 
-      
+     //スポット場所の呼出し
       const contentString =
       '<div id="content">' +
         '<div id="siteNotice">' +
         "</div>" +
-        '<h1 id="firstHeading" class="firstHeading">Uluru</h1>' +
+        '<h1 id="firstHeading" class="firstHeading"></h1>' +
         '<div id="bodyContent">' +
-        "<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large " +
+        "<p><b>自宅</b>, also referred to as <b>Ayers Rock</b>, is a large " +
         "sandstone rock formation in the southern part of the " +
         "Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) " +
         "south west of the nearest large town, Alice Springs; 450&#160;km " +
@@ -157,21 +166,7 @@
         "</div>" +
         "</div>";
 
-      //1
-      // var xhr = new XMLHttpRequest();
-      //var url = "https://example.com/api/data";
-      
-      //xhr.open("GET", url, true);
-      
-      //xhr.onreadystatechange = function () {
-        //if (xhr.readyState == 4 && xhr.status == 200) {
-          //var jsonData = JSON.parse(xhr.responseText);
-          //console.log(jsonData);
-        //}
-      //};
-      //xhr.send(); 
-
-      //2
+      //fetchAPI使う場合
         //var url = "https://example.com/api/data";
       //fetch(url)
         //.then(response => {
@@ -187,6 +182,7 @@
         //  console.error("There was a problem with the fetch operation:", error);
         //});
 
+        
   const infowindow = new google.maps.InfoWindow({
     content: contentString,
     ariaLabel: "Uluru",
@@ -203,6 +199,8 @@
       map,
     });
   });
+
+  //マーカー場所(EV車や電動キックボード)の表示
       const trafficLayer = new google.maps.TrafficLayer();
       const iconBase =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
@@ -232,7 +230,7 @@
     }
     ];
 
-  // Create markers.
+  // マーカー作成.
   for (let i = 0; i < features.length; i++) {
     const marker = new google.maps.Marker({
       position: features[i].position,
@@ -417,6 +415,7 @@
       }
     }
 
+    //トグルパネル
     function toggleDirectionsPanel() {
       const directionsPanel = document.getElementById("directions-panel");
       directionsPanel.classList.toggle("collapsed");
@@ -439,7 +438,7 @@
       const startInput = document.getElementById("start");
       const endInput = document.getElementById("end");
 
-      // Swap values
+      // 入れ替えボタン
       const temp = startInput.value;
       startInput.value = endInput.value;
       endInput.value = temp;
@@ -454,7 +453,7 @@
               lng: position.coords.longitude,
             };
 
-            // Update the marker's position
+            // ピンを打つ
             updateCurrentLocationMarker(currentLocation);
           },
           () => {
@@ -490,6 +489,6 @@
       map.setCenter(location);
     }
   </script>
-  
+  {%endblock %}
 </body>
 </html>
