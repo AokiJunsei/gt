@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Green Traffic{% endblock %}
+
+{% block content %}
+<main onload="initMap()">
+  <div class="container my-div-style">
+    <h5>現在の登録情報</h5>
+    <div class="row">
+      <div class="col-3">
+        <strong>場所名</strong>
+      </div>
+      <div class="col-9">
+        {{ object.title }}
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-3">
+        <strong>住所</strong>
+      </div>
+      <div class="col-9">
+        {{ object.content|linebreaksbr }}
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-3">
+        <strong>JSON</strong>
+      </div>
+      <div class="col-9">
+        {{ object.json }}
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- 写真の部分はコメントアウト -->
+    <!-- <div class="row">
+      <div class="col-3">
+        <strong>写真</strong>
+      </div>
+      <div class="col-3">
+        {% if object.photo1 %}
+        <img src="{{ object.photo1.url }}" width="200" height="200"/>
+        {% endif %}
+      </div>
+      <div class="col-3">
+        {% if object.photo2 %}
+        <img src="{{ object.photo2.url }}" width="200" height="200"/>
+        {% endif %}
+      </div>
+      <div class="col-3">
+        {% if object.photo3 %}
+        <img src="{{ object.photo3.url }}" width="200" height="200"/>
+        {% endif %}
+      </div>
+    </div> -->
+
+    <hr>
+
+    <h5 class="card-title">登録したい場所を入力してください</h5>
+    <form method="post" action="{% url 'save-location' %}" id="locationForm">
+      {% csrf_token %}
+      <div class="mb-3">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+      </div>
+      <div class="mb-3">
+        {{ form.address.label_tag }}
+        {{ form.address }}
+      </div>
+      <button type="button" class="btn btn-primary" id="saveButton">登録</button>
+    </form>
+  </div>
+  <!-- マップを表示 -->
+  <div id="map" class="mt-5"></div>
+  <!-- モーダルウィンドウ -->
+  <div class="modal" id="successModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">成功しました</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          データが保存されました
+        </div>
+        <div class="modal-footer">
+          <a href="{% url 'gt:top' %}" class="btn btn-primary">TOPページに戻る</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function initMap() {
+      var target = document.getElementById("map");
+      var name = "{{ name }}";
+      var address = "{{ address }}";
+      var jsonData = JSON.parse('{{ json_data|escapejs }}');
+
+      var geocoder = new google.maps.Geocoder();
+
+      geocoder.geocode({ address: address }, function (results, status) {
+        if (status === "OK" && results[0]) {
+          var map = new google.maps.Map(target, {
+            center: results[0].geometry.location,
+            zoom: 18,
+          });
+
+          var marker = new google.maps.Marker({
+            position: results[0].geometry.location,
+            map: map,
+            animation: google.maps.Animation.DROP,
+            title: name,
+          });
+        } else {
+          alert("住所が正しくないか存在しません。");
+          target.style.display = "none";
+        }
+      });
+    }
+
+    // 保存ボタンがクリックされたら確認ダイアログを表示
+    document.getElementById("saveButton").addEventListener("click", function () {
+      if (confirm("このデータを保存しますか？")) {
+        // フォームを送信
+        document.getElementById("locationForm").submit();
+      }
+    });
+
+    // モーダルウィンドウを表示
+    var modal = new bootstrap.Modal(document.getElementById("successModal"));
+    modal.show();
+  </script>
+</main>
+{% endblock content %}
