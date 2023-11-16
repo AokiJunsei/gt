@@ -26,32 +26,32 @@
           <div class="wrapper site-header__wrapper">
             <button><a href="{% url 'gt:top' %}" class="brand">Green Traffic</a><button>
             <div class="nav">
-                <button class="nav__item"><a href="{% url 'gt:top' %}">最短検索</a></button>
+                {% comment %} <button class="nav__item"><a href="{% url 'gt:top' %}">最短検索</a></button>
                 <button class="nav__item"><a href="{% url 'gt:Cheapest_search' %}">最安検索</a></button>
-                <button class="nav__item"><a href="{% url 'gt:Sharing_service' %}">シェアリングサービス</a></button>
+                <button class="nav__item"><a href="{% url 'gt:Sharing_service' %}">シェアリングサービス</a></button> {% endcomment %}
                 <button class="nav__item">バリアフリー検索</button>
                 <div class="btn-container">
                   <ul id="btn2" class="hidden">↓
-                  <li><a href="{% url 'gt:Barrier-free_Shortest' %}">最短</a></li><li><a href="{% url 'gt:Barrier-free_Cheapest' %}">最安</a></li>
+                  {% comment %} <li><a href="{% url 'gt:Barrier-free_Shortest' %}">最短</a></li><li><a href="{% url 'gt:Barrier-free_Cheapest' %}">最安</a></li> {% endcomment %}
                   </ul>
                 </div>
                 <div id="text"></div>
                 {% if user.is_authenticated %}
                 <div class = "logout">
-                  <button ><a href="{% url 'gt:logout' %}">ログアウト</a></button>
+                  {% comment %} <button ><a href="{% url 'gt:logout' %}">ログアウト</a></button> {% endcomment %}
                 </div>
                 <div class = "history">
-                  <button ><a href="{% url 'gt:account_history' %}">履歴一覧</a></button>
+                  {% comment %} <button ><a href="{% url 'gt:account_history' %}">履歴一覧</a></button> {% endcomment %}
                 </div>
                 <div class = "info">
-                  <button ><a href="{% url 'gt:account_info' request.user.id %}">登録情報</a></button>
+                  {% comment %} <button ><a href="{% url 'gt:account_info' request.user.id %}">登録情報</a></button> {% endcomment %}
                 </div>
                 {% else %}
                 <div class = "sign">
-                  <button ><a href="{% url 'gt:signUp' %}">新規登録</a></button>
+                  {% comment %} <button ><a href="{% url 'gt:signUp' %}">新規登録</a></button> {% endcomment %}
                 </div>
                 <div class = "login">
-                  <button ><a href="{% url 'gt:login' %}">ログイン</a></button>
+                  {% comment %} <button ><a href="{% url 'gt:login' %}">ログイン</a></button> {% endcomment %}
                 </div>
                 {% endif %}
 
@@ -66,7 +66,7 @@
                     var nowmonth = now.getMonth() + 1;
                     var nowdate = now.getDate();
 
-                    var text = nowyear + "/" + nowmonth + "/" + nowdate; 
+                    var text = nowyear + "/" + nowmonth + "/" + nowdate;
 
                     return text;
                   }
