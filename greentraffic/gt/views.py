@@ -33,10 +33,42 @@ def admin_map_register(request):
 
 
 
-def map_detail(request, pk):
+def admin_map_detail(request, pk):
     map_object = get_object_or_404(models, pk=pk)
     return render(request, 'gt/map_detail.html', {'map_object': map_object})
 
 
 
 
+def user_info(request):
+    return render(request, 'user_info.html')
+
+
+
+def user_update_view(request):
+    return render(request, 'user_update.html')
+
+
+
+def user_delete_view(request):
+    return render(request, 'user_delete.html')
+
+
+
+def account_history_view(request):
+    return render(request, 'user_log.html')
+
+
+
+def log_detail_view(request):
+    return render(request, 'user_log_detail.html')
+
+
+
+def signup_view(request):
+    return render(request, 'create.html')
+
+
+
+def login_view(request):
+    return render(request, 'user_login.html')
