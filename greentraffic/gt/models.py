@@ -48,7 +48,8 @@ class Spot(models.Model):
     contact_info = models.CharField(max_length=300, verbose_name="連絡先情報")
     fee_info = models.CharField(max_length=100, verbose_name="料金情報", blank=True, null=True)
     business_hours = models.CharField(max_length=100, verbose_name="営業時間", blank=True, null=True)
-    coordinates = models.JSONField(verbose_name="座標", blank=True, null=True)
+    latitude = models. CharField(max_length=100, verbose_name="緯度")
+    longitude = models. CharField(max_length=100, verbose_name="経度")
 
     def __str__(self):
         return f"{self.spot_id} - {self.spot_name}"
@@ -65,7 +66,8 @@ class Map(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, verbose_name="アカウントID")
     category = models.CharField(max_length=100, verbose_name="カテゴリ")
     address = models.CharField(max_length=100, verbose_name="住所")
-    coordinates = models.JSONField(verbose_name="座標", blank=True, null=True)
+    latitude = models. CharField(max_length=100, verbose_name="緯度")
+    longitude = models. CharField(max_length=100, verbose_name="経度")
     
     def __str__(self):
         return f"{self.map_id} - {self.location_name}"
