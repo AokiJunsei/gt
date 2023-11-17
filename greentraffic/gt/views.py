@@ -5,6 +5,12 @@ from django.shortcuts import render,get_object_or_404,HttpResponseRedirect
 from .models import models
 
 
+from .forms import LocationForm
+from .models import Map
+
+
+
+
 def top_page(request):
     return render(request, 'gt/top.html')
 
@@ -72,3 +78,42 @@ def signup_view(request):
 
 def login_view(request):
     return render(request, 'user_login.html')
+
+
+
+
+
+##画面遷移の関数はここより上に書きます
+
+
+
+
+
+
+
+#form系関数
+
+
+
+def save_location(request):
+    form = LocationForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            address = form.cleaned_data['address']
+            latitude = form.cleaned_data['latitude']
+            longitude = form.cleaned_data['longitude']
+            
+            # Mapモデルにデータを保存
+            map_instance = Map(
+                location_name=name,
+                account=request.user.account,  # 仮にユーザーアカウントがある場合
+                category='your_category',  # カテゴリを適切なものに変更
+                address=address,
+                coordinates={'latitude': latitude, 'longitude': longitude}
+            )
+            map_instance.save()
+
+            return render(request, 'your_template.html', {'form': form, 'name': name, 'address': address})
+    
+    return render(request, 'your_template.html', {'form': form})
