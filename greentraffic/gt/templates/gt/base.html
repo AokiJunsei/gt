@@ -31,19 +31,15 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'gt:top' %}">最短検索</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">最安検索</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">シェアリングサービス検索</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">バリアフリー検索</a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{% url 'gt:top' %}">最短検索</a></li>
-                        {% comment %} <li><a class="dropdown-item" href="{% url 'gt:Cheapest_search' %}">最安検索</a></li> {% endcomment %}
-                        {% comment %} <li><a class="dropdown-item" href="{% url 'gt:Sharing_service' %}">シェアリングサービス</a></li> {% endcomment %}
-                        <li><a class="dropdown-item" href="#">バリアフリー検索</a></li>
                         {% comment %} <li><a class="dropdown-item" href="{% url 'gt:Barrier-free_Shortest' %}">最短</a></li> {% endcomment %}
                         {% comment %} <li><a class="dropdown-item" href="{% url 'gt:Barrier-free_Cheapest' %}">最安</a></li> {% endcomment %}
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
                     </ul>
                 </li>
               </ul>
@@ -51,12 +47,12 @@
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
                 {% if user.is_authenticated %}
-                {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'gt:logout' %}">ログアウト</a></li> {% endcomment %}
-                {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'gt:account_history' %}">履歴一覧</a></li> {% endcomment %}
-                {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'gt:account_info' request.user.id %}">登録情報</a></li> {% endcomment %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'gt:logout' %}">ログアウト</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'gt:account_history' %}">履歴一覧</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'gt:account_info' request.user.id %}">登録情報</a></li>
                 {% else %}
                 {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'gt:signUp' %}">新規登録</a></li> {% endcomment %}
-                {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'gt:login' %}">ログイン</a></li> {% endcomment %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'gt:login' %}">ログイン</a></li>
                 {% endif %}
               </ul>
 
