@@ -1,98 +1,125 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Directions Service</title>
-  <style>
-    body, html {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
+{% extends "gt/base.html" %}
+{% load static %}
+{% block title %}Green Traffic{% endblock %}
 
-    #map-container {
-      position: relative;
-      height: 100vh;
-    }
+{% block head %}
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
 
-    #map {
-      height: 100%;
-    }
+  #map-container {
+    position: relative;
+    height: 100vh;
+  }
 
-    #directions-panel {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 30%;
-      max-height: 100vh;
-      overflow-y: auto;
-      background-color: #fff;
-      padding: 10px;
-      box-sizing: border-box;
-      transition: width 0.3s ease;
-    }
+  #map {
+    height: 100%;
+  }
 
-    #directions-panel.collapsed {
-      width: 0;
-    }
+  #directions-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30%;
+    max-height: 100vh;
+    overflow-y: auto;
+    background-color: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+    transition: width 0.3s ease;
+  }
 
-    #floating-panel {
-      position: absolute;
-      top: 10px;
-      left: 35%; /* Adjusted position */
-      z-index: 5;
-      background-color: #fff;
-      padding: 5px;
-      border: 1px solid #999;
-      text-align: center;
-      font-family: "Roboto", "sans-serif";
-      line-height: 30px;
-      padding-left: 10px;
-    }
+  #directions-panel.collapsed {
+    width: 0;
+  }
 
-    .mode-selector {
-      margin-top: 10px;
-    }
+  #floating-panel {
+    position: absolute; /* または `fixed` を使用してもよい */
+    top: 70px; /* ヘッダーの高さに応じて調整する */
+    left: 50%; /* 画面の中央に */
+    transform: translateX(-50%); /* 左に50%ずらして中央寄せ */
+    z-index: 5; /* 地図より上、ヘッダーより下になるように調整する */
+    max-width: 90%; /* 地図のコンテナの幅に合わせて調整する */
+    box-sizing: border-box; /* paddingとborderがwidthに含まれるように */
+    padding: 10px; /* 内側の余白 */
+    background-color: rgba(255, 255, 255, 0.9); /* 背景色と透明度（必要に応じて） */
+    border-radius: 5px; /* 角の丸み */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* 影の効果（オプショナル） */
+  }
 
-    .tab {
-      display: inline-block;
-      padding: 10px;
-      cursor: pointer;
-    }
+  .mode-selector {
+    margin-top: 10px;
+  }
 
-    .tab-content {
-      display: none;
-    }
+  .tab {
+    display: inline-block;
+    padding: 10px;
+    cursor: pointer;
+  }
 
-    .active {
-      display: block;
-    }
-  </style>
-  <!-- Font Awesome icons (free version)-->
-  <!-- <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script> -->
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-</head>
+  .tab-content {
+    display: none;
+  }
+
+  .active {
+    display: block;
+  }
+
+
+  #toggle-icon {
+    position: fixed; /* ボタンを固定位置にする */
+    top: 70px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+    right: 30px; /* 右端から10pxの位置に設定 */
+    z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
+  }
+
+  #toggle-button {
+    position: fixed; /* ボタンを固定位置にする */
+    top: 90px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+    right: 30px; /* 右端から10pxの位置に設定 */
+    z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
+  }
+
+  #current-location-icon {
+    cursor: pointer; /* アイコンがクリック可能であることを示す */
+    font-size: 24px; /* アイコンのサイズを設定 */
+    color: #000; /* アイコンの色を設定 */
+    /* その他のスタイリングを必要に応じて追加 */
+  }
+
+  #swap-icon {
+    cursor: pointer; /* アイコンにマウスを合わせたときにカーソルをポインタに変更 */
+    color: #007bff; /* アイコンの色を設定 */
+    font-size: 24px; /* アイコンのサイズを設定 */
+}
+
+
+</style>
+{% endblock %}
+
+{% block content %}
 <body onload="initMap()">
-
   <div id="floating-panel">
     <!-- <h1>最短検索</h1> -->
     <b>出発地: </b>
     <input type="text" id="start" placeholder="Enter start location" />
-    <button onclick="getCurrentLocation()">現在地</button><br>
+    <i id="current-location-icon" class="fas fa-compass" onclick="getCurrentLocation()"></i><br>
     <b>中継地点１: </b>
     <input type="text" id="waypoint1" placeholder="Enter waypoint location 1" />
     <b>中継地点２: </b>
     <input type="text" id="waypoint2" placeholder="Enter waypoint location 2" /><br>
     <b>到着地: </b>
     <input type="text" id="end" placeholder="Enter end location" />
-    <button onclick="swapStartEnd()">入れ替える</button>
+    <!--入れ替えボタン　未対応-->
+    <i id="swap-icon" class="fas fa-arrow-right-arrow-left" onclick="swapStartEnd()"></i>
     <b>出発時間: </b>
     <input type="date" id="departure-date" />
     <input type="time" id="departure-time" />
 
-    <button onclick="calculateAndDisplayRoute()">検索する</button>
-    <button onclick="toggleDirectionsPanel()">←</button>
+    <button onclick="calculateAndDisplayRoute()">検索</button>
 
     <div class="mode-selector">
       <input type="checkbox" id="mode-driving" checked />
@@ -110,6 +137,13 @@
     <span hidden><div id="id_ido">緯度</div></span>
     <span hidden><div id="id_keido">経度</div></span>
     <span hidden><div id="id_address">住所</div></span>
+  </div>
+  <!--フォームの表示非表示-->
+  <div>
+    <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
+  </div>
+  <div>
+    <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
   </div>
   <div id="map-container">
     <div id="map"></div>
@@ -130,6 +164,20 @@
   <script>
     let map, directionsService, directionsRenderer;
     let currentLocationMarker;
+
+    function toggleInputForm() {
+      var x = document.getElementById('floating-panel');
+      var icon = document.getElementById('toggle-icon');
+
+      if (!x.style.display || x.style.display === 'block') {
+        x.style.display = 'none'; // フォームを非表示にする
+        icon.className = 'fas fa-eye-slash'; // アイコンを非表示アイコンに変更
+      } else {
+        x.style.display = 'block'; // フォームを表示にする
+        icon.className = 'fas fa-eye'; // アイコンを表示アイコンに変更
+      }
+    }
+
 
     //マップ情報
     function initMap() {
@@ -741,4 +789,6 @@
     }
   </script>
 </body>
+{% endblock content %}
+
 </html>
