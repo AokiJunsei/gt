@@ -108,12 +108,12 @@ def save_location(request):
             map_instance = Map(
                 location_name=name,
                 account=request.user.account,  # 仮にユーザーアカウントがある場合
-                category='your_category',  # カテゴリを適切なものに変更
+                category='gt_category',  # カテゴリを適切なものに変更
                 address=address,
                 coordinates={'latitude': latitude, 'longitude': longitude}
             )
             map_instance.save()
 
-            return render(request, 'your_template.html', {'form': form, 'name': name, 'address': address})
+            return render(request, 'admin_map_change.html', {'form': form, 'name': name, 'address': address})
     
-    return render(request, 'your_template.html', {'form': form})
+    return render(request, 'top.html', {'form': form})
