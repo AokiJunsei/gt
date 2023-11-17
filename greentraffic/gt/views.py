@@ -91,29 +91,3 @@ def login_view(request):
 
 
 
-#form系関数
-
-
-
-def save_location(request):
-    form = LocationForm(request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            address = form.cleaned_data['address']
-            latitude = form.cleaned_data['latitude']
-            longitude = form.cleaned_data['longitude']
-            
-            # Mapモデルにデータを保存
-            map_instance = Map(
-                location_name=name,
-                account=request.user.account,  # 仮にユーザーアカウントがある場合
-                category='gt_category',  # カテゴリを適切なものに変更
-                address=address,
-                coordinates={'latitude': latitude, 'longitude': longitude}
-            )
-            map_instance.save()
-
-            return render(request, 'admin_map_change.html', {'form': form, 'name': name, 'address': address})
-    
-    return render(request, 'top.html', {'form': form})
