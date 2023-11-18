@@ -50,8 +50,14 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'gt:account_history' %}">履歴一覧</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'gt:account_info' request.user.id %}">登録情報</a></li>
                 {% else %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'gt:signup' %}">新規登録</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'gt:login' %}">ログイン</a></li>
+                {% if request.user.is_authenticated %}
+                <!-- ユーザーがログインしている場合 -->
+                <li class="nav-item"><a class="nav-link">登録情報閲覧</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}" >ログアウト</a></li>
+                {% else %}
+                <!-- ユーザーがログアウトしている場合 -->
+                <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">新規登録</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'user_login' %}">ログイン</a></li>
                 {% endif %}
               </ul>
 

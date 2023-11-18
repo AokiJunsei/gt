@@ -12,6 +12,14 @@ class Account(models.Model):
     flag = models.BooleanField(default=False, verbose_name="管理職flag", help_text="admin垢ならTrueに変更")
     status = models.BooleanField(default=False, verbose_name="アカウントステータス", help_text="ログアウト時にfalse、ログイン時にTrue")
     link = models.CharField(max_length=1000, verbose_name="SNSプロフィールリンク", blank=True, null=True)
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    last_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100)
+    address = models.CharField(max_length=255, blank=True)
+    gender = models.CharField(max_length=1, choices=[('M', '男'), ('F', '女'), ('O', 'その他')],blank=True)
+    def __str__(self):
+        return self.user.username
 
     def __str__(self):
         return f"{self.account_id} - {self.name}"
