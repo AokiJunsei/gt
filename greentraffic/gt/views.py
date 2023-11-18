@@ -137,7 +137,7 @@ def Login(request):
         Pass = request.POST.get('password')
 
         # Djangoの認証機能
-        user = authenticate(username=ID, password=Pass)
+        user = authenticate(request,username=ID, password=Pass)
 
         # ユーザー認証
         if user:
@@ -146,7 +146,7 @@ def Login(request):
                 # ログイン
                 login(request,user)
                 # ホームページ遷移
-                return HttpResponseRedirect(reverse(''))
+                return HttpResponseRedirect(reverse('gt:top'))
             else:
                 # アカウント利用不可
                 return HttpResponse("アカウントが有効ではありません")
