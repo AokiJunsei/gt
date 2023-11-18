@@ -50,7 +50,7 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'gt:account_history' %}">履歴一覧</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'gt:account_info' request.user.id %}">登録情報</a></li>
                 {% else %}
-                {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'gt:signUp' %}">新規登録</a></li> {% endcomment %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'gt:signup' %}">新規登録</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'gt:login' %}">ログイン</a></li>
                 {% endif %}
               </ul>

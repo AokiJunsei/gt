@@ -36,18 +36,20 @@
     width: 0;
   }
 
+
   #floating-panel {
     position: absolute; /* または `fixed` を使用してもよい */
-    top: 70px; /* ヘッダーの高さに応じて調整する */
-    left: 50%; /* 画面の中央に */
+    right: 20px; /* 地図の左端からの距離 */
     transform: translateX(-50%); /* 左に50%ずらして中央寄せ */
-    z-index: 5; /* 地図より上、ヘッダーより下になるように調整する */
+    top: 104; /* 画面の上端からの距離 */
+    z-index: 10; /* 他の要素より上に表示する */
     max-width: 90%; /* 地図のコンテナの幅に合わせて調整する */
     box-sizing: border-box; /* paddingとborderがwidthに含まれるように */
     padding: 10px; /* 内側の余白 */
     background-color: rgba(255, 255, 255, 0.9); /* 背景色と透明度（必要に応じて） */
     border-radius: 5px; /* 角の丸み */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* 影の効果（オプショナル） */
+    overflow-y: auto; /* スクロールを有効にする */
   }
 
   .mode-selector {
@@ -94,7 +96,36 @@
     cursor: pointer; /* アイコンにマウスを合わせたときにカーソルをポインタに変更 */
     color: #007bff; /* アイコンの色を設定 */
     font-size: 24px; /* アイコンのサイズを設定 */
-}
+  }
+
+  #waypoint1, #waypoint2, #waypoint1-label, #waypoint2-label {
+    {% comment %} display: none; {% endcomment %}
+  }
+
+    /* 表示されたときに横一列に並べるためのスタイル */
+  .form-group {
+    {% comment %} display: flex; {% endcomment %}
+    align-items: center; /* フォーム要素を垂直方向の中央に配置 */
+    gap: 8px; /* 要素間の隙間 */
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  .button-class {
+    background-color: #000000; /* 緑色の背景 */
+    color: white; /* 白色のテキスト */
+    border: none; /* 枠線なし */
+    border-radius: 5px; /* 角を丸くする */
+  }
+
+  .button-class {
+    transition: all 0.3s ease;
+  }
+  .button-class:hover {
+      transform: scale(1.1);
+  }
 
 
 </style>
@@ -104,22 +135,25 @@
 <body onload="initMap()">
   <div id="floating-panel">
     <!-- <h1>最短検索</h1> -->
-    <b>出発地: </b>
-    <input type="text" id="start" placeholder="Enter start location" />
-    <i id="current-location-icon" class="fas fa-compass" onclick="getCurrentLocation()"></i><br>
-    <b>中継地点１: </b>
-    <input type="text" id="waypoint1" placeholder="Enter waypoint location 1" />
-    <b>中継地点２: </b>
-    <input type="text" id="waypoint2" placeholder="Enter waypoint location 2" /><br>
-    <b>到着地: </b>
-    <input type="text" id="end" placeholder="Enter end location" />
+    <label>出発地: </label>
+    <input type="text" id="start" placeholder="出発地を入力してください" />
+    <i id="current-location-icon" class="fas fa-compass" onclick="getCurrentLocation()"></i>
+    {% comment %} <i id="toggle-form-icon" class="fas fa-eye"></i><br> {% endcomment %}
+    <div id="waypoint1-group" class="form-group">
+      <label id="waypoint1-label" for="waypoint1">中継地点１:</label>
+      <input type="text" id="waypoint1" placeholder="中継地点を入力してください">
+    </div>
+    <div id="waypoint2-group" class="form-group">
+      <label id="waypoint2-label" for="waypoint2">中継地点２:</label>
+      <input type="text" id="waypoint2" placeholder="中継地点を入力してください">
+    </div>
+    <label>目的地: </label>
+    <input type="text" id="end" placeholder="目的地を入力してください" /><br>
     <!--入れ替えボタン　未対応-->
-    <i id="swap-icon" class="fas fa-arrow-right-arrow-left" onclick="swapStartEnd()"></i>
-    <b>出発時間: </b>
+    {% comment %} <i id="swap-icon" class="fas fa-arrow-right-arrow-left" onclick="swapStartEnd()"></i> {% endcomment %}
+    <label>出発時刻: </label>
     <input type="date" id="departure-date" />
     <input type="time" id="departure-time" />
-
-    <button onclick="calculateAndDisplayRoute()">検索</button>
 
     <div class="mode-selector">
       <input type="checkbox" id="mode-driving" checked />
@@ -133,6 +167,9 @@
 
       <input type="checkbox" id="mode-bicycling"  />
       <label for="mode-bicycling">自転車</label>
+
+      <button class="button-class"onclick="calculateAndDisplayRoute()">検索</button>
+
     </div>
     <span hidden><div id="id_ido">緯度</div></span>
     <span hidden><div id="id_keido">経度</div></span>
@@ -177,6 +214,22 @@
         icon.className = 'fas fa-eye'; // アイコンを表示アイコンに変更
       }
     }
+
+    {% comment %} document.getElementById('toggle-form-icon').addEventListener('click', function() {
+      // 各要素の参照を取得
+      var wp1Group = document.getElementById('waypoint1-group');
+      var wp2Group = document.getElementById('waypoint2-group');
+      var icon = this;
+    
+      // waypointグループの表示状態をトグルする
+      var isWp1Visible = wp1Group.style.display === 'flex';
+      wp1Group.style.display = isWp1Visible ? 'none' : 'flex';
+      wp2Group.style.display = isWp1Visible ? 'none' : 'flex';
+    
+      // アイコンのクラスをトグルする
+      icon.className = isWp1Visible ? 'fas fa-eye-slash' : 'fas fa-eye';
+    });
+     {% endcomment %}
 
 
     //マップ情報
