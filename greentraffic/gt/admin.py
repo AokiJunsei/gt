@@ -3,8 +3,8 @@ from .models import Account, SearchHistory, Spot, Map
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('account_id', 'name', 'telephone_number', 'created', 'last_updated', 'flag', 'status')
-    search_fields = ('name', 'telephone_number')
+    list_display = ('user','last_name','first_name','address','gender')
+    search_fields = ('name', 'address')
     #アカウントテーブル
 
 @admin.register(SearchHistory)

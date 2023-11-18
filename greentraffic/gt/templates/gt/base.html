@@ -45,13 +45,13 @@
 
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% comment %} <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li> {% endcomment %}
-                {% if user.is_authenticated %}
+                {% if request.user.is_authenticated %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'gt:logout' %}">ログアウト</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'gt:account_history' %}">履歴一覧</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'gt:account_info' request.user.id %}">登録情報</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'gt:account_info' request.user.id %}">登録情報閲覧</a></li>
                 {% else %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'gt:signup' %}">新規登録</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'gt:login' %}">ログイン</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'gt:register' %}">新規登録</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'gt:user_login' %}">ログイン</a></li>
                 {% endif %}
               </ul>
 
