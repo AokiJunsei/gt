@@ -88,7 +88,6 @@ def login_view(request):
 
 
 
-
 ##画面遷移の関数はここより上に書きます
 
 
