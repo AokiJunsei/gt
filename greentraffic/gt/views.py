@@ -163,7 +163,7 @@ def Login(request):
 def Logout(request):
     logout(request)
     # ログイン画面遷移
-    return HttpResponseRedirect(reverse('user_login'))
+    return HttpResponseRedirect(reverse('gt:top'))
 
 
 
