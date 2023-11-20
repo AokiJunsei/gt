@@ -1,24 +1,25 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# アカウントテーブル
+# ユーザーアカウントのモデルクラス
 class Account(models.Model):
-    account_id = models.AutoField(primary_key=True, verbose_name="アカウントID")
-    name = models.CharField(max_length=100, verbose_name="お名前")
-    password = models.CharField(max_length=100, verbose_name="パスワード")
-    address = models.CharField(max_length=100, verbose_name="住所")
-    telephone_number = models.CharField(max_length=12, verbose_name="電話番号", help_text="ハイフンあり")
-    created = models.DateTimeField(auto_now_add=True, verbose_name="作成日時")
-    last_updated = models.DateTimeField(auto_now=True, verbose_name="最終更新日時")
-    flag = models.BooleanField(default=False, verbose_name="管理職flag", help_text="admin垢ならTrueに変更")
-    status = models.BooleanField(default=False, verbose_name="アカウントステータス", help_text="ログアウト時にfalse、ログイン時にTrue")
-    link = models.CharField(max_length=1000, verbose_name="SNSプロフィールリンク", blank=True, null=True)
+
+    # ユーザー認証のインスタンス(1対1関係)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    # 追加フィールド
+    last_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100)
+    zipcode = models.CharField(max_length=7, blank=True)
+    state = models.CharField(max_length=100, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    address = models.CharField(max_length=255, blank=True)
+    address_1 = models.CharField(max_length=100, blank=True)
+    address_2 = models.CharField(max_length=100, blank=True)
+    gender = models.CharField(max_length=1, choices=[('M', '男'), ('F', '女'), ('O', 'その他')], blank=True)  # 性別
 
     def __str__(self):
-        return f"{self.account_id} - {self.name}"
-
-    class Meta:
-        db_table = "GT001_account"
-        verbose_name = "アカウントテーブル"
+        return self.user.username
 
 
 # 検索履歴テーブル
@@ -48,8 +49,7 @@ class Spot(models.Model):
     contact_info = models.CharField(max_length=300, verbose_name="連絡先情報")
     fee_info = models.CharField(max_length=100, verbose_name="料金情報", blank=True, null=True)
     business_hours = models.CharField(max_length=100, verbose_name="営業時間", blank=True, null=True)
-    latitude = models. CharField(max_length=100, verbose_name="緯度")
-    longitude = models. CharField(max_length=100, verbose_name="経度")
+    coordinates = models.JSONField(verbose_name="座標", blank=True, null=True)
 
     def __str__(self):
         return f"{self.spot_id} - {self.spot_name}"
@@ -66,8 +66,7 @@ class Map(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, verbose_name="アカウントID")
     category = models.CharField(max_length=100, verbose_name="カテゴリ")
     address = models.CharField(max_length=100, verbose_name="住所")
-    latitude = models. CharField(max_length=100, verbose_name="緯度")
-    longitude = models. CharField(max_length=100, verbose_name="経度")
+    coordinates = models.JSONField(verbose_name="座標", blank=True, null=True)
     
     def __str__(self):
         return f"{self.map_id} - {self.location_name}"
