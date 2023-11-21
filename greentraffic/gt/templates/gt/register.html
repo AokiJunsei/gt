@@ -16,13 +16,72 @@
     <!-- 登録フォームの構造 -->
     <form enctype="multipart/form-data" method="post">
       {% csrf_token %}
-      {{ account_form.as_table }}
-      {{ add_account_form.as_table }}
-      <!-- ボタン配置 -->
-      <div class="button-container">
-        <a href="{% url 'gt:top' %}" class="btn btn-cancel">キャンセル</a>
-        <input class="btn btn-submit" type="submit" value="登録">
-      </div>
+      <table class="reg_form">
+        <tr>
+          <td>{{ account_form.username.label_tag }}</td>
+          <td>
+            {{ account_form.username }}
+            <small class="form-text text-muted"
+              >ユーザー名は半角英数字で入力してください</small
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>{{ account_form.email.label_tag }}</td>
+          <td>{{ account_form.email }}</td>
+        </tr>
+        <tr>
+          <td>{{ account_form.password.label_tag }}</td>
+          <td>
+            {{ account_form.password }}
+            <small class="form-text text-muted"
+              >8文字以上半角全角数字を入力してください</small
+            >
+            {% if account_form.password.errors %}
+            <div class="error">{{ account_form.password.errors }}</div>
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td>{{ add_account_form.last_name.label_tag }}</td>
+          <td>{{ add_account_form.last_name }}</td>
+          <td>{{ add_account_form.first_name.label_tag }}</td>
+          <td>{{ add_account_form.first_name }}</td>
+        </tr>
+        
+        <tr>
+          <td>{{ add_account_form.address.label_tag }}</td>
+          <td>{{ add_account_form.address }}</td>
+          <td>{{ add_account_form.gender.label_tag }}</td>
+          <td>{{ add_account_form.gender }}</td>
+        </tr>
+        
+        <tr>
+          <td>{{ add_account_form.zipcode.label_tag }}</td>
+          <td>{{ add_account_form.zipcode }}</td>
+          <td>{{ add_account_form.state.label_tag }}</td>
+          <td>{{ add_account_form.state }}</td>
+        </tr>
+        
+        <tr>
+          <td>{{ add_account_form.city.label_tag }}</td>
+          <td>{{ add_account_form.city }}</td>
+          <td>{{ add_account_form.address_1.label_tag }}</td>
+          <td>{{ add_account_form.address_1 }}</td>
+        </tr>
+        <tr>
+          <td>{{ add_account_form.address_2.label_tag }}</td>
+          <td>{{ add_account_form.address_2 }}</td>
+        </tr>
+        <tr>
+          
+          <td></td>
+          <td class="button-container">
+            <a class="btn btn-cancel">キャンセル</a>
+            <input type="submit" value="登録" class="btn btn-submit" />
+          </td>
+        </tr>
+      </table>
     </form>
   </div>
 {% endif %}
