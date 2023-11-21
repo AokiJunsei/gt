@@ -41,7 +41,7 @@ class AccountForm(forms.ModelForm):
     city = forms.CharField(max_length=100, required=False, label='市区町村')
     address_1 = forms.CharField(max_length=100, required=False, label='番地')
     address_2 = forms.CharField(max_length=100, required=False, label='建物名・部屋番号')
-
+    walking = forms.CharField(max_length=100, required=False, label='徒歩')
     
 
 # 追加のアカウント情報用のフォーム
@@ -50,7 +50,7 @@ class AddAccountForm(forms.ModelForm):
         # モデルクラスを指定
         model = Account
         # フィールド指定
-        fields = ('last_name', 'first_name', 'address', 'zipcode', 'state', 'city', 'address_1', 'address_2', 'gender')
+        fields = ('last_name', 'first_name', 'address', 'zipcode', 'state', 'city', 'address_1', 'address_2', 'gender','walking')
         # フィールド名指定
         labels = {
             'last_name': "苗字",
@@ -62,4 +62,5 @@ class AddAccountForm(forms.ModelForm):
             'address_1': "番地",
             'address_2': "建物名・部屋番号",
             'gender': "性別",
+            'walking' : "歩く速度"
         }

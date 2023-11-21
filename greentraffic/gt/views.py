@@ -173,3 +173,42 @@ def index(request):
     params = {"UserID": request.user, "is_authenticated": is_authenticated}
     return render(request, "gt/top.html", context=params)
 
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from .forms import AccountForm
+
+@login_required
+def user_update_view(request):
+    # ログイン中のユーザーのインスタンスを取得
+    user = request.user
+    if request.method == 'POST':
+        # フォームのデータでユーザーインスタンスを更新
+        form = AccountForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            # 更新が完了したら、ユーザー情報ページにリダイレクト
+            return HttpResponseRedirect('/account_info/')
+    else:
+        # 現在のユーザー情報でフォームを初期化
+        form = AccountForm(instance=user)
+    return render(request, 'user_update.html', {'form': form})
+
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from .forms import AccountForm
+
+@login_required
+def user_update_view(request):
+    # ログイン中のユーザーのインスタンスを取得
+    user = request.user
+    if request.method == 'POST':
+        # フォームのデータでユーザーインスタンスを更新
+        form = AccountForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            # 更新が完了したら、ユーザー情報ページにリダイレクト
+            return HttpResponseRedirect('/account_info/')
+    else:
+        # 現在のユーザー情報でフォームを初期化
+        form = AccountForm(instance=user)
+    return render(request, 'user_update.html', {'form': form})

@@ -24,6 +24,7 @@ class Account(models.Model):
     address_1 = models.CharField(max_length=100, blank=True)
     address_2 = models.CharField(max_length=100, blank=True)
     gender = models.CharField(max_length=1, choices=[('M', '男'), ('F', '女'), ('O', 'その他')], blank=True)  # 性別
+    walking = models.CharField(max_length=100, choices=[('Fast', 'はやい'), ('Normal', 'ふつう'), ('Slow', 'おそい')], blank=True)  #徒歩
     def __str__(self):
         return self.user.username
 
