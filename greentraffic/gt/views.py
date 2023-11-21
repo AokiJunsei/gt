@@ -173,3 +173,77 @@ def index(request):
     params = {"UserID": request.user, "is_authenticated": is_authenticated}
     return render(request, "gt/top.html", context=params)
 
+
+
+
+##########user_delete.htmlにおける関数##########
+
+def delete_account(request):
+    if request.method == 'POST':
+        form = AccountDeleteForm(request.POST)
+        if form.is_valid():
+            confirm_username = form.cleaned_data['confirm_username']
+            user = User.objects.get(pk=request.user.id)
+            if user.username == confirm_username:
+                user.delete()
+                logout(request)
+                return redirect('top.html')
+    else:
+        form = AccountDeleteForm()
+    
+    return render(request, 'user_delete.html', {'form': form})
+
+
+
+
+
+##########user_info.htmlにおける関数##########
+
+@login_required
+def my_page(request):
+    user_info = {
+        'name': request.user.account.first_name + " " + request.user.account.last_name,
+        'old': 'Age Value',  # 年齢がDBのカラムにないから付け足す
+        'address': request.user.account.address,
+        'email': request.user.email
+    }
+
+    return render(request, 'user_info.html', {'user': user_info})
+
+
+
+
+
+##########user_log_detail.htmlにおける関数##########
+
+def search_history_detail(request, history_id):
+    
+    search_history = get_object_or_404(SearchHistory, history_id=history_id)
+
+    context = {
+        'object': search_history
+    }
+
+    return render(request, 'user_log_detail.html', context)
+
+
+
+
+
+##########user_update.htmlにおける関数##########
+
+def account_update(request):
+    user_account = Account.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = AccountUpdateForm(request.POST, instance=user_account)
+        if form.is_valid():
+            form.save()
+            return redirect('top.html')
+    else:
+        form = AccountUpdateForm(instance=user_account)
+
+    context = {
+        'form': form
+    }
+    return render(request, 'user_update.html', context)
