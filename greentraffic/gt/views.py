@@ -1,7 +1,5 @@
-from django.shortcuts import render,get_object_or_404,HttpResponseRedirect
+from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,redirect
 
-##from .models import MapChange
-##from .models import MapDelete
 from .models import models
 
 
@@ -15,6 +13,12 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import logging
+
+from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
+from .forms import AccountDeleteForm
+from .forms import AccountUpdateForm
+from .models import Account
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +55,7 @@ def admin_map_detail(request, pk):
 
 
 
-
+@login_required
 def user_info(request):
     return render(request, 'user_info.html')
 
@@ -173,6 +177,7 @@ def index(request):
     params = {"UserID": request.user, "is_authenticated": is_authenticated}
     return render(request, "gt/top.html", context=params)
 
+<<<<<<< HEAD
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import AccountForm
@@ -212,3 +217,4 @@ def user_update_view(request):
         # 現在のユーザー情報でフォームを初期化
         form = AccountForm(instance=user)
     return render(request, 'user_update.html', {'form': form})
+=======
