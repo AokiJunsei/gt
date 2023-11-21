@@ -4,8 +4,8 @@ h1{
 
   div.reg{
     background-color: #EEEEEE;
-    margin-left: 15%;
-    margin-right: 15%;
+    margin-left: 20%;
+    margin-right: 20%;
   }
   
   .message{
@@ -17,6 +17,7 @@ h1{
     width: 100%;
     border-spacing: 10px 30px;
     padding-left:20px;
+    
   }
   
   
@@ -38,6 +39,11 @@ h1{
   .btn-cancel {
     /* 赤色を設定 */
     background-color: #ff0000;
+  }
+
+  .btn-submit {
+    /* 赤色を設定 */
+    background-color: #009999;
   }
   
   .btn-cancel:hover {
@@ -73,7 +79,7 @@ h1{
     
     .btn:hover {
       color: #fff;
-      background: #000099;
+      background: #009999;
     }
     
     /* ボタンコンテナ内の余白を調整 */
@@ -93,7 +99,11 @@ h1{
     
     .btn-cancel:hover {
       /* ホバー時は暗めの赤色 */
-      background: #000099;
+      background: #009999;
     }
     
+    .btn-submit:hover {
+      /* ホバー時は暗めの赤色 */
+      background: #000099;
+    }
   }
