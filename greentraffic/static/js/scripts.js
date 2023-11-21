@@ -1,17 +1,17 @@
 $(document).ready(function() {
-    // モーダルが開かれたときに実行されるイベント
+    // モーダルが開かれたときのイベント
     $("#logoutModal").on('shown.bs.modal', function() {
         console.log("ログアウトモーダルが表示されました。");
     });
 
-    // モーダルが閉じられるときに実行されるイベント
+    // モーダルが閉じられたときのイベント
     $("#logoutModal").on('hidden.bs.modal', function() {
         console.log("ログアウトモーダルが閉じられました。");
     });
 
-    // キャンセルボタンにイベントハンドラを設定（必要に応じて）
-    $("#logoutModal .btn-secondary").on('click', function() {
-        console.log("キャンセルボタンがクリックされました。");
+    // キャンセルボタンと×マークに同じ挙動を設定
+    $("#logoutModal .btn-secondary, #logoutModal .close").on('click', function() {
+        console.log("キャンセルまたは×マークがクリックされました。");
         $("#logoutModal").modal('hide');
     });
 });
