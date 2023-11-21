@@ -1,12 +1,14 @@
-{% extends "base.html" %}
+{% extends "gt/base.html" %}
 {% load static %}
 {% block title %}Green Traffic{% endblock %}
+
+{% block head %}{% endblock %}
 
 {% block content %}
 <main onload="initMap()">
   <div>
       <h5 class="card-title">登録したい場所を入力してください</h5>
-      <form method="post" action="{% url 'save-location' %}" id="locationForm">
+      {% comment %} <form method="post" action="{% url 'gt:save-location' %}" id="locationForm"> {% endcomment %}
           {% csrf_token %}
           <div class="mb-3">
               {{ form.name.label_tag }}
