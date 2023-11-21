@@ -63,3 +63,17 @@ class AddAccountForm(forms.ModelForm):
             'address_2': "建物名・部屋番号",
             'gender': "性別",
         }
+
+##########user_delete.htmlのformクラス##########
+
+class AccountDeleteForm(forms.Form):
+    confirm_username = forms.CharField(label='Confirm Username', max_length=150)
+
+
+
+##########user_update.htmlのformクラス##########
+
+class AccountUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ['last_name', 'first_name', 'zipcode', 'state', 'city', 'address', 'address_1', 'address_2', 'gender']
