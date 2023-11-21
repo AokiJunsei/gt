@@ -42,5 +42,58 @@ h1{
   
   .btn-cancel:hover {
     /* ホバー時は暗めの赤色 */
-    background: #cc0000;
+    background: #cc0000;h1 {
+      text-align: center;
+    }
+    
+    div.reg {
+      background-color: #eeeeee;
+      margin-left: 20%;
+      margin-right: 20%;
+    }
+    
+    .message {
+      text-align: right;
+      margin-right: 20%;
+    }
+    
+    table.reg_form {
+      width: 100%;
+      border-spacing: 10px 30px;
+      padding-left: 20px;
+    }
+    
+    .btn {
+      color: #fff;
+      background-color: #000033;
+      font-size: 1em;
+      padding: 10px 30px;
+      margin: 0 10px;
+    }
+    
+    .btn:hover {
+      color: #fff;
+      background: #000099;
+    }
+    
+    /* ボタンコンテナ内の余白を調整 */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      /* ボタンを中央に配置 */
+      align-items: center;
+      padding: 10px 0;
+    }
+    
+    /* キャンセルボタンスタイル */
+    .btn-cancel {
+      /* 赤色を設定 */
+      background-color: #ff0000;
+    }
+    
+    .btn-cancel:hover {
+      /* ホバー時は暗めの赤色 */
+      background: #000099;
+    }
+    
   }
