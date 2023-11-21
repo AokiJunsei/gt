@@ -55,19 +55,8 @@ def admin_map_detail(request, pk):
 
 
 
-@login_required
-def user_info(request):
-    return render(request, 'user_info.html')
 
 
-
-def user_update_view(request):
-    return render(request, 'user_update.html')
-
-
-
-def user_delete_view(request):
-    return render(request, 'user_delete.html')
 
 
 
@@ -177,44 +166,37 @@ def index(request):
     params = {"UserID": request.user, "is_authenticated": is_authenticated}
     return render(request, "gt/top.html", context=params)
 
-<<<<<<< HEAD
-from django.contrib.auth.models import User
+# views.py
+
 from django.contrib.auth.decorators import login_required
-from .forms import AccountForm
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Account
+from .forms import AccountForm, AccountDeleteForm
+
+@login_required
+def user_info(request):
+    account = get_object_or_404(Account, user=request.user)
+    return render(request, 'user_info.html', {'account': account})
 
 @login_required
 def user_update_view(request):
-    # ログイン中のユーザーのインスタンスを取得
-    user = request.user
     if request.method == 'POST':
-        # フォームのデータでユーザーインスタンスを更新
-        form = AccountForm(request.POST, instance=user)
+        form = AccountForm(request.POST, instance=request.user.account)
         if form.is_valid():
             form.save()
-            # 更新が完了したら、ユーザー情報ページにリダイレクト
-            return HttpResponseRedirect('/account_info/')
+            return redirect('gt:user_info')
     else:
-        # 現在のユーザー情報でフォームを初期化
-        form = AccountForm(instance=user)
+        form = AccountForm(instance=request.user.account)
     return render(request, 'user_update.html', {'form': form})
-
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
-from .forms import AccountForm
 
 @login_required
-def user_update_view(request):
-    # ログイン中のユーザーのインスタンスを取得
-    user = request.user
+def user_delete_view(request):
     if request.method == 'POST':
-        # フォームのデータでユーザーインスタンスを更新
-        form = AccountForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            # 更新が完了したら、ユーザー情報ページにリダイレクト
-            return HttpResponseRedirect('/account_info/')
+        form = AccountDeleteForm(request.POST, instance=request.user.account)
+        if form.is_valid():  # Delete form doesn't need validation in most cases
+            request.user.account.delete()
+            request.user.delete()
+            return redirect('gt:login')  # Or wherever you want to redirect after deletion
     else:
-        # 現在のユーザー情報でフォームを初期化
-        form = AccountForm(instance=user)
-    return render(request, 'user_update.html', {'form': form})
-=======
+        form = AccountDeleteForm(instance=request.user.account)
+    return render(request, 'user_delete_confirm.html', {'form': form})
