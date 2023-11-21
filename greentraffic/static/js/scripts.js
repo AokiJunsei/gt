@@ -1,7 +1,17 @@
-/*!
-* Start Bootstrap - Bare v5.0.9 (https://startbootstrap.com/template/bare)
-* Copyright 2013-2023 Start Bootstrap
-* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-bare/blob/master/LICENSE)
-*/
-// This file is intentionally blank
-// Use this file to add JavaScript to your project
+$(document).ready(function() {
+    // モーダルが開かれたときに実行されるイベント
+    $("#logoutModal").on('shown.bs.modal', function() {
+        console.log("ログアウトモーダルが表示されました。");
+    });
+
+    // モーダルが閉じられるときに実行されるイベント
+    $("#logoutModal").on('hidden.bs.modal', function() {
+        console.log("ログアウトモーダルが閉じられました。");
+    });
+
+    // キャンセルボタンにイベントハンドラを設定（必要に応じて）
+    $("#logoutModal .btn-secondary").on('click', function() {
+        console.log("キャンセルボタンがクリックされました。");
+        $("#logoutModal").modal('hide');
+    });
+});
