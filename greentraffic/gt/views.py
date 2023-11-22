@@ -1,7 +1,5 @@
-from django.shortcuts import render,get_object_or_404,HttpResponseRedirect
+from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,redirect
 
-##from .models import MapChange
-##from .models import MapDelete
 from .models import models
 
 
@@ -15,6 +13,12 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import logging
+
+from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
+from .forms import AccountDeleteForm
+from .forms import AccountUpdateForm
+from .models import Account
 
 logger = logging.getLogger(__name__)
 
@@ -52,18 +56,7 @@ def admin_map_detail(request, pk):
 
 
 
-def user_info(request):
-    return render(request, 'user_info.html')
 
-
-
-def user_update_view(request):
-    return render(request, 'user_update.html')
-
-
-
-def user_delete_view(request):
-    return render(request, 'user_delete.html')
 
 
 
@@ -173,3 +166,37 @@ def index(request):
     params = {"UserID": request.user, "is_authenticated": is_authenticated}
     return render(request, "gt/top.html", context=params)
 
+# views.py
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Account
+from .forms import AccountForm, AccountDeleteForm
+
+@login_required
+def user_info(request):
+    account = get_object_or_404(Account, user=request.user)
+    return render(request, 'user_info.html', {'account': account})
+
+@login_required
+def user_update_view(request):
+    if request.method == 'POST':
+        form = AccountForm(request.POST, instance=request.user.account)
+        if form.is_valid():
+            form.save()
+            return redirect('gt:user_info')
+    else:
+        form = AccountForm(instance=request.user.account)
+    return render(request, 'user_update.html', {'form': form})
+
+@login_required
+def user_delete_view(request):
+    if request.method == 'POST':
+        form = AccountDeleteForm(request.POST, instance=request.user.account)
+        if form.is_valid():  # Delete form doesn't need validation in most cases
+            request.user.account.delete()
+            request.user.delete()
+            return redirect('gt:login')  # Or wherever you want to redirect after deletion
+    else:
+        form = AccountDeleteForm(instance=request.user.account)
+    return render(request, 'user_delete_confirm.html', {'form': form})

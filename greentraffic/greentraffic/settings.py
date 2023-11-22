@@ -66,7 +66,7 @@ ROOT_URLCONF = 'greentraffic.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'gt/templates/gt'],  # この設定が正しいパスを指しているか確認してください。
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -160,5 +160,5 @@ LOGIN_URL = 'user_login'
 LOGIN_REDIRECT_URL = 'top'
 
 SESSION_SAVE_EVERY_REQUEST = True
-SESSION_COOKIE_AGE = 60
+SESSION_COOKIE_AGE = 300
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

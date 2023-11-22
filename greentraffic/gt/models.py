@@ -13,11 +13,18 @@ class Account(models.Model):
     # status = models.BooleanField(default=False, verbose_name="アカウントステータス", help_text="ログアウト時にfalse、ログイン時にTrue")
     # link = models.CharField(max_length=1000, verbose_name="SNSプロフィールリンク", blank=True, null=True)
 
+    # ユーザー認証のインスタンス(1対1関係)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     last_name = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
+    zipcode = models.CharField(max_length=7, blank=True)
+    state = models.CharField(max_length=100, blank=True)
+    city = models.CharField(max_length=100, blank=True)
     address = models.CharField(max_length=255, blank=True)
-    gender = models.CharField(max_length=1, choices=[('M', '男'), ('F', '女'), ('O', 'その他')],blank=True)
+    address_1 = models.CharField(max_length=100, blank=True)
+    address_2 = models.CharField(max_length=100, blank=True)
+    gender = models.CharField(max_length=1, choices=[('M', '男'), ('F', '女'), ('O', 'その他')], blank=True)  # 性別
+    walking = models.CharField(max_length=100, choices=[('Fast', 'はやい'), ('Normal', 'ふつう'), ('Slow', 'おそい')], blank=True)  #徒歩
     def __str__(self):
         return self.user.username
 
