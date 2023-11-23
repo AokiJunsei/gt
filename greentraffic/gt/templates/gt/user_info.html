@@ -6,42 +6,18 @@
 {% block content %}
 
 {% if user.is_authenticated %}
-<div>
+<div class="reg">
+    <h2>登録情報</h2>
     <p>氏名: {{ user.account.last_name }} {{ user.account.first_name }}</p>
     <p>郵便番号: {{ user.account.zipcode }}</p>
     <p>住所: {{ user.account.state }} {{ user.account.city }} {{ user.account.address }}</p>
     <p>メールアドレス: {{ user.email }}</p>
+    <div class="button-container">
+        <a href="{% url 'gt:user_update' %}" class="btn btn--radius btn--cubic btn-submit">編集</a>
+        <a href="{% url 'gt:user_delete' %}" class="btn btn--radius btn--cubic btn-cancel">削除</a>
+    </div>
 </div>
-<div>
 
-</div>
-<!--歩く速度はYahoo使用不可によりなし-->
-<!--TODO 年齢の変数とメールアドレスの変数はDBのカラムに後日修正　create.htmlも後日修正の必要あり-->
 {% endif %}
 
 {% endblock %}
-
-
-
-
-<!--urls.py(仮)-->
-
-<!--
-    app_name = 'gt'
-    urlpatterns = [
-        path('account_info/<int:user_id>/', views.account_info, name='account_info'),
-    ]
--->
-
-
-<!--views.py(仮)-->
-
-<!--
-    from django.contrib.auth.models import User
-    def users(request, user_id):
-        user = get_object_or_404(User, pk=user_id)
-        context = {
-            'user': user,
-        }
-        return render(request, 'app/user_info.html', context)
--->

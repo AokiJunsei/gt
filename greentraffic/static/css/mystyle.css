@@ -23,9 +23,11 @@ table.reg_form {
 /* ボタンコンテナのスタイル */
 .button-container {
   display: flex;
-  justify-content: flex-end; /* ボタンを右端に配置 */
+  flex-direction: column; /* アイテムを縦に並べる */
+  align-items: center; /* 水平方向で中央寄せにする */
   padding: 10px 0;
 }
+
 
 /* ボタンの共通スタイル */
 .btn {
@@ -49,6 +51,11 @@ table.reg_form {
 }
 
 /* ボタンのホバー効果 */
-.btn:hover {
-  background-color: #888; /* ホバー時の色を暗く */
+
+/* キャンセルボタンのホバー時のスタイルを暗い赤色に変更 */
+.btn-cancel:hover {
+  background-color: #c00000; /* 暗い赤色に変更 */
+}
+.btn-submit:hover {
+  background-color: #809999; /* 暗い赤色に変更 */
 }
