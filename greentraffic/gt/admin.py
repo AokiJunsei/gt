@@ -3,7 +3,7 @@ from .models import Account, SearchHistory, Spot, Map
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('user','last_name','first_name','address','gender','zipcode','state','city','address_1','address_2','walking')
+    list_display = ('user','last_name','first_name','address','gender','zipcode','state','city','address_1','address_2',)
     search_fields = ('name', 'address')
     #アカウントテーブル
 
