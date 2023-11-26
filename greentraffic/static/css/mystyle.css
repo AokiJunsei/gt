@@ -23,9 +23,17 @@ table.reg_form {
 /* ボタンコンテナのスタイル */
 .button-container {
   display: flex;
-  flex-direction: column; /* アイテムを縦に並べる */
-  align-items: center; /* 水平方向で中央寄せにする */
-  padding: 10px 0;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.button-container button:first-child {
+  margin-right: 20px; /* 右のボタンからの距離 */
+}
+
+.button-container button:last-child {
+  margin-left: 20px; /* 左のボタンからの距離 */
 }
 
 
