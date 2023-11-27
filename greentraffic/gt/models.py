@@ -36,7 +36,7 @@ class Account(models.Model):
 
 
 # 検索履歴テーブル
-class SearchHistory(models.Model):
+class searchhistory1(models.Model):
     history_id = models.AutoField(primary_key=True, verbose_name="履歴ID")
     account = models.ForeignKey(Account, on_delete=models.CASCADE, verbose_name="アカウントID")
     search_result = models.CharField(max_length=100, verbose_name="検索結果")
