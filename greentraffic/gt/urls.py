@@ -22,11 +22,11 @@ urlpatterns = [
     
     path('account_history/', views.account_history_view, name='account_history'),
     path('log_detail/', views.log_detail_view, name='log_detail'),
-    
-    
-    
-    path('sign_up/', views.signup_view, name='signup'),
-    path('login/', views.login_view, name='login'),
+
+
+    path('accounts/login/', views.Login, name='user_login'),
+    path('logout/', views.Logout, name='logout'),
+    path('register/', views.AccountRegistration.as_view(), name='register'),
 ]
 
 

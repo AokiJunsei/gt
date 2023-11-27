@@ -1,0 +1,54 @@
+/* ベースのスタイル */
+h1 {
+  text-align: center;
+}
+
+div.reg {
+  background-color: #EEEEEE;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.message {
+  text-align: right;
+  margin-right: 20%;
+}
+
+table.reg_form {
+  width: 100%;
+  border-spacing: 10px 30px;
+  padding-left: 20px;
+}
+
+/* ボタンコンテナのスタイル */
+.button-container {
+  display: flex;
+  justify-content: flex-end; /* ボタンを右端に配置 */
+  padding: 10px 0;
+}
+
+/* ボタンの共通スタイル */
+.btn {
+  padding: 10px 30px;
+  margin: 0 10px;
+  border: none;
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* 背景色の変化を滑らかに */
+}
+
+/* キャンセルボタンのスタイル */
+.btn-cancel {
+  background-color: #ff0000;
+}
+
+/* 登録ボタンのスタイル */
+.btn-submit {
+  background-color: #009999;
+}
+
+/* ボタンのホバー効果 */
+.btn:hover {
+  background-color: #888; /* ホバー時の色を暗く */
+}

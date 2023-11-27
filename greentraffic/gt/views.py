@@ -1,39 +1,30 @@
 from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,redirect
 
-##from .models import MapChange
-##from .models import MapDelete
 from .models import models
 
 
 from .forms import LocationForm
 from .models import Map
 
+from django.views.generic import TemplateView
+from .forms import AccountForm, AddAccountForm
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+import logging
 
 from django.http import HttpResponseRedirect
-from django.urls import reverse
-from .models import Spot
-from .forms import SpotDeleteForm, MapDeleteForm
-
-from .forms import LocationForm
-
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .forms import AccountDeleteForm
-
-from django.contrib.auth.decorators import login_required
-
-from .models import SearchHistory
-
-
 from .forms import AccountUpdateForm
 from .models import Account
 
+logger = logging.getLogger(__name__)
 
 
 def top_page(request):
     return render(request, 'gt/top.html')
-
-
 
 
 
@@ -96,7 +87,7 @@ def signup_view(request):
 
 
 def login_view(request):
-    return render(request, 'gt/user_login.html')
+    return render(request, 'user_login.html')
 
 
 
@@ -106,164 +97,118 @@ def login_view(request):
 
 
 
+class AccountRegistration(TemplateView):
+    template_name = "gt/register.html"
 
+    def get(self, request):
+        context = {
+            "AccountCreate": False,
+            "account_form": AccountForm(),
+            "add_account_form": AddAccountForm(),
+        }
+        return render(request, self.template_name, context=context)
 
+    def post(self, request):
+        account_form = AccountForm(data=request.POST)
+        add_account_form = AddAccountForm(data=request.POST)
 
+        if account_form.is_valid() and add_account_form.is_valid():
+            account = account_form.save()
+            account.set_password(account.password)
+            account.save()
 
-##########admin_map_change.htmlにおける関数##########
+            add_account = add_account_form.save(commit=False)
+            add_account.user = account
+            add_account.save()
 
-def save_location(request):
-    form = LocationForm(request.POST or None)
+            context = {"AccountCreate": True}
+        else:
+            logger.error(account_form.errors)
+            context = {
+                "AccountCreate": False,
+                "account_form": account_form,
+                "add_account_form": add_account_form
+            }
+
+        return render(request, self.template_name, context=context)
+
+#ログイン
+
+def Login(request):
+    # POST
     if request.method == 'POST':
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            address = form.cleaned_data['address']
-            latitude = form.cleaned_data['latitude']
-            longitude = form.cleaned_data['longitude']
-            
-            
-            
-            # Mapモデルにデータを保存
-            map_instance = Map(
-                location_name=name,
-                account=request.user.account,  # 仮にユーザーアカウントがある場合
-                category='gt_category',  # カテゴリを適切なものに変更
-                address=address,
-                coordinates={'latitude': latitude, 'longitude': longitude}
-            )
-            map_instance.save()
+        # フォーム入力のユーザーID・パスワード取得
+        ID = request.POST.get('userid')
+        Pass = request.POST.get('password')
 
+        # Djangoの認証機能
+        user = authenticate(request,username=ID, password=Pass)
 
-
-
-            return render(request, 'top.html', {'form': form, 'name': name, 'address': address})
-    
-    return render(request, 'admin_map_change.html', {'form': form})
-
-
-
-
-
-##########admin_map_delete.htmlにおける関数##########
-
-def delete_spot(request, spot_id):
-    spot = get_object_or_404(Spot, pk=spot_id)
-    if request.method == 'POST':
-        form = SpotDeleteForm(request.POST, instance=spot)
-        if form.is_valid():
-            spot.delete()
-            return HttpResponseRedirect(reverse('top.html'))
+        # ユーザー認証
+        if user:
+            #ユーザーアクティベート判定
+            if user.is_active:
+                # ログイン
+                login(request,user)
+                # ホームページ遷移
+                return HttpResponseRedirect(reverse('gt:top'))
+            else:
+                # アカウント利用不可
+                return HttpResponse("アカウントが有効ではありません")
+        # ユーザー認証失敗
+        else:
+            return HttpResponse("ログインIDまたはパスワードが間違っています")
+    # GET
     else:
-        form = SpotDeleteForm(instance=spot)
-    
-    return render(request, 'admin_map_delete.html', {'form': form})
+        return render(request, 'gt/user_login.html')
 
-def delete_map(request, map_id):
-    map_instance = get_object_or_404(Map, pk=map_id)
-    if request.method == 'POST':
-        form = MapDeleteForm(request.POST, instance=map_instance)
-        if form.is_valid():
-            map_instance.delete()
-            return HttpResponseRedirect(reverse('top.html'))
-    else:
-        form = MapDeleteForm(instance=map_instance)
-    
-    return render(request, 'admin_map_delete.html', {'form': form})
+
+#ログアウト
+@login_required
+def Logout(request):
+    logout(request)
+    # ログイン画面遷移
+    return HttpResponseRedirect(reverse('gt:top'))
 
 
 
+def index(request):
+    # ユーザーがログインしているかどうかをテンプレートに渡すことができます
+    is_authenticated = request.user.is_authenticated
+    params = {"UserID": request.user, "is_authenticated": is_authenticated}
+    return render(request, "gt/top.html", context=params)
 
+# views.py
 
-
-##########admin_map_register.htmlにおける関数##########
-
-
-def save_location(request):
-    if request.method == 'POST':
-        form = LocationForm(request.POST)
-        if form.is_valid():
-            
-            name = form.cleaned_data['name']
-            address = form.cleaned_data['address']
-            
-            return render(request, 'top.html', {'name': name, 'address': address})
-    else:
-        form = LocationForm()
-    
-    return render(request, 'admin_map_register.html', {'form': form})
-
-
-
-
-
-##########user_delete.htmlにおける関数##########
-
-def delete_account(request):
-    if request.method == 'POST':
-        form = AccountDeleteForm(request.POST)
-        if form.is_valid():
-            confirm_username = form.cleaned_data['confirm_username']
-            user = User.objects.get(pk=request.user.id)
-            if user.username == confirm_username:
-                user.delete()
-                logout(request)
-                return redirect('top.html')
-    else:
-        form = AccountDeleteForm()
-    
-    return render(request, 'user_delete.html', {'form': form})
-
-
-
-
-
-##########user_info.htmlにおける関数##########
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Account
+from .forms import AccountForm, AccountDeleteForm
 
 @login_required
-def my_page(request):
-    user_info = {
-        'name': request.user.account.first_name + " " + request.user.account.last_name,
-        'old': 'Age Value',  # 年齢がDBのカラムにないから付け足す
-        'address': request.user.account.address,
-        'email': request.user.email
-    }
+def user_info(request):
+    account = get_object_or_404(Account, user=request.user)
+    return render(request, 'user_info.html', {'account': account})
 
-    return render(request, 'user_info.html', {'user': user_info})
-
-
-
-
-
-##########user_log_detail.htmlにおける関数##########
-
-def search_history_detail(request, history_id):
-    
-    search_history = get_object_or_404(SearchHistory, history_id=history_id)
-
-    context = {
-        'object': search_history
-    }
-
-    return render(request, 'user_log_detail.html', context)
-
-
-
-
-
-##########user_update.htmlにおける関数##########
-
-def account_update(request):
-    user_account = Account.objects.get(user=request.user)
-
+@login_required
+def user_update_view(request):
     if request.method == 'POST':
-        form = AccountUpdateForm(request.POST, instance=user_account)
+        form = AccountForm(request.POST, instance=request.user.account)
         if form.is_valid():
             form.save()
-            return redirect('top.html')
+            return redirect('gt:user_info')
     else:
-        form = AccountUpdateForm(instance=user_account)
+        form = AccountForm(instance=request.user.account)
+    return render(request, 'user_update.html', {'form': form})
 
-    context = {
-        'form': form
-    }
-    return render(request, 'user_update.html', context)
+@login_required
+def user_delete_view(request):
+    if request.method == 'POST':
+        form = AccountDeleteForm(request.POST, instance=request.user.account)
+        if form.is_valid():  # Delete form doesn't need validation in most cases
+            request.user.account.delete()
+            request.user.delete()
+            return redirect('gt:login')  # Or wherever you want to redirect after deletion
+    else:
+        form = AccountDeleteForm(instance=request.user.account)
+    return render(request, 'user_delete_confirm.html', {'form': form})
