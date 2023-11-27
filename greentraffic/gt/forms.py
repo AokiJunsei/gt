@@ -13,7 +13,7 @@ class LocationForm(forms.Form):
 
 
 
-
+#fff
 # フォームクラス作成
 class AccountForm(forms.ModelForm):
     # パスワード入力：非表示対応
