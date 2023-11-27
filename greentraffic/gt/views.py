@@ -3,7 +3,7 @@ from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,redir
 from .models import models
 
 from .forms import LocationForm
-from .models import Map
+# from .models import Map
 
 from django.views.generic import TemplateView
 from .forms import AccountForm, AddAccountForm

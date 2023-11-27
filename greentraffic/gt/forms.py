@@ -1,14 +1,12 @@
 from django import forms
-from .models import Map
+
+from .models import Account
+# from .models import Map
+# from .models import Spot
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import re
-from .models import Account
-
-from .models import Spot
-
-from .models import Account
 
 ##########アカウント認証系のform##########
 
@@ -41,7 +39,6 @@ class AccountForm(forms.ModelForm):
     address_1 = forms.CharField(max_length=100, required=False, label='番地')
     address_2 = forms.CharField(max_length=100, required=False, label='建物名・部屋番号')
 
-    
 
 # 追加のアカウント情報用のフォーム
 class AddAccountForm(forms.ModelForm):
@@ -75,54 +72,15 @@ class LocationForm(forms.Form):
 
 ##########admin_map_delete.htmlのformクラス##########
 
-class SpotDeleteForm(forms.ModelForm):
-    class Meta:
-        model = Spot
-        fields = []
+# class SpotDeleteForm(forms.ModelForm):
+#     class Meta:
+#         model = Spot
+#         fields = []
 
-class MapDeleteForm(forms.ModelForm):
-    class Meta:
-        model = Map
-        fields = []
-
-
-
-##########admin_map_register.htmlのformクラス##########
-
-class LocationForm(forms.Form):
-    name = forms.CharField(max_length=100)
-    address = forms.CharField(max_length=255)
-
-
-
-
-##########user_delete.htmlのformクラス##########
-
-class AccountDeleteForm(forms.Form):
-    confirm_username = forms.CharField(label='Confirm Username', max_length=150)
-
-
-
-##########user_update.htmlのformクラス##########
-
-class AccountUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Account
-        fields = ['last_name', 'first_name', 'zipcode', 'state', 'city', 'address', 'address_1', 'address_2', 'gender']
-
-
-
-##########admin_map_delete.htmlのformクラス##########
-
-class SpotDeleteForm(forms.ModelForm):
-    class Meta:
-        model = Spot
-        fields = []
-
-class MapDeleteForm(forms.ModelForm):
-    class Meta:
-        model = Map
-        fields = []
+# class MapDeleteForm(forms.ModelForm):
+#     class Meta:
+#         model = Map
+#         fields = []
 
 
 
@@ -180,7 +138,7 @@ class AccountForm(forms.ModelForm):
     address_1 = forms.CharField(max_length=100, required=False, label='番地')
     address_2 = forms.CharField(max_length=100, required=False, label='建物名・部屋番号')
     walking = forms.CharField(max_length=100, required=False, label='徒歩')
-    
+
 
 # 追加のアカウント情報用のフォーム
 class AddAccountForm(forms.ModelForm):
@@ -202,17 +160,3 @@ class AddAccountForm(forms.ModelForm):
             'gender': "性別",
             'walking' : "歩く速度"
         }
-
-##########user_delete.htmlのformクラス##########
-
-class AccountDeleteForm(forms.Form):
-    confirm_username = forms.CharField(label='Confirm Username', max_length=150)
-
-
-
-##########user_update.htmlのformクラス##########
-
-class AccountUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Account
-        fields = ['last_name', 'first_name', 'zipcode', 'state', 'city', 'address', 'address_1', 'address_2', 'gender']
