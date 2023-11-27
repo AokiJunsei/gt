@@ -2,7 +2,6 @@ from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,redir
 
 from .models import models
 
-
 from .forms import LocationForm
 from .models import Map
 
@@ -78,17 +77,6 @@ def account_history_view(request):
 
 def log_detail_view(request):
     return render(request, 'gt/user_log_detail.html')
-
-
-
-def signup_view(request):
-    return render(request, 'gt/create.html')
-
-
-
-def login_view(request):
-    return render(request, 'user_login.html')
-
 
 
 

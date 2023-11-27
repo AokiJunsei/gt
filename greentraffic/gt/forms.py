@@ -73,7 +73,6 @@ class LocationForm(forms.Form):
     longitude = forms.CharField(label='経度', max_length=100)
 
 
-
 ##########admin_map_delete.htmlのformクラス##########
 
 class SpotDeleteForm(forms.ModelForm):
