@@ -2,9 +2,8 @@ from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,redir
 
 from .models import models
 
-
 from .forms import LocationForm
-from .models import Map
+# from .models import Map
 
 from django.views.generic import TemplateView
 from .forms import AccountForm, AddAccountForm
@@ -56,27 +55,28 @@ def admin_map_detail(request, pk):
 
 
 
+def user_info(request):
+    return render(request, 'gt/user_info.html')
 
+
+
+def user_update_view(request):
+    return render(request, 'gt/user_update.html')
+
+
+
+def user_delete_view(request):
+    return render(request, 'gt/user_delete.html')
 
 
 
 def account_history_view(request):
-    return render(request, 'user_log.html')
+    return render(request, 'gt/user_log.html')
 
 
 
 def log_detail_view(request):
-    return render(request, 'user_log_detail.html')
-
-
-
-def signup_view(request):
-    return render(request, 'create.html')
-
-
-
-def login_view(request):
-    return render(request, 'user_login.html')
+    return render(request, 'gt/user_log_detail.html')
 
 
 
