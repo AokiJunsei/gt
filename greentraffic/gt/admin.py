@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Account, searchhistory1, Spot, Map
+from .models import Account, SearchHistory, Spot, Map
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
@@ -7,8 +7,8 @@ class AccountAdmin(admin.ModelAdmin):
     search_fields = ('name', 'address')
     #アカウントテーブル
 
-@admin.register(searchhistory1)
-class searchhistory1Admin(admin.ModelAdmin):
+@admin.register(SearchHistory)
+class SearchHistoryAdmin(admin.ModelAdmin):
     list_display = ('history_id', 'account', 'search_result', 'search_datetime', 'search_query', 'search_type')
     search_fields = ('account__name', 'search_result', 'search_query')
     #検索履歴テーブル

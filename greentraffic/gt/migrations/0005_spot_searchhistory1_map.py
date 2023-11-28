@@ -27,17 +27,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='searchhistory1',
-            fields=[
-                ('history_id', models.AutoField(primary_key=True, serialize=False, verbose_name='履歴ID')),
-                ('search_result', models.CharField(max_length=100, verbose_name='検索結果')),
-                ('search_datetime', models.DateTimeField(auto_now_add=True, verbose_name='検索日時')),
-                ('search_query', models.CharField(max_length=100, verbose_name='検索クエリ')),
-                ('search_type', models.CharField(max_length=100, verbose_name='検索の種類')),
-                ('account', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gt.account', verbose_name='アカウントID')),
-            ],
-        ),
-        migrations.CreateModel(
             name='Map',
             fields=[
                 ('map_id', models.AutoField(primary_key=True, serialize=False, verbose_name='マップID')),
