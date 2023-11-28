@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block title %}マイページ{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<div class="reg">
+    <h2>登録情報</h2>
+    <p>氏名: {{ user.account.last_name }} {{ user.account.first_name }}</p>
+    <p>郵便番号: {{ user.account.zipcode }}</p>
+    <p>住所: {{ user.account.state }} {{ user.account.city }} {{ user.account.address }}</p>
+    <p>メールアドレス: {{ user.email }}</p>
+    <div class="button-container">
+        <a href="{% url 'gt:user_delete' %}" class="btn btn--radius btn--cubic btn-cancel">削除</a>
+        <a href="{% url 'gt:user_update' %}" class="btn btn--radius btn--cubic btn-submit">編集</a>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

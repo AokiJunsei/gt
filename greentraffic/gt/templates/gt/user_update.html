@@ -1,0 +1,16 @@
+<!-- user_update.html -->
+{% extends 'base.html' %}
+{% block title %}登録情報更新ページ{% endblock %}
+{% block content %}
+<div class="reg">
+    <h1>登録情報の変更</h1>
+    <form action="{% url 'gt:user_update' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="button-container">
+            <button class="btn btn--radius btn--cubic btn-submit" type="submit">変更</button>
+            <a href="{% url 'gt:user_info' %}" class="btn btn--radius btn--cubic btn-cancel">戻る</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
