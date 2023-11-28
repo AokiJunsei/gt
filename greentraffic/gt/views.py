@@ -18,6 +18,11 @@ logger = logging.getLogger(__name__)
 def top_page(request):
     return render(request, 'gt/top.html')
 
+# 管理者用トップページのビュー
+@login_required
+def admin_top(request):
+    return render(request, 'gt/admin_top.html')
+
 # 管理者用マップ変更ビュー
 @login_required
 def admin_map_change(request, pk):
@@ -92,9 +97,10 @@ def Login(request):
         username = request.POST.get('userid')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        if request.user.is_authenticated:
+        if user:
             if request.user.username == 'kobayashi':
-                return HttpResponseRedirect(reverse('gt:admin_map_register'))
+                return HttpResponseRedirect(reverse('gt:admin_top'))
+            
             elif user.is_active:
                 login(request, user)
                 return HttpResponseRedirect(reverse('gt:top'))
