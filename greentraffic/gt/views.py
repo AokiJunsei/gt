@@ -103,35 +103,27 @@ class AccountRegistration(TemplateView):
         return render(request, self.template_name, context=context)
 
 # ログインビュー
+
+# ログインビュー
 def Login(request):
     if request.method == 'POST':
         username = request.POST.get('userid')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        if request.user.is_authenticated:
-            if request.user.username == 'kobayashi':
-                return HttpResponseRedirect(reverse('gt:admin_map_register'))
-            elif user.is_active:
-                login(request, user)
-                return HttpResponseRedirect(reverse('gt:top'))
+        if user:
+            if user.is_active:
+                login(request, user)  # ユーザーをログインさせる
+                if request.user.username == 'kobayashi':
+                    return HttpResponseRedirect(reverse('gt:admin_top'))
+                else:
+                    return HttpResponseRedirect(reverse('gt:top'))
             else:
                 return HttpResponse("アカウントが有効ではありません")
         else:
             return HttpResponse("ログインIDまたはパスワードが間違っています")
+
     else:
         return render(request, 'gt/user_login.html')
-
-def my_view(request):
-    if request.user.is_authenticated:
-        # 特定のユーザーの場合
-        if request.user.username == 'kobayashi':
-            return redirect('特定のページのURL名')
-        # それ以外のユーザーの場合
-        else:
-            return redirect('通常のページのURL名')
-    else:
-        # 未認証の場合
-        return redirect('ログインページのURL名')
 
 # ログアウトビュー
 @login_required
