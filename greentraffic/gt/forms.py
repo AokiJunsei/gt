@@ -32,7 +32,8 @@ class AccountForm(forms.ModelForm):
     city = forms.CharField(max_length=100, required=False, label='市区町村')
     address_1 = forms.CharField(max_length=100, required=False, label='番地')
     address_2 = forms.CharField(max_length=100, required=False, label='建物名・部屋番号')
-
+    walking = forms.CharField(max_length=100, required=False, label='徒歩')
+    
 
 # 追加のアカウント情報用のフォーム
 class AddAccountForm(forms.ModelForm):
@@ -78,35 +79,3 @@ class AccountUpdateForm(forms.ModelForm):
             'address_2': "建物名・部屋番号",
             'gender': "性別",
         }
-
-
-##########admin_map_change.htmlのformクラス##########
-
-class LocationForm(forms.Form):
-    name = forms.CharField(label='場所名', max_length=100)
-    address = forms.CharField(label='住所', max_length=100)
-    latitude = forms.CharField(label='緯度', max_length=100)
-    longitude = forms.CharField(label='経度', max_length=100)
-
-
-##########admin_map_delete.htmlのformクラス##########
-
-# class SpotDeleteForm(forms.ModelForm):
-#     class Meta:
-#         model = Spot
-#         fields = []
-
-# class MapDeleteForm(forms.ModelForm):
-#     class Meta:
-#         model = Map
-#         fields = []
-
-
-
-##########admin_map_register.htmlのformクラス##########
-
-class LocationForm(forms.Form):
-    name = forms.CharField(max_length=100)
-    address = forms.CharField(max_length=255)
-
-
