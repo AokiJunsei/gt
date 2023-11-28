@@ -28,6 +28,11 @@ logger = logging.getLogger(__name__)
 def top_page(request):
     return render(request, 'gt/top.html')
 
+# 管理者用トップページのビュー
+@login_required
+def admin_top(request):
+    return render(request, 'gt/admin_top.html')
+
 # 管理者用マップ変更ビュー
 @login_required
 def admin_map_change(request, pk):
