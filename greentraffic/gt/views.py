@@ -118,7 +118,7 @@ def Login(request):
         if user:
             if user.is_active:
                 login(request, user)  # ユーザーをログインさせる
-                if request.user.username == 'kobayashi':
+                if request.user.username == 'admin':
                     return HttpResponseRedirect(reverse('gt:admin_top'))
                 else:
                     return HttpResponseRedirect(reverse('gt:top'))
