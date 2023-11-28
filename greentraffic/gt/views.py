@@ -98,16 +98,17 @@ def Login(request):
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user:
-            if request.user.username == 'kobayashi':
-                return HttpResponseRedirect(reverse('gt:admin_top'))
-            
-            elif user.is_active:
-                login(request, user)
-                return HttpResponseRedirect(reverse('gt:top'))
+            if user.is_active:
+                login(request, user)  # ユーザーをログインさせる
+                if request.user.username == 'kobayashi':
+                    return HttpResponseRedirect(reverse('gt:admin_top'))
+                else:
+                    return HttpResponseRedirect(reverse('gt:top'))
             else:
                 return HttpResponse("アカウントが有効ではありません")
         else:
             return HttpResponse("ログインIDまたはパスワードが間違っています")
+
     else:
         return render(request, 'gt/user_login.html')
 
