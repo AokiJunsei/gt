@@ -1,32 +1,32 @@
+<!-- user_delete.html -->
 {% extends 'base.html' %}
-
 {% block content %}
-
-<div class="modal fade" tabindex="-1" role="dialog" id="deleteModal-{{request.user.id}}">
-	<div class="modal-dialog" role="document">
-			<div class="modal-content">
-					<div class="modal-header">
-							<h5 class="modal-title">退会</h5>
-							<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-							</button>
-					</div>
-					<div class="modal-body">
-							<p>削除すると元に戻すことはできません。よろしいでしょうか？</p>
-					</div>
-					<div class="modal-footer">
-							<form method="POST" role="form">
-								{% csrf_token %}
-								<p>あなたのアカウント「@{{ user.username }}」を、本当に削除してもよろしいですか？</p>
-								<button type="submit" class="btn btn-danger">削除</button>
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-							</form>
-					</div>
-			</div>
-	</div>
+<div class="reg">
+    <h2>アカウントの削除</h2>
+    <p>アカウントを削除すると、すべてのデータが失われます。本当に削除しますか？</p>
+    <div class="button-container">
+        <button id="delete-account-btn" class="btn btn--radius btn--cubic btn-cancel">アカウントを削除する</button>
+    </div>
 </div>
-
+<script>
+// ボタンクリックイベント
+document.getElementById('delete-account-btn').addEventListener('click', function() {
+    // 確認メッセージ
+    var confirmDeletion = confirm('アカウントを削除してもよろしいですか？この操作は取り消しできません。');
+    if (confirmDeletion) {
+        // 確認が得られた場合、フォームを送信する
+        var form = document.createElement('form');
+        form.method = 'post';
+        form.action = '{% url 'gt:user_delete' %}';
+        // CSRFトークンを追加する
+        var csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = '{{ csrf_token }}';
+        form.appendChild(csrfInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+});
+</script>
 {% endblock %}
-
-
-<!-- PS バックエンドの書くのめんどい 淳晟よろしく-->

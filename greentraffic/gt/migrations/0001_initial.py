@@ -25,42 +25,5 @@ class Migration(migrations.Migration):
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
-        migrations.CreateModel(
-            name='Spot',
-            fields=[
-                ('spot_id', models.AutoField(primary_key=True, serialize=False, verbose_name='スポットID')),
-                ('spot_name', models.CharField(max_length=100, verbose_name='スポット名')),
-                ('category', models.CharField(max_length=100, verbose_name='カテゴリ')),
-                ('address', models.CharField(max_length=100, verbose_name='住所')),
-                ('contact_info', models.CharField(max_length=300, verbose_name='連絡先情報')),
-                ('fee_info', models.CharField(blank=True, max_length=100, null=True, verbose_name='料金情報')),
-                ('business_hours', models.CharField(blank=True, max_length=100, null=True, verbose_name='営業時間')),
-                ('latitude', models.CharField(max_length=100, verbose_name='緯度')),
-                ('longitude', models.CharField(max_length=100, verbose_name='経度')),
-                ('account', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gt.account', verbose_name='アカウントID')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='SearchHistory',
-            fields=[
-                ('history_id', models.AutoField(primary_key=True, serialize=False, verbose_name='履歴ID')),
-                ('search_result', models.CharField(max_length=100, verbose_name='検索結果')),
-                ('search_datetime', models.DateTimeField(auto_now_add=True, verbose_name='検索日時')),
-                ('search_query', models.CharField(max_length=100, verbose_name='検索クエリ')),
-                ('search_type', models.CharField(max_length=100, verbose_name='検索の種類')),
-                ('account', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gt.account', verbose_name='アカウントID')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Map',
-            fields=[
-                ('map_id', models.AutoField(primary_key=True, serialize=False, verbose_name='マップID')),
-                ('location_name', models.CharField(max_length=100, verbose_name='位置名')),
-                ('category', models.CharField(max_length=100, verbose_name='カテゴリ')),
-                ('address', models.CharField(max_length=100, verbose_name='住所')),
-                ('latitude', models.CharField(max_length=100, verbose_name='緯度')),
-                ('longitude', models.CharField(max_length=100, verbose_name='経度')),
-                ('account', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gt.account', verbose_name='アカウントID')),
-            ],
-        ),
+        
     ]
