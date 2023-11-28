@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,redir
 
 from .models import models
 
-from .forms import LocationForm
+# from .forms import LocationForm
 # from .models import Map
 
 from django.views.generic import TemplateView
@@ -11,70 +11,58 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.views.generic import TemplateView
+from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from .models import Account, Map
+from .forms import AccountForm, AddAccountForm, AccountDeleteForm, AccountUpdateForm, LocationForm
+
 import logging
 
-from django.http import HttpResponseRedirect
-from django.contrib.auth.models import User
-from .forms import AccountDeleteForm
-from .forms import AccountUpdateForm
-from .models import Account
-
+# ロガーの設定
 logger = logging.getLogger(__name__)
 
-
+# トップページのビュー
 def top_page(request):
     return render(request, 'gt/top.html')
 
+# 管理者用トップページのビュー
+@login_required
+def admin_top(request):
+    return render(request, 'gt/admin_top.html')
 
-
+# 管理者用マップ変更ビュー
+@login_required
 def admin_map_change(request, pk):
-    map_change = get_object_or_404(MapChange, pk=pk)
+    map_change = get_object_or_404(Map, pk=pk)
     return render(request, 'gt/admin_map_change.html', {'map_change': map_change})
 
-
-
+# 管理者用マップ削除ビュー
+@login_required
 def admin_map_delete(request, pk):
-    map_delete = get_object_or_404(MapDelete, pk=pk)
+    map_delete = get_object_or_404(Map, pk=pk)
     return render(request, 'gt/admin_map_delete.html', {'map_delete': map_delete})
 
-
-
+# 管理者用マップ登録ビュー
+@login_required
 def admin_map_register(request):
     return render(request, 'gt/admin_map_register.html')
 
-
-
-#利用者ページへ遷移する関数書く
-
-
-
+# 管理者用マップ詳細ビュー
+@login_required
 def admin_map_detail(request, pk):
-    map_object = get_object_or_404(models, pk=pk)
+    map_object = get_object_or_404(Map, pk=pk)
     return render(request, 'gt/map_detail.html', {'map_object': map_object})
 
-
-
-
-def user_info(request):
-    return render(request, 'gt/user_info.html')
-
-
-
-def user_update_view(request):
-    return render(request, 'gt/user_update.html')
-
-
-
-def user_delete_view(request):
-    return render(request, 'gt/user_delete.html')
-
-
-
+# アカウント履歴ビュー
+@login_required
 def account_history_view(request):
     return render(request, 'gt/user_log.html')
 
-
-
+# ログ詳細ビュー
+@login_required
 def log_detail_view(request):
     return render(request, 'gt/user_log_detail.html')
 
@@ -122,86 +110,62 @@ class AccountRegistration(TemplateView):
                 "account_form": account_form,
                 "add_account_form": add_account_form
             }
-
         return render(request, self.template_name, context=context)
 
-#ログイン
+# ログインビュー
 
+# ログインビュー
 def Login(request):
-    # POST
     if request.method == 'POST':
-        # フォーム入力のユーザーID・パスワード取得
-        ID = request.POST.get('userid')
-        Pass = request.POST.get('password')
-
-        # Djangoの認証機能
-        user = authenticate(request,username=ID, password=Pass)
-
-        # ユーザー認証
+        username = request.POST.get('userid')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
         if user:
-            #ユーザーアクティベート判定
             if user.is_active:
-                # ログイン
-                login(request,user)
-                # ホームページ遷移
-                return HttpResponseRedirect(reverse('gt:top'))
+                login(request, user)  # ユーザーをログインさせる
+                if request.user.username == 'admin':
+                    return HttpResponseRedirect(reverse('gt:admin_top'))
+                else:
+                    return HttpResponseRedirect(reverse('gt:top'))
             else:
-                # アカウント利用不可
                 return HttpResponse("アカウントが有効ではありません")
-        # ユーザー認証失敗
         else:
             return HttpResponse("ログインIDまたはパスワードが間違っています")
-    # GET
+
     else:
         return render(request, 'gt/user_login.html')
 
-
-#ログアウト
+# ログアウトビュー
 @login_required
 def Logout(request):
     logout(request)
-    # ログイン画面遷移
     return HttpResponseRedirect(reverse('gt:top'))
 
-
-
-def index(request):
-    # ユーザーがログインしているかどうかをテンプレートに渡すことができます
-    is_authenticated = request.user.is_authenticated
-    params = {"UserID": request.user, "is_authenticated": is_authenticated}
-    return render(request, "gt/top.html", context=params)
-
-# views.py
-
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Account
-from .forms import AccountForm, AccountDeleteForm
-
+# ユーザー情報ビュー
 @login_required
 def user_info(request):
     account = get_object_or_404(Account, user=request.user)
     return render(request, 'user_info.html', {'account': account})
 
+# ユーザー情報更新ビュー
 @login_required
 def user_update_view(request):
     if request.method == 'POST':
-        form = AccountForm(request.POST, instance=request.user.account)
+        form = AccountUpdateForm(request.POST, instance=request.user.account)
         if form.is_valid():
             form.save()
             return redirect('gt:user_info')
     else:
-        form = AccountForm(instance=request.user.account)
+        form = AccountUpdateForm(instance=request.user.account)
     return render(request, 'user_update.html', {'form': form})
 
 @login_required
 def user_delete_view(request):
     if request.method == 'POST':
-        form = AccountDeleteForm(request.POST, instance=request.user.account)
-        if form.is_valid():  # Delete form doesn't need validation in most cases
-            request.user.account.delete()
-            request.user.delete()
-            return redirect('gt:login')  # Or wherever you want to redirect after deletion
+        user = request.user
+        logout(request)  # ユーザーをログアウト
+        user.delete()  # アカウントを削除
+        return redirect('gt:register')  # ログインページにリダイレクト
     else:
-        form = AccountDeleteForm(instance=request.user.account)
-    return render(request, 'user_delete_confirm.html', {'form': form})
+        return render(request, 'user_delete.html')
+
