@@ -67,11 +67,10 @@ class AccountDeleteForm(forms.Form):
 class AccountUpdateForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ['last_name', 'first_name', 'zipcode', 'state', 'city', 'address', 'address_1', 'address_2', 'gender']
+        fields = ['last_name', 'first_name', 'zipcode', 'state', 'city',  'address_1', 'address_2', 'gender']
         labels = {
             'last_name': "苗字",
             'first_name': "名前",
-            'address': "住所",
             'zipcode': "郵便番号",
             'state': "都道府県",
             'city': "市区町村",
