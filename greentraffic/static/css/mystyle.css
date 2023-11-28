@@ -1,52 +1,24 @@
-/* ベーススタイル */
+/* ベースのスタイル */
 h1 {
   text-align: center;
 }
 
-/* 登録フォームコンテナのスタイル */
-.reg {
-  width: 80%;
-  margin: auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+div.reg {
+  background-color: #EEEEEE;
+  margin-left: 13%;
+  margin-right: 13%;
 }
 
-/* フォームのテーブルスタイル */
+.message {
+  text-align: right;
+  margin-right: 20%;
+}
+
 table.reg_form {
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+  border-spacing: 10px 30px;
+  padding-left: 20px;
 }
-
-table.reg_form tr {
-  border-bottom: 1px solid #e9e9e9;
-}
-
-table.reg_form td {
-  padding: 10px;
-  vertical-align: top;
-}
-
-/* フォームの入力要素のスタイル */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-select {
-  width: 50%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-top: 5px; /* ラベルとのスペース */
-}
-
-/* エラーメッセージのスタイル */
-.error {
-  color: #d9534f; /* エラーの色 */
-  margin-top: 5px;
-}
-
 
 /* ボタンコンテナのスタイル */
 .button-container {
