@@ -80,6 +80,11 @@ def log_detail_view(request):
 
 
 
+def user_spot_addspot_view(request):
+    return render(request, 'gt/user_spot_addspot.html')
+
+
+
 
 ##画面遷移の関数はここより上に書きます
 

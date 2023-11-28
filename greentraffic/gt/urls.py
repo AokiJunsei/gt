@@ -27,6 +27,7 @@ urlpatterns = [
     path('accounts/login/', views.Login, name='user_login'),
     path('logout/', views.Logout, name='logout'),
     path('register/', views.AccountRegistration.as_view(), name='register'),
+    path('user_spot_addspot/', views.user_spot_addspot_view, name='user_spot_addspot'),
 ]
 
 

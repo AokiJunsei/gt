@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Green Traffic{% endblock %}
+
+{% block contents %}
+
+<main onload="initMap()">
+    <div>
+        <h5 class="card-title">登録したい場所を入力してください</h5>
+        <form method="post" action="{% url 'save-location' %}" id="locationForm">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.name.label_tag }}
+                {{ form.name }}
+            </div>
+            <div class="mb-3">
+                {{ form.address.label_tag }}
+                {{ form.address }}
+            </div>
+            <dialog id="dlog">
+                <form method="dialog">
+                    <p>本当に登録しますか？</p>
+                    <button type="submit" value="yes">はい</button>
+                    <button type="submit" value="no" autofocus>いいえ</button>
+                </form>
+            </dialog>
+            <button type="button" class="btn btn-primary" id="saveButton">登録</button>
+        </form>
+    </div>
+    <!-- マップを表示 -->
+    <div id="map" class="mt-5"></div>
+    <!-- モーダルウィンドウ -->
+    <div class="modal" id="successModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">成功しました</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    データが保存されました
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'gt:top' %}" class="btn btn-primary">TOPページに戻る</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function initMap() {
+            var target = document.getElementById("map");
+            var name = "{{ name }}";
+            var address = "{{ address }}";
+            var jsonData = JSON.parse('{{ json_data|escapejs }}');
+
+            var geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({ address: address }, function (results, status) {
+                if (status === "OK" && results[0]) {
+                var map = new google.maps.Map(target, {
+                    center: results[0].geometry.location,
+                    zoom: 18,
+                });
+
+                var marker = new google.maps.Marker({
+                    position: results[0].geometry.location,
+                    map: map,
+                    animation: google.maps.Animation.DROP,
+                    title: name,
+                });
+
+                var dialog = document.querySelector('dialog');
+                var btn_saveButton = document.getElementById('saveButton');
+                btn_saveButton.addEventListener('click', function() {
+                    dialog.showModal();
+                }, false);
+                dialog.addEventListener('cancel', function(event){
+                    event.preventDefault();
+                });
+                dialog.addEventListener('close', function(event){
+                    if (this.returnValue === 'yes') {
+                        alert('登録しました。');
+                    } else {
+                        alert('登録をキャンセルしました。');
+                    }
+                });
+                } else {
+                alert("住所が正しくないか存在しません。");
+                target.style.display = "none";
+                }
+            });
+            }
+
+        // 保存ボタンがクリックされたら確認ダイアログを表示
+        document.getElementById("saveButton").addEventListener("click", function () {
+            if (confirm("このデータを登録しますか？")) {
+                // フォームを送信
+                document.getElementById("locationForm").submit();
+            }
+        });
+
+        // モーダルウィンドウを表示
+        var modal = new bootstrap.Modal(document.getElementById("successModal"));
+        modal.show();
+    </script>
+</main>
+{% endblock %}
