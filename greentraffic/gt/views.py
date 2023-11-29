@@ -5,7 +5,7 @@ from .models import models
 from django.views.generic import TemplateView
 from .forms import AccountForm, AddAccountForm
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -16,6 +16,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Account, Map
 from .forms import AccountForm, AddAccountForm, AccountDeleteForm, AccountUpdateForm, LocationForm
 
+import requests
+import json
 import logging
 
 # ロガーの設定
@@ -28,7 +30,9 @@ def top_page(request):
 # 管理者用トップページのビュー
 @login_required
 def admin_top(request):
-    return render(request, 'gt/admin_top.html')
+    map_list = Map.objects.all()
+    return render(request, 'gt/admin_top.html', {'map_list' : map_list})
+
 
 # 管理者用マップ変更ビュー
 @login_required
@@ -40,13 +44,15 @@ def admin_map_change(request, pk):
 @login_required
 def admin_map_delete(request, pk):
     map_delete = get_object_or_404(Map, pk=pk)
-    return render(request, 'gt/admin_map_delete.html', {'map_delete': map_delete})
+    map_delete.delete()
+    return redirect(reverse('gt:admin_top'))
 
 # 管理者用マップ詳細ビュー
 @login_required
 def admin_map_detail(request, pk):
-    map_object = get_object_or_404(Map, pk=pk)
-    return render(request, 'gt/map_detail.html', {'map_object': map_object})
+    map_detail = get_object_or_404(Map, pk=pk)
+    return render(request, 'gt/admin_map_detail.html', {'map_detail': map_detail})
+
 
 # アカウント履歴ビュー
 @login_required
@@ -60,9 +66,9 @@ def log_detail_view(request):
 
 
 
-
 ##画面遷移の関数はここより上に書きます
 
+# 新規登録ビュー
 class AccountRegistration(TemplateView):
     template_name = "gt/register.html"
 
@@ -97,7 +103,6 @@ class AccountRegistration(TemplateView):
             }
         return render(request, self.template_name, context=context)
 
-# ログインビュー
 
 # ログインビュー
 def Login(request):
@@ -144,6 +149,7 @@ def user_update_view(request):
         form = AccountUpdateForm(instance=request.user.account)
     return render(request, 'user_update.html', {'form': form})
 
+# ユーザー退会ビュー
 @login_required
 def user_delete_view(request):
     if request.method == 'POST':
@@ -155,20 +161,9 @@ def user_delete_view(request):
         return render(request, 'user_delete.html')
 
 
-
-import requests
-import json
-from django.shortcuts import render
-from .forms import LocationForm
-from .models import Map
-from django.http import JsonResponse
-
 # 管理者用マップ登録ビュー
 @login_required
 def admin_map_register(request):
-    def is_ajax(request):
-        return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
-
     if request.method == 'POST':
         form = LocationForm(request.POST)
         if form.is_valid():
@@ -198,23 +193,16 @@ def admin_map_register(request):
                 # データベースに保存
                 Map.objects.create(name=name, address=address, json_data=json_data)
 
-                show_modal = False
                 message_success = "データが保存されました"
-                # AJAXリクエストの場合はJsonResponseを返す
-                if is_ajax(request):
-                    return HttpResponseRedirect(reverse('gt:admin_top'))
-                    # return render(request, 'gt/admin_map_register.html', {'form': form})
-                # それ以外の場合はテンプレートをレンダリングして返す
-                else:
-                    show_modal = True
-                    return render(request, 'gt/admin_map_register.html', {'form': form,'message': message_success, 'json_data': json_data,'show_modal': show_modal})
+                alert_API = "APIからデータを取得できませんでした"
+                alert_form = "フォームが無効です"
+                show_modal = True
+                show_alert = True
+                return render(request, 'gt/admin_map_register.html', {'form': form,'message': message_success, 'json_data': json_data,'show_modal': show_modal})
             else:
-                return JsonResponse({'message': 'APIからデータを取得できませんでした'}, status=400)
+                return render(request, 'gt/admin_map_register.html', {'form': form,'message': alert_API, 'show_alert': show_alert})
         else:
-            if is_ajax(request):
-                return JsonResponse({'message': 'フォームが無効です'}, ensure_ascii=False, status=400)
-            else:
-                return render(request, 'gt/admin_map_register.html', {'form': form})
+            return render(request, 'gt/admin_map_register.html', {'form': form,'message': alert_form, 'show_alert': show_alert})
     else:
         form = LocationForm()
         return render(request, 'gt/admin_map_register.html', {'form': form})

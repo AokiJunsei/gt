@@ -3,7 +3,7 @@
 
 {% block contents %}
 
-<div class="modal fade" tabindex="-1" role="dialog" id="deleteModal-{{object.pk}}">
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteModal-{{ object.pk }}">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -16,7 +16,7 @@
                 <p>削除すると元に戻すことはできません。よろしいでしょうか？</p>
             </div>
             <div class="modal-footer">
-                <form method="POST" action="{% url 'gt:map_detail' object.pk %}">{% csrf_token %}
+                <form method="POST" action="{% url 'gt:admin_map_delete' map_delete.pk %}">{% csrf_token %}
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
                     <button type="submit" class="btn btn-danger">削除</button>
                 </form>
@@ -24,5 +24,6 @@
         </div>
     </div>
 </div>
+
 
 {% endblock %}
