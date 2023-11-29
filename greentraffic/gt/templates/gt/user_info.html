@@ -6,8 +6,9 @@
 {% block content %}
 
 {% if user.is_authenticated %}
+<h2>登録情報</h2>
 <div class="reg">
-    <h2>登録情報</h2>
+    
     <p>氏名: {{ user.account.last_name }} {{ user.account.first_name }}</p>
     <p>郵便番号: {{ user.account.zipcode }}</p>
     <p>住所: {{ user.account.state }} {{ user.account.city }} {{ user.account.address }}</p>

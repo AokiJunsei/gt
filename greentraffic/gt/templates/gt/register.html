@@ -18,13 +18,13 @@
       {% csrf_token %}
       <table class="reg_form">
         <tr>
+          
           <th>{{ account_form.username.label_tag }}</th>
+          <div class tyuuimessage>
           <td>
-            {{ account_form.username }}
-            <small class="form-text text-muted"
-              >ユーザー名は半角英数字で入力してください</small
-            >
+            {{ account_form.username }}            
           </td>
+          </div>
         </tr>
         <tr>
           <th>{{ account_form.email.label_tag }}</th>
