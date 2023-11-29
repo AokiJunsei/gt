@@ -2,9 +2,6 @@ from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,redir
 
 from .models import models
 
-# from .forms import LocationForm
-# from .models import Map
-
 from django.views.generic import TemplateView
 from .forms import AccountForm, AddAccountForm
 from django.contrib.auth import authenticate, login, logout
@@ -45,11 +42,6 @@ def admin_map_delete(request, pk):
     map_delete = get_object_or_404(Map, pk=pk)
     return render(request, 'gt/admin_map_delete.html', {'map_delete': map_delete})
 
-# 管理者用マップ登録ビュー
-@login_required
-def admin_map_register(request):
-    return render(request, 'gt/admin_map_register.html')
-
 # 管理者用マップ詳細ビュー
 @login_required
 def admin_map_detail(request, pk):
@@ -70,8 +62,6 @@ def log_detail_view(request):
 
 
 ##画面遷移の関数はここより上に書きます
-
-
 
 class AccountRegistration(TemplateView):
     template_name = "gt/register.html"
@@ -164,3 +154,67 @@ def user_delete_view(request):
     else:
         return render(request, 'user_delete.html')
 
+
+
+import requests
+import json
+from django.shortcuts import render
+from .forms import LocationForm
+from .models import Map
+from django.http import JsonResponse
+
+# 管理者用マップ登録ビュー
+@login_required
+def admin_map_register(request):
+    def is_ajax(request):
+        return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+    if request.method == 'POST':
+        form = LocationForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            address = form.cleaned_data['address']
+
+            # ここで外部APIを呼び出し、JSONデータを取得
+            api_url = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
+            response = requests.get(api_url, params={'address': address})
+
+            if response.status_code == 200:
+                data = response.json()
+
+                # デバックコンソール
+                # print("Data:", data)
+
+                location_data = data['results'][0]['geometry']['location']
+                lat = location_data['lat']  # 緯度
+                lng = location_data['lng']  # 経度
+
+                # 緯度と経度のみを含む辞書を作成
+                location_only = {'lat': lat, 'lng': lng}
+
+                # 辞書をJSONにシリアライズ
+                json_data = json.dumps(location_only)
+
+                # データベースに保存
+                Map.objects.create(name=name, address=address, json_data=json_data)
+
+                show_modal = False
+                message_success = "データが保存されました"
+                # AJAXリクエストの場合はJsonResponseを返す
+                if is_ajax(request):
+                    return HttpResponseRedirect(reverse('gt:admin_top'))
+                    # return render(request, 'gt/admin_map_register.html', {'form': form})
+                # それ以外の場合はテンプレートをレンダリングして返す
+                else:
+                    show_modal = True
+                    return render(request, 'gt/admin_map_register.html', {'form': form,'message': message_success, 'json_data': json_data,'show_modal': show_modal})
+            else:
+                return JsonResponse({'message': 'APIからデータを取得できませんでした'}, status=400)
+        else:
+            if is_ajax(request):
+                return JsonResponse({'message': 'フォームが無効です'}, ensure_ascii=False, status=400)
+            else:
+                return render(request, 'gt/admin_map_register.html', {'form': form})
+    else:
+        form = LocationForm()
+        return render(request, 'gt/admin_map_register.html', {'form': form})

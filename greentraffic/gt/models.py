@@ -76,21 +76,12 @@ class Spot(models.Model):
 # マップテーブル
 class Map(models.Model):
     map_id = models.AutoField(primary_key=True, verbose_name="マップID")
-    location_name = models.CharField(max_length=100, verbose_name="位置名")
-    account = models.ForeignKey(Account, on_delete=models.CASCADE, verbose_name="アカウントID")
-    category = models.CharField(max_length=100, verbose_name="カテゴリ")
-    address = models.CharField(max_length=100, verbose_name="住所")
-    latitude = models. CharField(max_length=100, verbose_name="緯度")
-    longitude = models. CharField(max_length=100, verbose_name="経度")
-    
+    name = models.CharField(max_length=100, verbose_name="場所名",null=True)
+    address = models.CharField(max_length=200,  verbose_name="住所",null=True)
+    json_data = models.TextField(verbose_name="json_data",null=True)  # JSON形式で緯度経度情報を保存
+
     def __str__(self):
-        return f"{self.map_id} - {self.location_name}"
-    
-    # class Meta:
-    #     db_table = "GT004_map"
-    #     verbose_name = "マップテーブル"
-
-
+        return self.name
 
 
 

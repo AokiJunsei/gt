@@ -79,8 +79,7 @@ class AccountUpdateForm(forms.ModelForm):
             'gender': "性別",
         }
 
+############## admin_map_register #############################
 class LocationForm(forms.Form):
-    name = forms.CharField(label='場所名', max_length=100)
-    address = forms.CharField(label='住所', max_length=100)
-    latitude = forms.CharField(label='緯度', max_length=100)
-    longitude = forms.CharField(label='経度', max_length=100)
+    name = forms.CharField(label='登録名', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    address = forms.CharField(label='住所', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}))
