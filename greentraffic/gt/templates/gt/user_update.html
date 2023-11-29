@@ -8,52 +8,52 @@
         {% csrf_token %}
         <table class="reg_form">
         <tr>
-            <td>
+            <th>
                 <label for="id_last_name">苗字:</label>
                 {{ form.last_name.errors }}
                 {{ form.last_name }}
-            </td>
-            <td>
+            </th>
+            <th>
                 <label for="id_first_name">名前:</label>
                 {{ form.first_name.errors }}
                 {{ form.first_name }}
-            </td>
-        </td>
+            </th>
+        </tr>
             <tr>
-            <td>
+            <th>
                 <label for="id_zipcode">郵便番号:</label>
                 {{ form.zipcode.errors }}
                 {{ form.zipcode }}
-            </td>
-            <td>
+            </th>
+            <th>
                 <label for="id_state">都道府県:</label>
                 {{ form.state.errors }}
                 {{ form.state }}
-            </td>
+            </th>
         </tr>
         <tr>
-            <td>
+            <th>
                 <label for="id_city">市区町村:</label>
                 {{ form.city.errors }}
                 {{ form.city }}
-            </td>
-            <td>
+            </th>
+            <th>
                 <label for="id_address_1">番地:</label>
                 {{ form.address_1.errors }}
                 {{ form.address_1 }}
-            </td>
+            </th>
         </tr>
         <tr>
-            <td>
+            <th>
                 <label for="id_address_2">建物名・部屋番号:</label>
                 {{ form.address_2.errors }}
                 {{ form.address_2 }}
-            </td>
-            <td>
+            </th>
+            <th>
                 <label for="id_gender">性別:</label>
                 {{ form.gender.errors }}
                 {{ form.gender }}
-            </td>
+            </th>
         </tr>
 </table>
         <div class="button-container">

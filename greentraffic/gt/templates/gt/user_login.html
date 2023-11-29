@@ -17,19 +17,17 @@
 
     <table class="reg_form">
     <tr>
-    <td><label for="userid">ユーザーID:</label></td>
+    <th><label for="userid">ユーザーID:</label></th>
     <td><input type="text" name="userid"></td>
-    <td><label for="password">パスワード：</label></td>
+    <th><label for="password">パスワード：</label></th>
     <td><input type="password" name="password"></td>
     </tr>
     </table>
 
-    <tr>
-      <td colspan="4" class="button-container">
+    <div class="button-container">
         <input type="submit" class="btn btn-submit" value="ログイン">
         <a href="{% url 'gt:top' %}" class="btn btn-cancel">キャンセル</a>
-      </td>
-    </tr>
+    </div>
 
 </form>
 </div>

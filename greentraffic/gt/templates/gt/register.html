@@ -18,7 +18,7 @@
       {% csrf_token %}
       <table class="reg_form">
         <tr>
-          <td>{{ account_form.username.label_tag }}</td>
+          <th>{{ account_form.username.label_tag }}</th>
           <td>
             {{ account_form.username }}
             <small class="form-text text-muted"
@@ -27,11 +27,11 @@
           </td>
         </tr>
         <tr>
-          <td>{{ account_form.email.label_tag }}</td>
+          <th>{{ account_form.email.label_tag }}</th>
           <td>{{ account_form.email }}</td>
         </tr>
         <tr>
-          <td>{{ account_form.password.label_tag }}</td>
+          <th>{{ account_form.password.label_tag }}</th>
           <td>
             {{ account_form.password }}
             <small class="form-text text-muted"
@@ -43,32 +43,32 @@
           </td>
         </tr>
         <tr>
-          <td>{{ add_account_form.last_name.label_tag }}</td>
+          <th>{{ add_account_form.last_name.label_tag }}</th>
           <td>{{ add_account_form.last_name }}</td>
-          <td>{{ add_account_form.first_name.label_tag }}</td>
+          <th>{{ add_account_form.first_name.label_tag }}</th>
           <td>{{ add_account_form.first_name }}</td>
         </tr>
         
         <tr>
-          <td>{{ add_account_form.gender.label_tag }}</td>
+          <th>{{ add_account_form.gender.label_tag }}</th>
           <td>{{ add_account_form.gender }}</td>
         </tr>
         
         <tr>
-          <td>{{ add_account_form.zipcode.label_tag }}</td>
+          <th>{{ add_account_form.zipcode.label_tag }}</th>
           <td>{{ add_account_form.zipcode }}</td>
-          <td>{{ add_account_form.state.label_tag }}</td>
+          <th>{{ add_account_form.state.label_tag }}</th>
           <td>{{ add_account_form.state }}</td>
         </tr>
         
         <tr>
-          <td>{{ add_account_form.city.label_tag }}</td>
+          <th>{{ add_account_form.city.label_tag }}</th>
           <td>{{ add_account_form.city }}</td>
-          <td>{{ add_account_form.address_1.label_tag }}</td>
+          <th>{{ add_account_form.address_1.label_tag }}</th>
           <td>{{ add_account_form.address_1 }}</td>
         </tr>
         <tr>
-          <td>{{ add_account_form.address_2.label_tag }}</td>
+          <th>{{ add_account_form.address_2.label_tag }}</th>
           <td>{{ add_account_form.address_2 }}</td>
         </tr>
         
