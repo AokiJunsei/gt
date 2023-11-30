@@ -168,7 +168,7 @@
       <input type="checkbox" id="mode-bicycling"  />
       <label for="mode-bicycling">自転車</label>
 
-      <button class="button-class"onclick="calculateAndDisplayRoute()">検索</button>
+      <button class="button-class"onclick="trainTF()">検索</button>
 
     </div>
     <span hidden><div id="id_ido">緯度</div></span>
@@ -199,7 +199,8 @@
   ></script>
 
   <script>
-    let map, directionsService, directionsRenderer;
+    var map;
+    let directionsService, directionsRenderer;
     let currentLocationMarker;
 
     function toggleInputForm() {
@@ -215,21 +216,21 @@
       }
     }
 
-    {% comment %} document.getElementById('toggle-form-icon').addEventListener('click', function() {
+    /*document.getElementById('toggle-form-icon').addEventListener('click', function() {
       // 各要素の参照を取得
       var wp1Group = document.getElementById('waypoint1-group');
       var wp2Group = document.getElementById('waypoint2-group');
       var icon = this;
-    
+
       // waypointグループの表示状態をトグルする
       var isWp1Visible = wp1Group.style.display === 'flex';
       wp1Group.style.display = isWp1Visible ? 'none' : 'flex';
       wp2Group.style.display = isWp1Visible ? 'none' : 'flex';
-    
+
       // アイコンのクラスをトグルする
       icon.className = isWp1Visible ? 'fas fa-eye-slash' : 'fas fa-eye';
-    });
-     {% endcomment %}
+    });*/
+
 
 
     //マップ情報
@@ -245,86 +246,8 @@
         center: initial_location,
       });
 
-      /*情報ウィンドウの中身のHTML*/
-      const contentString =
-      '<div id="content">' +
-        '<div id="siteNotice">' +
-        "</div>" +
-        '<h1 id="firstHeading" class="firstHeading"></h1>' +
-        '<div id="bodyContent">' +
-        "<p><b>自宅</b>, also referred to as <b>Ayers Rock</b>, is a large " +
-        "sandstone rock formation in the southern part of the " +
-        "Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) " +
-        "south west of the nearest large town, Alice Springs; 450&#160;km " +
-        "(280&#160;mi) by road. Kata Tjuta and initial_location are the two major " +
-        "features of the initial_location - Kata Tjuta National Park. initial_location is " +
-        "sacred to the Pitjantjatjara and Yankunytjatjara, the " +
-        "Aboriginal people of the area. It has many springs, waterholes, " +
-        "rock caves and ancient paintings. initial_location is listed as a World " +
-        "Heritage Site.</p>" +
-        '<p>Attribution: initial_location, <a href="https://en.wikipedia.org/w/index.php?title=initial_location&oldid=297882194">' +
-        "https://en.wikipedia.org/w/index.php?title=initial_location</a> " +
-        "(last visited June 22, 2009).</p>" +
-        "</div>" +
-        "</div>";
-
-      const infoWindow = new google.maps.InfoWindow({
-        /*情報ウィンドウの中身の文字列を取得　contentStrings*/
-        content: contentString,
-        ariaLabel: "initial_location",
-      });
-      const marker = new google.maps.Marker({
-        position: initial_location,
-        map,
-        title: "initial_location (Ayers Rock)",
-      });
-
-      marker.addListener("click", () => {
-        infoWindow.open({
-          anchor: marker,
-          map,
-        });
-      });
-
-      //マーカー場所(EV車や電動キックボード)の表示
+      /*交通情報*/
       const trafficLayer = new google.maps.TrafficLayer();
-      const iconBase =
-        "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
-      const icons = {
-        parking: {
-          icon: iconBase + "parking_lot_maps.png",
-        },
-        library: {
-          icon: iconBase + "library_maps.png",
-        },
-        info: {
-          icon: iconBase + "info-i_maps.png",
-        },
-      };
-
-      const features = [
-        {
-          position: new google.maps.LatLng(35.5737851, 139.7626623),
-          type: "library",
-        },
-        {
-          position: new google.maps.LatLng(35.5637851, 139.7626623),
-          type: "parking",
-        },
-        {
-          position: new google.maps.LatLng(35.5937851, 139.7626623),
-          type: "info",
-        }
-        ];
-
-      // マーカー作成.
-      for (let i = 0; i < features.length; i++) {
-        const marker = new google.maps.Marker({
-          position: features[i].position,
-          icon: icons[features[i].type].icon,
-          map: map,
-        });
-      }
       trafficLayer.setMap(map);
 
       //検索結果を左のタブに表示
@@ -384,7 +307,6 @@
         document.getElementById('id_address').innerHTML = level;
         document.getElementById("waypoint1").value =   ido + ","+ keido;
       }
-
     }
 
     /*上記までがinitMap()*/
@@ -464,6 +386,25 @@
       map.setCenter(location);
     }
 
+    /*電車かそれ否かを分ける関数*/
+    function trainTF(){
+      clearMapData();
+      if (!map) {
+        console.error("Map object is not initialized yet.");
+        return;
+      }
+
+      var checkbox = document.getElementById('mode-transit');
+      if (checkbox.checked) {
+          /*デバックの為一次コメントアウト*/
+          /*fetchRouteAndDisplayOnMap();*/
+          let coordinates = extractCoordinates(routeData);
+          displayRouteOnMap(coordinates, map);
+      }else{
+        calculateAndDisplayRoute()
+      }
+    }
+
     /*経路検索メソッド*/
     function calculateAndDisplayRoute() {
       const start = document.getElementById("start").value;
@@ -473,13 +414,11 @@
       const departureTime = document.getElementById("departure-date").value;
 
       const drivingMode = document.getElementById("mode-driving").checked;
-      // const transitMode = document.getElementById("mode-transit").checked;
       const walkingMode = document.getElementById("mode-walking").checked;
       const bicyclingMode = document.getElementById("mode-bicycling").checked;
 
       const travelModes = [];
       if (drivingMode) travelModes.push(google.maps.TravelMode.DRIVING);
-      // if (transitMode) travelModes.push(google.maps.TravelMode.TRANSIT);
       if (walkingMode) travelModes.push(google.maps.TravelMode.WALKING);
       if (bicyclingMode) travelModes.push(google.maps.TravelMode.BICYCLING);
 
@@ -589,70 +528,6 @@
   </script>
 
   <script>
-    /*電車が選択されたときに動く関数*/
-    document.addEventListener('DOMContentLoaded', function() {
-        var checkbox = document.getElementById('mode-transit');
-        checkbox.addEventListener('change', function() {
-            if (this.checked) {
-                /*デバックの為一次コメントアウト*/
-                /*fetchRouteAndDisplayOnMap();*/
-                displayRouteOnMap();
-            }
-        });
-    });
-
-
-    /*電車が選択された際にAPIをfetchする関数*/
-    /*function fetchRouteAndDisplayOnMap() {
-      const start = document.getElementById("start").value;
-      const waypoint1 = document.getElementById("waypoint1").value;
-      const waypoint2 = document.getElementById("waypoint2").value;
-      const end = document.getElementById("end").value;
-      const departureDateInput = document.getElementById("departure-date").value;
-      const departureTimeInput = document.getElementById("departure-time").value;
-
-     // 日付をyyyymmdd形式に変換
-      const departureDate = departureDateInput.split('-').join('');
-     // 時間をhhmm形式に変換
-      const departureTime = departureTimeInput.split(':').join('');
-      const queryParams = {
-        //APIリクエストに必要なパラメータ
-        f : 1,
-        rm : 'sr',
-        eki1 : start,
-        eki2 : end,
-        kbn1 : 'R',
-        date : departureDate,
-        time : departureTime,
-        opt1 : 0,
-        opt2 : 0,
-        opt3 : 1,
-        opt4 : 0,
-        max : 8,
-        sort : 0,
-        trtm : 3
-      }
-      const queryString = new URLSearchParams(queryParams).toString();
-      const url = `https://cloud.jorudan.biz/api/gv?ak=J2vqRoi1ciaJzktP&${queryString}`;
-
-      fetch(url,{
-        method : 'GET',
-      })
-      .then(response => {
-        if(!response.ok){
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        //取得したルート情報を地図上に表示する
-        //displayRouteOnMap(data);
-        alert(JSON.stringify(data,null,2));
-      })
-      .catch(error => {
-        console.error('Error:',error)
-      });
-    }*/
 
     var routeData = {
       "NorikaeBizApiResult":{
@@ -795,51 +670,218 @@
           }
       }}
 
-    /*取得したルート情報を地図上に表示する関数*/
-    function displayRouteOnMap(routeData) {
-      var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 12,
-          center: { lat: 35.6895, lng: 139.6917 } // 初期中心点を設定（例: 東京）
+
+
+    /*電車が選択された際にAPIをfetchする関数*/
+    /*function fetchRouteAndDisplayOnMap() {
+      const start = document.getElementById("start").value;
+      const waypoint1 = document.getElementById("waypoint1").value;
+      const waypoint2 = document.getElementById("waypoint2").value;
+      const end = document.getElementById("end").value;
+      const departureDateInput = document.getElementById("departure-date").value;
+      const departureTimeInput = document.getElementById("departure-time").value;
+
+     // 日付をyyyymmdd形式に変換
+      const departureDate = departureDateInput.split('-').join('');
+     // 時間をhhmm形式に変換
+      const departureTime = departureTimeInput.split(':').join('');
+      const queryParams = {
+        //APIリクエストに必要なパラメータ
+        f : 1,
+        rm : 'sr',
+        eki1 : start,
+        eki2 : end,
+        kbn1 : 'R',
+        date : departureDate,
+        time : departureTime,
+        opt1 : 0,
+        opt2 : 0,
+        opt3 : 1,
+        opt4 : 0,
+        max : 8,
+        sort : 0,
+        trtm : 3
+      }
+      const queryString = new URLSearchParams(queryParams).toString();
+      const url = `https://cloud.jorudan.biz/api/gv?ak=J2vqRoi1ciaJzktP&${queryString}`;
+
+      fetch(url,{
+        method : 'GET',
+      })
+      .then(response => {
+        if(!response.ok){
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        //取得したルート情報を地図上に表示する
+        //displayRouteOnMap(data);
+        alert(JSON.stringify(data,null,2));
+      })
+      .catch(error => {
+        console.error('Error:',error)
       });
+    }*/
+
+
+      /*座標データの抽出*/
+      function extractCoordinates(routeData) {
+        let coordinates = [];
+        routeData.NorikaeBizApiResult.body.route.forEach(route => {
+            route.path.forEach(segment => {
+                coordinates.push({
+                    from: segment.from,
+                    to: segment.to,
+                    fromX: segment.fromX,
+                    fromY: segment.fromY,
+                    toX: segment.toX,
+                    toY: segment.toY
+                });
+            });
+        });
+        return coordinates;
+    }
+
+    /*LatLngオブジェクトへ変換*/
+    function convertToLatLng(x, y) {
+      let [degreesX, minutesX, secondsX, fractionX] = x.split(',').map(Number);
+      let [degreesY, minutesY, secondsY, fractionY] = y.split(',').map(Number);
+
+      // 経度と緯度を小数点形式に変換
+      let lat = degreesY + minutesY / 60 + secondsY / 3600 + fractionY / 3600000;
+      let lng = degreesX + minutesX / 60 + secondsX / 3600 + fractionX / 3600000;
+
+      return new google.maps.LatLng(lat, lng);
+  }
+
+    /*情報ウィンドウテキストを生成*/
+    function createInfoWindowText(segment) {
+      let text = '';
+
+      if (segment.from) {
+          text += `出発地点: ${segment.from}駅<br>`;
+      }
+      if (segment.to) {
+          text += `到着地点: ${segment.to}駅<br>`;
+      }
+      if (segment.kyori) {
+          text += `距離: ${segment.kyori} km<br>`;
+      }
+      if (segment.jikan) {
+          text += `時間: ${segment.jikan} 分<br>`;
+      }
+      if (segment.untin) {
+          text += `費用: ¥${segment.untin}<br>`;
+      }
+      if (segment.icUntin) {
+          text += `ICカード運賃: ¥${segment.icUntin}<br>`;
+      }
+
+      return text;
+  }
+
+
+    /*マーカーと情報ウィンドウを配置する関数*/
+    function placeMarkersForPolyline(polyline, coordinates, map) {
+      if (coordinates.length > 0) {
+          var startSegment = coordinates[0];
+          var endSegment = coordinates[coordinates.length - 1];
+
+          if (startSegment && endSegment) {
+              var startLatLng = convertToLatLng(startSegment.fromX, startSegment.fromY);
+              var endLatLng = convertToLatLng(endSegment.toX, endSegment.toY);
+
+              var startInfoText = createInfoWindowText(startSegment);
+              var endInfoText = createInfoWindowText(endSegment);
+
+              addMarkerWithInfoWindow(startLatLng, startInfoText, map);
+              addMarkerWithInfoWindow(endLatLng, endInfoText, map);
+          }
+      }
+  }
+
+
+
+    /*電車のルートを地図上に描く*/
+    function displayRouteOnMap(coordinates, map) {
+      console.log(coordinates);  // デバッグ情報
+      if (!map) {
+          console.error("Map object is not initialized");
+          return;
+      }
 
       var bounds = new google.maps.LatLngBounds();
       var routePath = new google.maps.Polyline({
           path: [],
           geodesic: true,
-          strokeColor: '#FF0000',
+          strokeColor: '#0072BC',
           strokeOpacity: 1.0,
           strokeWeight: 2,
           map: map
       });
 
-      routeData.NorikaeBizApiResult.body.route.forEach(function(route) {
-          route.path.forEach(function(segment) {
-              var from = convertToLatLng(segment.fromX, segment.fromY);
-              var to = convertToLatLng(segment.toX, segment.toY);
+      coordinates.forEach(coord => {
+        let from = convertToLatLng(coord.fromX, coord.fromY);
+        let to = convertToLatLng(coord.toX, coord.toY);
 
-              // ポリラインのパスに座標を追加
-              routePath.getPath().push(from);
-              routePath.getPath().push(to);
+        let infoText = createInfoWindowText(coord);
 
-              // マーカーを設置
-              new google.maps.Marker({ position: from, map: map });
-              new google.maps.Marker({ position: to, map: map });
+        // マーカーと情報ウィンドウを追加
+        addMarkerWithInfoWindow(from, infoText, map);
+        addMarkerWithInfoWindow(to, infoText, map);
 
-              // boundsに座標を追加
-              bounds.extend(from);
-              bounds.extend(to);
-          });
+        routePath.getPath().push(from);
+        routePath.getPath().push(to);
+
+        bounds.extend(from);
+        bounds.extend(to);
+    });
+
+      map.fitBounds(bounds);
+
+      // ポリラインの両端にマーカーを配置
+      placeMarkersForPolyline(routePath, map);
+  }
+
+    /*マーカーに情報ウィンドウを追加する関数*/
+    function addMarkerWithInfoWindow(latLng, contentString, map) {
+      var marker = new google.maps.Marker({
+          position: latLng,
+          map: map
       });
 
-      // マップのビューポートを調整
-      map.fitBounds(bounds);
+      var infowindow = new google.maps.InfoWindow({
+          content: contentString
+      });
+
+      marker.addListener('click', function() {
+          infowindow.open(map, marker);
+      });
+  }
+
+
+    // 地図上のマーカーを格納する配列
+    var markers = [];
+
+    // 地図上のポリラインを格納する配列
+    var polylines = [];
+
+    // 地図データをクリアする関数
+    function clearMapData() {
+        // すべてのマーカーをクリア
+        markers.forEach(function(marker) {
+            marker.setMap(null);
+        });
+        markers = [];
+
+        // すべてのポリラインをクリア
+        polylines.forEach(function(polyline) {
+            polyline.setMap(null);
+        });
+        polylines = [];
     }
 
-    function convertToLatLng(x, y) {
-        // x, yの値を緯度経度に変換する処理
-        // 例: '139,37,24,400' → { lat: 35.6895, lng: 139.6917 }
-        // 注意: 実際の変換ロジックは、x, yの形式に基づいて実装する必要があります
-    }
   </script>
 </body>
 {% endblock content %}
