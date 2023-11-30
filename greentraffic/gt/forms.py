@@ -67,11 +67,10 @@ class AccountDeleteForm(forms.Form):
 class AccountUpdateForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ['last_name', 'first_name', 'zipcode', 'state', 'city', 'address', 'address_1', 'address_2', 'gender']
+        fields = ['last_name', 'first_name', 'zipcode', 'state', 'city',  'address_1', 'address_2', 'gender']
         labels = {
             'last_name': "苗字",
             'first_name': "名前",
-            'address': "住所",
             'zipcode': "郵便番号",
             'state': "都道府県",
             'city': "市区町村",
@@ -80,8 +79,7 @@ class AccountUpdateForm(forms.ModelForm):
             'gender': "性別",
         }
 
+############## admin_map_register #############################
 class LocationForm(forms.Form):
-    name = forms.CharField(label='場所名', max_length=100)
-    address = forms.CharField(label='住所', max_length=100)
-    latitude = forms.CharField(label='緯度', max_length=100)
-    longitude = forms.CharField(label='経度', max_length=100)
+    name = forms.CharField(label='登録名', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    address = forms.CharField(label='住所', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}))

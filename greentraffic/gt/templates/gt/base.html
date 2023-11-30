@@ -124,9 +124,31 @@
           </div>
       </div>
       <!-- Footer -->
-      <footer class="py-5 bg-black">
-        <div class="container px-5"><p class="m-0 text-center text-white small">Copyright &copy; </p></div>
+      <footer class="footer mt-auto py-3 bg-dark">
+        <div class="container text-center">
+          <!-- 画像をクリックするとモーダルを開く -->
+          <img src="{% static 'assets/ohara.png' %}" alt="Footer Image" style="max-height: 50px;" data-bs-toggle="modal" data-bs-target="#externalSiteModal">
+          <div class="text-white">
+            Green traffic.
+          </div>
+        </div>
       </footer>
+
+      <!-- モーダルウィンドウ -->
+      <div class="modal fade" id="externalSiteModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLabel">広告</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- 外部サイトを表示するiframe -->
+              <iframe src="https://www.o-hara.ac.jp/senmon/school/tokyo_it/" style="width:100%;height:80vh;" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>
