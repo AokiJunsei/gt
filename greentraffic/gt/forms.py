@@ -8,8 +8,12 @@ import re
 # フォームクラス作成
 class AccountForm(forms.ModelForm):
     # パスワード入力：非表示対応
-    password = forms.CharField(widget=forms.PasswordInput(), label="パスワード")
-
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'placeholder': '8文字以上数字を含む'
+        }), 
+        label="パスワード",
+        )
     class Meta:
         # ユーザー認証
         model = User

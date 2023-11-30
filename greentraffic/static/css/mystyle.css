@@ -5,8 +5,8 @@ h1 {
 
 div.reg {
   background-color: #EEEEEE;
-  margin-left: 20%;
-  margin-right: 20%;  
+  margin-left: 25%;
+  margin-right: 25%;  
   display: flex;
 }
 
@@ -25,6 +25,7 @@ table.reg _form td {
   overflow: hidden; /* 内容がセルをはみ出さないようにする */
   text-overflow: ellipsis; /* 長い文字列を省略形で表示 */
   white-space: nowrap; /* 改行を防止 */
+  
 }
 
 
@@ -38,11 +39,11 @@ table.reg_form small{
 }
 /* ボタンコンテナのスタイル */
 .button-container {
-  display: flex;
   justify-content: center;
   align-items: center;
   padding-top: 10px;
   padding-bottom: 10px;
+  margin: auto; /* 中央揃え */
 }
 
 .button-container button:first-child {
