@@ -178,18 +178,6 @@ def Login(request):
     else:
         return render(request, 'gt/user_login.html')
 
-def my_view(request):
-    if request.user.is_authenticated:
-        # 特定のユーザーの場合
-        if request.user.username == 'kobayashi':
-            return redirect('特定のページのURL名')
-        # それ以外のユーザーの場合
-        else:
-            return redirect('通常のページのURL名')
-    else:
-        # 未認証の場合
-        return redirect('ログインページのURL名')
-
 # ログアウトビュー
 @login_required
 def Logout(request):
@@ -226,8 +214,6 @@ def user_update_view(request):
     return render(request, 'user_update.html', {'form': form})
 
 
-
-
 # ユーザー退会ビュー
 @login_required
 def user_delete_view(request):
@@ -255,9 +241,6 @@ def admin_map_register(request):
 
             if response.status_code == 200:
                 data = response.json()
-
-                # デバックコンソール
-                # print("Data:", data)
 
                 location_data = data['results'][0]['geometry']['location']
                 lat = location_data['lat']  # 緯度
