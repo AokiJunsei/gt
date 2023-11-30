@@ -7,11 +7,11 @@ urlpatterns = [
     path('', views.top_page, name="top"),
     path('admin_top/', views.admin_top, name="admin_top"),
     
-    path('map_change/<int:pk>/', views.admin_map_change, name='admin_map_change'),
-    path('map_delete/<int:pk>/', views.admin_map_delete, name='admin_map_delete'),
+    path('map_change/<str:vehicle_type>/<int:pk>/', views.admin_map_change, name='admin_map_change'),
+    path('map_delete/<str:vehicle_type>/<int:pk>/', views.admin_map_delete, name='admin_map_delete'),
     path('map_register/', views.admin_map_register, name='admin_map_register'),
     #利用者ページpath書く
-    path('map_detail/<int:pk>/', views.admin_map_detail, name='admin_map_detail'),
+    path('map_detail/<str:vehicle_type>/<int:pk>/', views.admin_map_detail, name='admin_map_detail'),
     
     
     path('account_info/', views.user_info, name='user_info'),

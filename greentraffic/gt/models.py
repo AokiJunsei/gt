@@ -44,24 +44,27 @@ class Spot(models.Model):
     def __str__(self):
         return f"{self.spot_id} - {self.spot_name}"
 
-# マップテーブル
-class Map(models.Model):
-    map_id = models.AutoField(primary_key=True, verbose_name="マップID")
-    name = models.CharField(max_length=100, verbose_name="場所名",null=True)
-    address = models.CharField(max_length=200,  verbose_name="住所",null=True)
-    json_data = models.TextField(verbose_name="json_data",null=True)  # JSON形式で緯度経度情報を保存
+# マップテーブル(車)
+class MapCar(models.Model):
+    map_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100,blank=True)
+    address = models.CharField(max_length=200,blank=True)
+    json_data = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+# マップテーブル（自転車）
+class MapBike(models.Model):
+    map_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100,blank=True)
+    address = models.CharField(max_length=200,blank=True)
+    json_data = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
 
 
 
-#緯度と経度をjsonデータ型で受け取る例
-#{
-#    "coordinates": {
-#    "latitude": "40.7128",
-#    "longitude": "-74.0060"
-#    }
-#}
 
 
