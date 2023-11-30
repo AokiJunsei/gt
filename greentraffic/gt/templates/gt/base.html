@@ -94,9 +94,8 @@
 
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% if request.user.is_authenticated %}
-                  {% if request.user.username == "admin" %}
+                  {% if request.user.username != "admin" %}
                   <li class="nav-item"><a class="nav-link" href="{% url 'gt:user_info' %}">登録情報閲覧</a></li>
-                  {% else %}
                   <li class="nav-item"><a class="nav-link" href="{% url 'gt:account_history' %}">履歴一覧</a></li>
                   {% endif %}
                 <li class="nav-item">
