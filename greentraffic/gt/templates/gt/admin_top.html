@@ -69,16 +69,17 @@
         {% endif %}
 
         <!-- ページ数表示 -->
-        {% for page_num in page_obj.paginator.page_range %} {% if
-        page_obj.number == page_num %}
-        <li class="page-item active">
-            <a class="page-link" href="#">{{ page_num }}</a>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
-        </li>
-        {% endif %} {% endfor %}
+        {% for page_num in page_obj.paginator.page_range %} 
+            {% if page_obj.number == page_num %}
+                <li class="page-item active">
+                    <a class="page-link" href="#">{{ page_num }}</a>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                </li>
+            {% endif %} 
+        {% endfor %}
 
         <!-- 次ページへのリンク -->
         {% if page_obj.has_next %}
