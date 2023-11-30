@@ -2,89 +2,126 @@ from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,redir
 
 from .models import models
 
-
-from .forms import LocationForm
-from .models import Map
-
 from django.views.generic import TemplateView
 from .forms import AccountForm, AddAccountForm
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.views.generic import TemplateView
+from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from .models import Account, Map
+from .forms import AccountForm, AddAccountForm, AccountDeleteForm, AccountUpdateForm, LocationForm
+
+import requests
+import json
 import logging
 
-from django.http import HttpResponseRedirect
-from django.contrib.auth.models import User
-from .forms import AccountDeleteForm
-from .forms import AccountUpdateForm
-from .models import Account
-
+# ロガーの設定
 logger = logging.getLogger(__name__)
 
-
+# トップページのビュー
 def top_page(request):
     return render(request, 'gt/top.html')
 
+# 管理者用トップページのビュー
+@login_required
+def admin_top(request):
+    map_list = Map.objects.all()
+    return render(request, 'gt/admin_top.html', {'map_list' : map_list})
 
 
+# 管理者用マップ変更ビュー
+@login_required
 def admin_map_change(request, pk):
-    map_change = get_object_or_404(MapChange, pk=pk)
-    return render(request, 'gt/admin_map_change.html', {'map_change': map_change})
+    map_change = get_object_or_404(Map, pk=pk)
+    if request.method == 'POST':
+        form = LocationForm(request.POST)
+        if form.is_valid():
+            map_change.name = form.cleaned_data['name']
+            map_change.address = form.cleaned_data['address']
 
+            # ここで外部APIを呼び出し、JSONデータを取得
+            api_url = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
+            response = requests.get(api_url, params={'address': map_change.address})
 
+            if response.status_code == 200:
+                data = response.json()
+                location_data = data['results'][0]['geometry']['location']
+                map_change.lat = location_data['lat']  # 緯度
+                map_change.lng = location_data['lng']  # 経度
 
+                # 緯度と経度のみを含む辞書を作成
+                location_only = {'lat': map_change.lat, 'lng': map_change.lng}
+
+                # 辞書をJSONにシリアライズ
+                map_change.json_data = json.dumps(location_only)
+
+                # データベースに保存
+                map_change.save()
+
+                message_success = "データが保存されました"
+                alert_API = "APIからデータを取得できませんでした"
+                alert_form = "フォームが無効です"
+                show_modal = True
+                show_alert = True
+                return render(request, 'gt/admin_map_register.html', {
+                    'form': form,
+                    'message': message_success,
+                    'json_data': map_change.json_data,
+                    'show_modal': show_modal
+                })
+            else:
+                # APIからデータを取得できなかった場合の処理
+                return render(request, 'gt/admin_map_change.html', {
+                    'form': form,
+                    'message': alert_API,
+                    'show_alert': show_alert
+                })
+        else:
+            # フォームが無効な場合の処理
+            return render(request, 'gt/admin_map_change.html', {
+                'form': form,
+                'message': alert_form,
+                'show_alert': show_alert
+            })
+    else:
+        # GETリクエストの場合、フォームを既存のデータで初期化
+        form = LocationForm(initial={'name': map_change.name, 'address': map_change.address})
+        return render(request, 'gt/admin_map_change.html', {'form': form})
+
+# 管理者用マップ削除ビュー
+@login_required
 def admin_map_delete(request, pk):
-    map_delete = get_object_or_404(MapDelete, pk=pk)
-    return render(request, 'gt/admin_map_delete.html', {'map_delete': map_delete})
+    map_delete = get_object_or_404(Map, pk=pk)
+    map_delete.delete()
+    return redirect(reverse('gt:admin_top'))
 
-
-
-def admin_map_register(request):
-    return render(request, 'gt/admin_map_register.html')
-
-
-
-#利用者ページへ遷移する関数書く
-
-
-
+# 管理者用マップ詳細ビュー
+@login_required
 def admin_map_detail(request, pk):
-    map_object = get_object_or_404(models, pk=pk)
-    return render(request, 'gt/map_detail.html', {'map_object': map_object})
+    map_detail = get_object_or_404(Map, pk=pk)
+    return render(request, 'gt/admin_map_detail.html', {'map_detail': map_detail})
 
 
-
-
-
-
-
-
+# アカウント履歴ビュー
+@login_required
 def account_history_view(request):
-    return render(request, 'user_log.html')
+    return render(request, 'gt/user_log.html')
 
-
-
+# ログ詳細ビュー
+@login_required
 def log_detail_view(request):
-    return render(request, 'user_log_detail.html')
-
-
-
-def signup_view(request):
-    return render(request, 'create.html')
-
-
-
-def login_view(request):
-    return render(request, 'user_login.html')
-
+    return render(request, 'gt/user_log_detail.html')
 
 
 
 ##画面遷移の関数はここより上に書きます
 
-
-
+# 新規登録ビュー
 class AccountRegistration(TemplateView):
     template_name = "gt/register.html"
 
@@ -117,86 +154,108 @@ class AccountRegistration(TemplateView):
                 "account_form": account_form,
                 "add_account_form": add_account_form
             }
-
         return render(request, self.template_name, context=context)
 
-#ログイン
 
+# ログインビュー
 def Login(request):
-    # POST
     if request.method == 'POST':
-        # フォーム入力のユーザーID・パスワード取得
-        ID = request.POST.get('userid')
-        Pass = request.POST.get('password')
-
-        # Djangoの認証機能
-        user = authenticate(request,username=ID, password=Pass)
-
-        # ユーザー認証
+        username = request.POST.get('userid')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
         if user:
-            #ユーザーアクティベート判定
             if user.is_active:
-                # ログイン
-                login(request,user)
-                # ホームページ遷移
-                return HttpResponseRedirect(reverse('gt:top'))
+                login(request, user)  # ユーザーをログインさせる
+                if request.user.username == 'admin':
+                    return HttpResponseRedirect(reverse('gt:admin_top'))
+                else:
+                    return HttpResponseRedirect(reverse('gt:top'))
             else:
-                # アカウント利用不可
                 return HttpResponse("アカウントが有効ではありません")
-        # ユーザー認証失敗
         else:
             return HttpResponse("ログインIDまたはパスワードが間違っています")
-    # GET
+
     else:
         return render(request, 'gt/user_login.html')
 
-
-#ログアウト
+# ログアウトビュー
 @login_required
 def Logout(request):
     logout(request)
-    # ログイン画面遷移
     return HttpResponseRedirect(reverse('gt:top'))
 
-
-
-def index(request):
-    # ユーザーがログインしているかどうかをテンプレートに渡すことができます
-    is_authenticated = request.user.is_authenticated
-    params = {"UserID": request.user, "is_authenticated": is_authenticated}
-    return render(request, "gt/top.html", context=params)
-
-# views.py
-
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Account
-from .forms import AccountForm, AccountDeleteForm
-
+# ユーザー情報ビュー
 @login_required
 def user_info(request):
     account = get_object_or_404(Account, user=request.user)
     return render(request, 'user_info.html', {'account': account})
 
+# ユーザー情報更新ビュー
 @login_required
 def user_update_view(request):
     if request.method == 'POST':
-        form = AccountForm(request.POST, instance=request.user.account)
+        form = AccountUpdateForm(request.POST, instance=request.user.account)
         if form.is_valid():
             form.save()
             return redirect('gt:user_info')
     else:
-        form = AccountForm(instance=request.user.account)
+        form = AccountUpdateForm(instance=request.user.account)
     return render(request, 'user_update.html', {'form': form})
 
+# ユーザー退会ビュー
 @login_required
 def user_delete_view(request):
     if request.method == 'POST':
-        form = AccountDeleteForm(request.POST, instance=request.user.account)
-        if form.is_valid():  # Delete form doesn't need validation in most cases
-            request.user.account.delete()
-            request.user.delete()
-            return redirect('gt:login')  # Or wherever you want to redirect after deletion
+        user = request.user
+        logout(request)  # ユーザーをログアウト
+        user.delete()  # アカウントを削除
+        return redirect('gt:register')  # ログインページにリダイレクト
     else:
-        form = AccountDeleteForm(instance=request.user.account)
-    return render(request, 'user_delete_confirm.html', {'form': form})
+        return render(request, 'user_delete.html')
+
+
+# 管理者用マップ登録ビュー
+@login_required
+def admin_map_register(request):
+    if request.method == 'POST':
+        form = LocationForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            address = form.cleaned_data['address']
+
+            # ここで外部APIを呼び出し、JSONデータを取得
+            api_url = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
+            response = requests.get(api_url, params={'address': address})
+
+            if response.status_code == 200:
+                data = response.json()
+
+                # デバックコンソール
+                # print("Data:", data)
+
+                location_data = data['results'][0]['geometry']['location']
+                lat = location_data['lat']  # 緯度
+                lng = location_data['lng']  # 経度
+
+                # 緯度と経度のみを含む辞書を作成
+                location_only = {'lat': lat, 'lng': lng}
+
+                # 辞書をJSONにシリアライズ
+                json_data = json.dumps(location_only)
+
+                # データベースに保存
+                Map.objects.create(name=name, address=address, json_data=json_data)
+
+                message_success = "データが保存されました"
+                alert_API = "APIからデータを取得できませんでした"
+                alert_form = "フォームが無効です"
+                show_modal = True
+                show_alert = True
+                return render(request, 'gt/admin_map_register.html', {'form': form,'message': message_success, 'json_data': json_data,'show_modal': show_modal})
+            else:
+                return render(request, 'gt/admin_map_register.html', {'form': form,'message': alert_API, 'show_alert': show_alert})
+        else:
+            return render(request, 'gt/admin_map_register.html', {'form': form,'message': alert_form, 'show_alert': show_alert})
+    else:
+        form = LocationForm()
+        return render(request, 'gt/admin_map_register.html', {'form': form})

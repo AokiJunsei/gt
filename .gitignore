@@ -9,10 +9,6 @@ __pycache__
 # Virtualenv
 venv/
 
-
-# macOS
-.DS_Store
-
 # Editor directories and files
 .idea/
 .vscode/

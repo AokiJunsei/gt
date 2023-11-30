@@ -5,8 +5,8 @@ h1 {
 
 div.reg {
   background-color: #EEEEEE;
-  margin-left: 20%;
-  margin-right: 20%;
+  margin-left: 13%;
+  margin-right: 13%;
 }
 
 .message {
@@ -23,9 +23,19 @@ table.reg_form {
 /* ボタンコンテナのスタイル */
 .button-container {
   display: flex;
-  justify-content: flex-end; /* ボタンを右端に配置 */
-  padding: 10px 0;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 10px;
 }
+
+.button-container button:first-child {
+  margin-right: 20px; /* 右のボタンからの距離 */
+}
+
+.button-container button:last-child {
+  margin-left: 20px; /* 左のボタンからの距離 */
+}
+
 
 /* ボタンの共通スタイル */
 .btn {
@@ -49,6 +59,35 @@ table.reg_form {
 }
 
 /* ボタンのホバー効果 */
-.btn:hover {
-  background-color: #888; /* ホバー時の色を暗く */
+
+/* キャンセルボタンのホバー時のスタイルを暗い赤色に変更 */
+.btn-cancel:hover {
+  background-color: #c00000; /* 暗い赤色に変更 */
+}
+.btn-submit:hover {
+  background-color: #809999; /* 暗い赤色に変更 */
+}
+
+/*footer*/
+
+footer.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 60px; /* フッターの高さを適宜調整してください */
+  background-color: #333; /* フッターの背景色を適宜調整してください */
+  color: white;
+  text-align: center;
+  z-index: 1000; /* 他の要素より上に表示されるように */
+}
+
+/* メインコンテンツの下部にフッターの高さ分のスペースを確保 */
+body, html {
+  margin: 0;
+  padding-bottom: 60px; /* フッターの高さに合わせて調整してください */
+}
+
+.container.text-center {
+  text-align: center;
 }

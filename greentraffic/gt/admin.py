@@ -3,7 +3,7 @@ from .models import Account, SearchHistory, Spot, Map
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('user','last_name','first_name','address','gender','zipcode','state','city','address_1','address_2','walking')
+    list_display = ('user','last_name','first_name','address','gender','zipcode','state','city','address_1','address_2',)
     search_fields = ('name', 'address')
     #アカウントテーブル
 
@@ -21,6 +21,8 @@ class SpotAdmin(admin.ModelAdmin):
 
 @admin.register(Map)
 class MapAdmin(admin.ModelAdmin):
-    list_display = ('map_id', 'location_name', 'account', 'category', 'address', 'latitude', 'longitude')
-    search_fields = ('location_name', 'account__name', 'category', 'address')
-    #マップテーブル
+    list_display = ('name', 'address', 'json_data_display')
+
+    def json_data_display(self, obj):
+        return obj.json_data
+    json_data_display.short_description = 'JSON Data'
