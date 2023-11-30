@@ -205,14 +205,28 @@ def user_info(request):
 # ユーザー情報更新ビュー
 @login_required
 def user_update_view(request):
+    user = request.user
+    account = user.account
+
     if request.method == 'POST':
-        form = AccountUpdateForm(request.POST, instance=request.user.account)
+        form = AccountUpdateForm(request.POST, instance=account)
         if form.is_valid():
+            # User モデルの更新
+            user.username = form.cleaned_data['username']
+            user.email = form.cleaned_data['email']
+            user.password = form.cleaned_data['password']
+            user.save()
+
+            # Account モデルの更新
             form.save()
             return redirect('gt:user_info')
     else:
-        form = AccountUpdateForm(instance=request.user.account)
+        form = AccountUpdateForm(instance=account, initial={'username': user.username, 'email': user.email})
+
     return render(request, 'user_update.html', {'form': form})
+
+
+
 
 # ユーザー退会ビュー
 @login_required

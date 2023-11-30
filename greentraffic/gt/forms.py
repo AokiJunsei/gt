@@ -111,9 +111,24 @@ class AccountDeleteForm(forms.Form):
 ##########user_update.htmlのformクラス##########
 
 class AccountUpdateForm(forms.ModelForm):
+    username = forms.CharField(
+        max_length=150, 
+        required=False, 
+        label='ユーザーID'  # ラベルを追加
+    )
+    email = forms.EmailField(
+        required=False, 
+        label='メールアドレス'  # ラベルを追加
+    )
+    password = forms.CharField(
+        max_length=8, 
+        widget=forms.PasswordInput(),  # PasswordInputウィジェットを使用
+        label="新しいパスワード",
+        required=False
+    )
     class Meta:
         model = Account
-        fields = ['last_name', 'first_name', 'zipcode', 'state', 'city',  'address_1', 'address_2', 'gender']
+        fields = ['username', 'email', 'last_name', 'first_name', 'zipcode', 'state', 'city', 'address_1', 'address_2', 'gender']
         labels = {
             'last_name': "苗字",
             'first_name': "名前",
@@ -124,6 +139,25 @@ class AccountUpdateForm(forms.ModelForm):
             'address_2': "建物名・部屋番号",
             'gender': "性別",
         }
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if username and User.objects.filter(username=username).exclude(pk=self.instance.user.pk).exists():
+            raise ValidationError('このユーザーIDは既に使用されています。')
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email and User.objects.filter(email=email).exclude(pk=self.instance.user.pk).exists():
+            raise ValidationError('このメールアドレスは既に使用されています。')
+        return email
+    
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if len(password) < 8:
+            raise ValidationError('パスワードは8文字以上である必要があります。')
+        if not re.search(r'\d', password):
+            raise ValidationError('パスワードには少なくとも1つの数字を含める必要があります。')
+        return password
 
 ############## admin_map_register #############################
 class LocationForm(forms.Form):

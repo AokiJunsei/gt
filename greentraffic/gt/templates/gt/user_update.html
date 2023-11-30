@@ -2,64 +2,64 @@
 {% extends 'base.html' %}
 {% block title %}登録情報更新ページ{% endblock %}
 {% block content %}
+<h1>登録情報の変更</h1>
 <div class="reg">
-    <h1>登録情報の変更</h1>
     <form action="{% url 'gt:user_update' %}" method="POST">
         {% csrf_token %}
         <table class="reg_form">
-        <tr>
-            <th>
-                <label for="id_last_name">苗字:</label>
-                {{ form.last_name.errors }}
-                {{ form.last_name }}
-            </th>
-            <th>
-                <label for="id_first_name">名前:</label>
-                {{ form.first_name.errors }}
-                {{ form.first_name }}
-            </th>
-        </tr>
             <tr>
-            <th>
-                <label for="id_zipcode">郵便番号:</label>
-                {{ form.zipcode.errors }}
-                {{ form.zipcode }}
-            </th>
-            <th>
-                <label for="id_state">都道府県:</label>
-                {{ form.state.errors }}
-                {{ form.state }}
-            </th>
-        </tr>
-        <tr>
-            <th>
-                <label for="id_city">市区町村:</label>
-                {{ form.city.errors }}
-                {{ form.city }}
-            </th>
-            <th>
-                <label for="id_address_1">番地:</label>
-                {{ form.address_1.errors }}
-                {{ form.address_1 }}
-            </th>
-        </tr>
-        <tr>
-            <th>
-                <label for="id_address_2">建物名・部屋番号:</label>
-                {{ form.address_2.errors }}
-                {{ form.address_2 }}
-            </th>
-            <th>
-                <label for="id_gender">性別:</label>
-                {{ form.gender.errors }}
-                {{ form.gender }}
-            </th>
-        </tr>
-</table>
+              <th>{{ form.username.label_tag }}</th>
+              <td>{{ form.username }}</td>
+              <th>{{ form.email.label_tag }}</th>
+              <td>{{ form.email }}</td>
+            </tr>
+            <tr>
+              <th>{{ form.password.label_tag }}</th>
+              <td>
+                {{ form.password }}
+                {% if form.password.errors %}
+                <div class="error">{{ form.password.errors }}</div>
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th>{{ form.last_name.label_tag }}</th>
+              <td>{{ form.last_name }}</td>
+              <th>{{ form.first_name.label_tag }}</th>
+              <td>{{ form.first_name }}</td>
+            </tr>
+            
+            <tr>
+              <th>{{ form.gender.label_tag }}</th>
+              <td>{{ form.gender }}</td>
+            </tr>
+            
+            <tr>
+              <th>{{ form.zipcode.label_tag }}</th>
+              <td>{{ form.zipcode }}</td>
+              <th>{{ form.state.label_tag }}</th>
+              <td>{{ form.state }}</td>
+            </tr>
+            
+            <tr>
+              <th>{{ form.city.label_tag }}</th>
+              <td>{{ form.city }}</td>
+              <th>{{ form.address_1.label_tag }}</th>
+              <td>{{ form.address_1 }}</td>
+            </tr>
+            <tr>
+              <th>{{ form.address_2.label_tag }}</th>
+              <td>{{ form.address_2 }}</td>
+            </tr>
+            
+            
+          </table>
         <div class="button-container">
             <a href="{% url 'gt:user_info' %}" class="btn btn--radius btn--cubic btn-cancel">戻る</a>
             <button class="btn btn--radius btn--cubic btn-submit" type="submit">変更</button>
         </div>
+        
     </form>
+    
 </div>
 {% endblock %}

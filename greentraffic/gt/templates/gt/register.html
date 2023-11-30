@@ -12,7 +12,6 @@
   <h1>登録完了!</h1>
   <a href="{% url 'gt:top' %}" class="btn btn-cancel">topに戻る</a>
 {% else %}
-
   <div class="reg">
     <!-- 登録フォームの構造 -->
     <form enctype="multipart/form-data" method="post">
@@ -20,8 +19,9 @@
       <table class="reg_form">
         <tr>
           <th>{{ account_form.username.label_tag }}</th>
-          <td>{{ account_form.username }}</td>
-          
+          <td>
+            {{ account_form.username }}
+          </td>
         </tr>
         <tr>
           <th>{{ account_form.email.label_tag }}</th>
