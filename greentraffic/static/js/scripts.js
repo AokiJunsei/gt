@@ -1,3 +1,4 @@
+// ログアウトのモーダルウィンドウ
 $(document).ready(function() {
     // モーダルが開かれたときのイベント
     $("#logoutModal").on('shown.bs.modal', function() {
@@ -14,4 +15,19 @@ $(document).ready(function() {
         console.log("キャンセルまたは×マークがクリックされました。");
         $("#logoutModal").modal('hide');
     });
+});
+
+
+// ヘッダー日付
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("text").innerHTML = showNow();
+
+    function showNow() {
+    var now = new Date();
+    var nowyear = now.getFullYear();
+    var nowmonth = now.getMonth() + 1;
+    var nowdate = now.getDate();
+    var text = nowyear + "/" + nowmonth + "/" + nowdate;
+    return text;
+    }
 });
