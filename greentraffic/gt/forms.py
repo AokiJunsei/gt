@@ -7,20 +7,34 @@ import re
 
 # フォームクラス作成
 class AccountForm(forms.ModelForm):
+    username = forms.CharField(
+        max_length=100, 
+        required=False, 
+        label='ユーザーID',
+        widget=forms.TextInput(attrs={
+            'placeholder': '例：test'
+        })
+    )
     # パスワード入力：非表示対応
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={
+    email = forms.CharField(
+        max_length=100, 
+        required=False, 
+        label='メール',
+        widget=forms.TextInput(attrs={
+            'placeholder': '例：xxx@xxx.com'
+        })
+    )
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
             'placeholder': '8文字以上数字を含む'
         }), 
-        label="パスワード",
-        )
+        label="パスワード" )
+    
     class Meta:
         # ユーザー認証
         model = User
         # フィールド指定
         fields = ('username', 'email', 'password')
         # フィールド名指定
-        labels = {'username': "ユーザーID", 'email': "メール"}
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
@@ -30,20 +44,48 @@ class AccountForm(forms.ModelForm):
             raise ValidationError('パスワードには少なくとも1つの数字を含める必要があります。')
         return password
 
-    # 新しい住所関連フィールド
-    zipcode = forms.CharField(max_length=7, required=False, label='郵便番号')
-    state = forms.CharField(max_length=100, required=False, label='都道府県')
-    city = forms.CharField(max_length=100, required=False, label='市区町村')
-    address_1 = forms.CharField(max_length=100, required=False, label='番地')
-    address_2 = forms.CharField(max_length=100, required=False, label='建物名・部屋番号')
-    walking = forms.CharField(max_length=100, required=False, label='徒歩')
-    
-
 # 追加のアカウント情報用のフォーム
 class AddAccountForm(forms.ModelForm):
+    last_name = forms.CharField(
+        max_length=100, 
+        required=False, 
+        label='苗字',
+        widget=forms.TextInput(attrs={
+            'placeholder': '例：大原'
+        })
+    )
+    first_name = forms.CharField(
+        max_length=100, 
+        required=False, 
+        label='名前',
+        widget=forms.TextInput(attrs={
+            'placeholder': '例：太郎'
+        })
+    )
+    zipcode = forms.CharField(
+        max_length=7, 
+        required=False, 
+        widget=forms.TextInput(attrs={
+            'placeholder': '例：1018351'
+        }),
+        label='郵便番号',
+    )
+    state = forms.CharField(max_length=100, required=False, label='都道府県',widget=forms.TextInput(attrs={
+            'placeholder': '例：東京都 '
+        }),)
+    city = forms.CharField(max_length=100, required=False, label='市区町村',widget=forms.TextInput(attrs={
+            'placeholder': '例：千代田区西神田 '
+        }),)
+    address_1 = forms.CharField(max_length=100, required=False, label='番地',widget=forms.TextInput(attrs={
+            'placeholder': '例：2-4-11 '
+        }),)
+    address_2 = forms.CharField(max_length=100, required=False, label='建物名・部屋番号',widget=forms.TextInput(attrs={
+            'placeholder': '例：TICビル '
+        }),)
     class Meta:
         # モデルクラスを指定
         model = Account
+        
         # フィールド指定
         fields = ('last_name', 'first_name', 'address', 'zipcode', 'state', 'city', 'address_1', 'address_2', 'gender',)
         # フィールド名指定

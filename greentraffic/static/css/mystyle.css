@@ -5,9 +5,11 @@ h1 {
 
 div.reg {
   background-color: #EEEEEE;
-  margin-left: 25%;
-  margin-right: 25%;  
+  margin-left: 20%;
+  margin-right: 20%;  
   display: flex;
+  justify-content: center;
+  padding-top: 10px;
 }
 
 .message {
@@ -19,21 +21,19 @@ table.reg_form {
   width: 100%; /* テーブルの幅を100%に設定 */
 }
 /* 各テーブルセルのスタイル */
-table.reg _form td {
+table.reg_form td {
   min-width: 100px; /* 最小幅を設定 */
   max-width: 200px; /* 最大幅を設定 */
   overflow: hidden; /* 内容がセルをはみ出さないようにする */
   text-overflow: ellipsis; /* 長い文字列を省略形で表示 */
   white-space: nowrap; /* 改行を防止 */
-  
+  padding-right: 5px;
 }
-
-
-
 table.reg_form th{
-  padding-left: 20px;
+  padding-left: 5px;
   white-space: nowrap; /* 改行を防止 */
 }
+
 table.reg_form small{
   white-space: nowrap; /* 改行を防止 */
 }
@@ -42,10 +42,11 @@ table.reg_form small{
   justify-content: center;
   align-items: center;
   padding-top: 10px;
-  padding-bottom: 10px;
   margin: auto; /* 中央揃え */
 }
-
+input::placeholder {
+  padding-left: 2px;
+}
 .button-container button:first-child {
   margin-right: 20px; /* 右のボタンからの距離 */
 }
