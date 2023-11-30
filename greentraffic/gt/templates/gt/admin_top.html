@@ -73,30 +73,30 @@
                 </div>
                 <div>
                     <a class="btn btn-success" href="{% url 'gt:admin_map_change' map.pk %}">変更</a>
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal-{{ map.pk }}">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
                         削除
                     </button>
                 </div>
             </div>
             <hr class="my-4" />
             <!--削除するためのモーダルウィンドウ -->
-            <div class="modal fade" tabindex="-1" role="dialog" id="deleteModal-{{ map.pk }}">
-                <div class="modal-dialog" role="document">
+            <div class="modal fade" id="deleteModal-{{ map.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ map.pk }}" aria-hidden="true">
+                <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">データの削除</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                        <h5 class="modal-title" id="deleteModalLabel-{{ map.pk }}">削除確認</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
                         </div>
                         <div class="modal-body">
-                            <p>削除すると元に戻すことはできません。よろしいでしょうか？</p>
+                        本当に削除しますか？
                         </div>
                         <div class="modal-footer">
-                            <form method="POST" action="{% url 'gt:admin_map_delete' map.pk %}">{% csrf_token %}
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-                                <button type="submit" class="btn btn-danger">削除</button>
-                            </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                        <form method="post" action="{% url 'gt:admin_map_delete' map.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="map_id" value="{{ map.pk }}">
+                            <button type="submit" class="btn btn-danger">削除</button>
+                        </form>
                         </div>
                     </div>
                 </div>

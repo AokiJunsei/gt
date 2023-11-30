@@ -6,48 +6,73 @@
 {% block active_map_list %}active{% endblock %}
 
 {% block content %}
-
-<div class="container my-div-style">
-    <div class="row">
-        <div class="col-3">
-            <strong>場所名</strong>
-        </div>
-        <div class="col-9">
-            {{ map_detail.name }}
-        </div>
-    </div>
-
-    <hr>
-
-    <div class="row">
-        <div class="col-3">
-            <strong>住所</strong>
-        </div>
-        <div class="col-9">
-            {{ map_detail.address|linebreaksbr }}
-        </div>
-    </div>
-
-    <hr>
-
-    <div class="row">
-        <div class="col-3">
-            <strong>JSON</strong>
-        </div>
-        <div class="col-9">
-            {{ map_detail.json_data }}
-        </div>
-    </div>
-
-    <hr>
-
-    <div class="row">
-        <div class="col-12">
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <a class="btn btn-success" href="{% url 'gt:admin_map_change' map_detail.pk %}">変更</a>
-                <a class="btn btn-secondary" href="{% url 'gt:admin_top' %}">戻る</a>
+<main onload="initMap()">
+    <div class="container my-div-style">
+        <div class="row">
+            <div class="col-3">
+                <strong>場所名</strong>
+            </div>
+            <div class="col-9">
+                {{ map_detail.name }}
             </div>
         </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-3">
+                <strong>住所</strong>
+            </div>
+            <div class="col-9">
+                {{ map_detail.address|linebreaksbr }}
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-3">
+                <strong>JSON</strong>
+            </div>
+            <div class="col-9">
+                {{ map_detail.json_data }}
+            </div>
+        </div>
+
+        <hr>
+
+        <div id="map" style="width: 100%; height: 400px;"></div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a class="btn btn-success" href="{% url 'gt:admin_map_change' map_detail.pk %}">変更</a>
+                    <a class="btn btn-secondary" href="{% url 'gt:admin_top' %}">戻る</a>
+                </div>
+            </div>
+        </div>
+
+        <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
+        ></script>
+
+        <script>
+            function initMap() {
+                var jsonData = JSON.parse('{{ map_detail.json_data|safe }}');
+
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 12,
+                    center: jsonData
+                });
+
+                var marker = new google.maps.Marker({
+                    position: jsonData,
+                    map: map
+                });
+            }
+        </script>
     </div>
-</div>
+</main>
 {% endblock %}
