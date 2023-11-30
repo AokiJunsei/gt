@@ -1,156 +1,54 @@
-{% extends "base.html" %}
-
+{% extends "gt/base.html" %}
+{% load static %}
 {% block title %}Green Traffic{% endblock %}
 
-{% block contents %}
-
-<main onload="initMap()">
-    <div>
-        <h5 class="card-title">登録したい場所を入力してください</h5>
-        <form method="post" action="{% url 'save-location' %}" id="locationForm">
-            {% csrf_token %}
-            <div class="mb-3">
-                {{ form.name.label_tag }}
-                {{ form.name }}
-            </div>
-            <div class="mb-3">
-                {{ form.address.label_tag }}
-                {{ form.address }}
-            </div>
-            <dialog id="dlog">
-                <form method="dialog">
-                    <p>本当に登録しますか？</p>
-                    <button type="submit" value="yes">はい</button>
-                    <button type="submit" value="no" autofocus>いいえ</button>
-                </form>
-            </dialog>
-            <button type="button" class="btn btn-primary" id="saveButton">登録</button>
-        </form>
-    </div>
-    <!-- マップを表示 -->
-    <div id="map" class="mt-5"></div>
-    <!-- モーダルウィンドウ -->
-    <div class="modal" id="successModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">成功しました</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    データが保存されました
-                </div>
-                <div class="modal-footer">
-                    <a href="{% url 'gt:top' %}" class="btn btn-primary">TOPページに戻る</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
-        function initMap() {
-            var target = document.getElementById("map");
-            var name = "{{ name }}";
-            var address = "{{ address }}";
-            var jsonData = JSON.parse('{{ json_data|escapejs }}');
-
-            var geocoder = new google.maps.Geocoder();
-
-            geocoder.geocode({ address: address }, function (results, status) {
-                if (status === "OK" && results[0]) {
-                var map = new google.maps.Map(target, {
-                    center: results[0].geometry.location,
-                    zoom: 18,
-                });
-
-                var marker = new google.maps.Marker({
-                    position: results[0].geometry.location,
-                    map: map,
-                    animation: google.maps.Animation.DROP,
-                    title: name,
-                });
-
-                var dialog = document.querySelector('dialog');
-                var btn_saveButton = document.getElementById('saveButton');
-                btn_saveButton.addEventListener('click', function() {
-                    dialog.showModal();
-                }, false);
-                dialog.addEventListener('cancel', function(event){
-                    event.preventDefault();
-                });
-                dialog.addEventListener('close', function(event){
-                    if (this.returnValue === 'yes') {
-                        alert('登録しました。');
-                    } else {
-                        alert('登録をキャンセルしました。');
-                    }
-                });
-                } else {
-                alert("住所が正しくないか存在しません。");
-                target.style.display = "none";
-                }
-            });
-            }
-
-        // 保存ボタンがクリックされたら確認ダイアログを表示
-        document.getElementById("saveButton").addEventListener("click", function () {
-            if (confirm("このデータを登録しますか？")) {
-                // フォームを送信
-                document.getElementById("locationForm").submit();
-            }
-        });
-
-        // モーダルウィンドウを表示
-        var modal = new bootstrap.Modal(document.getElementById("successModal"));
-        modal.show();
-    </script>
-</main>
+{% block head %}
+<style>
+  #map {
+    height: 100%;
+  }
+</style>
 {% endblock %}
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<title>a</title>
-<script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap"
-    async
-    defer
-></script>
-<link href="style.css" rel="stylesheet" type="text/css">
-</head>
-<body>
-    
-<div id="map" style="width: 600px; height: 500px;"></div>
-<script>
-function initMap() {
+{% block content %}
+<body onload="initMap()">
+    <div id="map"></div>
+    <!-- <div id="map_canvas" style="width:100%;height:300px"></div> -->
+  
 
-    var target = document.getElementById('map'); //マップを表示する要素を指定
-    var address = {{ user.account.state }} {{ user.account.city }} {{ user.account.address }}; //住所を指定
-    var geocoder = new google.maps.Geocoder();  
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
+        defer
+    ></script>
+    <script>
+        function initMap() {
+            var target = document.getElementById('map'); //マップを表示する要素を指定
+            var address = '東京都新宿区西新宿2-8-1'; //住所を指定
+            var geocoder = new google.maps.Geocoder();  
 
-    geocoder.geocode({ address: address }, function(results, status){
-    if (status === 'OK' && results[0]){
-
-        console.log(results[0].geometry.location);
-
-        var map = new google.maps.Map(target, {  
-            center: results[0].geometry.location,
-            zoom: 18
-        });
-
-        var marker = new google.maps.Marker({
-            position: results[0].geometry.location,
-            map: map,
-            animation: google.maps.Animation.DROP
-        });
-
-    }else{ 
-        //住所が存在しない場合の処理
-        alert('住所が正しくないか存在しません。');
-        target.style.display='none';
-    }
-    });
-}
-</script>
+            geocoder.geocode({ address: address }, function(results, status){
+                if (status === 'OK' && results[0]){
+            
+                    console.log(results[0].geometry.location);
+            
+                    var map = new google.maps.Map(target, {  
+                    center: results[0].geometry.location,
+                    zoom: 18
+                    });
+            
+                    var marker = new google.maps.Marker({
+                    position: results[0].geometry.location,
+                    map: map,
+                    animation: google.maps.Animation.DROP
+                    });
+            
+                }else{ 
+                    //住所が存在しない場合の処理
+                    alert('住所が正しくないか存在しません。');
+                    target.style.display='none';
+                }
+            });
+        }
+    </script>
 </body>
-</html>
+{% endblock content %}
