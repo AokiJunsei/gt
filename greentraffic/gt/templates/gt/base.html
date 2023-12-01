@@ -66,29 +66,35 @@
                   {% if request.user.username == "admin" %}
                   <li class="nav-item"><a class="nav-link" href="{% url 'gt:admin_top' %}">マップ情報一覧</a></li>
                   <li class="nav-item"><a class="nav-link" href="{% url 'gt:admin_map_register' %}">マップ情報追加</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">利用者情報閲覧</a></li>
+                  <li class="nav-item"><a class="nav-link" href="{% url 'gt:admin_user_info' %}">利用者情報閲覧</a></li>
                   <li class="nav-item">
                     <a class="nav-link" href="#"><div id="text"></div></a>
                   </li>
                   {% else %}
                   <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'gt:top' %}">最短検索</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">最安検索</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">シェアリングサービス検索</a></li>
+                  <li class="nav-item"><a class="nav-link" href="{% url 'gt:search_cheap' %}">最安検索</a></li>
                   <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">バリアフリー検索</a>
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">シェアリングサービス検索</a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                      <li><a class="dropdown-item" href="#">最短</a></li>
-                      <li><a class="dropdown-item" href="#">最安</a></li>
+                      <li><a class="dropdown-item" href="{% url 'gt:search_share_car' %}">自動車</a></li>
+                      <li><a class="dropdown-item" href="{% url 'gt:search_share_bike' %}">自転車</a></li>
                     </ul>
                   </li>
+                  <li class="nav-item"><a class="nav-link" href="{% url 'gt:my_map' %}">My Map</a></li>
                   <li class="nav-item">
                     <a class="nav-link" href="#"><div id="text"></div></a>
                   </li>
                   {% endif %}
                 {% else %}
                   <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'gt:top' %}">最短検索</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">最安検索</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">シェアリングサービス検索</a></li>
+                  <li class="nav-item"><a class="nav-link" href="{% url 'gt:search_cheap' %}">最安検索</a></li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">シェアリングサービス検索</a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="{% url 'gt:search_share_car' %}">自動車</a></li>
+                      <li><a class="dropdown-item" href="{% url 'gt:search_share_bike' %}">自転車</a></li>
+                    </ul>
+                  </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#"><div id="text"></div></a>
                   </li>

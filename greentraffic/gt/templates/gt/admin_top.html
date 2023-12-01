@@ -203,6 +203,9 @@
     <div class="d-flex justify-content-end mb-4">
         <a class="btn btn-primary" href="{% url 'gt:admin_map_register' %}">追加する</a>
     </div>
+    <div class="d-flex justify-content-end mb-4">
+        <a class="btn btn-primary" href="{% url 'gt:admin_map_register' %}">利用者情報を閲覧する</a>
+    </div>
 
     {% comment %} 表示するリストを切り替える関数 {% endcomment %}
     <script>
@@ -237,9 +240,3 @@
     </script>
 </div>
 {% endblock content %}
-
-
-{% comment %} <div class="d-flex justify-content-end mb-4">
-	TODO 利用者情報閲覧ページへのルーティングボタンを追加
-	<a class="btn btn-primary" href="{% url 'gt:admin_map_register' %}">利用者情報を閲覧する</a>
-</div> {% endcomment %}
