@@ -7,6 +7,7 @@ div.reg {
   background-color: #EEEEEE;
   margin: auto; /* 中央揃えに */
   max-width: 640px; /* 最大幅を設定 */
+  padding-top: 10px;
   padding: 10px;
 }
 
@@ -39,8 +40,7 @@ table.reg_form small{
 .button-container {
   justify-content: center;
   align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 20px;
   margin: auto; /* 中央揃え */
 }
 input::placeholder {
