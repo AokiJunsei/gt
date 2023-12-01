@@ -5,11 +5,9 @@ h1 {
 
 div.reg {
   background-color: #EEEEEE;
-  margin-left: 20%;
-  margin-right: 20%;  
-  display: flex;
-  justify-content: center;
-  padding-top: 10px;
+  margin: auto; /* 中央揃えに */
+  max-width: 640px; /* 最大幅を設定 */
+  padding: 10px;
 }
 
 .message {
@@ -110,4 +108,12 @@ body, html {
 
 .container.text-center {
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  table.reg_form {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 }
