@@ -14,8 +14,6 @@
 <body onload="initMap()">
     <div id="map"></div>
     <!-- <div id="map_canvas" style="width:100%;height:300px"></div> -->
-  
-
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
         defer
@@ -23,7 +21,7 @@
     <script>
         function initMap() {
             var target = document.getElementById('map'); //マップを表示する要素を指定
-            var address = '東京都新宿区西新宿2-8-1'; //住所を指定
+            var address = '{{ user.account.state }} {{ user.account.city }} {{ user.account.address }}'; //住所を指定
             var geocoder = new google.maps.Geocoder();  
 
             geocoder.geocode({ address: address }, function(results, status){

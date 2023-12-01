@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Account
+from .models import Spot
 from django import forms
 from django.core.exceptions import ValidationError
 import re
@@ -85,3 +86,14 @@ class LocationForm(forms.Form):
     address = forms.CharField(label='住所', max_length=100)
     latitude = forms.CharField(label='緯度', max_length=100)
     longitude = forms.CharField(label='経度', max_length=100)
+
+class SpotForm(forms.ModelForm):
+    address = forms.CharField(max_length=100, required=False, label='住所')
+
+class AddSpotForm(forms.ModelForm):
+    class Meta:
+        model = Spot
+        fields = ('address',)
+        labels = {
+            'address': "住所",
+        }

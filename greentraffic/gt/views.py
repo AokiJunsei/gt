@@ -6,7 +6,7 @@ from .models import models
 # from .models import Map
 
 from django.views.generic import TemplateView
-from .forms import AccountForm, AddAccountForm
+from .forms import AccountForm, AddAccountForm, SpotForm, AddSpotForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -169,3 +169,37 @@ def user_delete_view(request):
     else:
         return render(request, 'user_delete.html')
 
+
+class SpotRegistration(TemplateView):
+    template_name = "gt/user_spot_addspot.html"
+
+    def get(self, request):
+        context = {
+            "SpotCreate": False,
+            "spot_form": SpotForm(),
+            "add_spot_form": AddSpotForm(),
+        }
+        return render(request, self.template_name, context=context)
+
+    def post(self, request):
+        spot_form = SpotForm(data=request.POST)
+        add_spot_form = AddSpotForm(data=request.POST)
+
+        if spot_form.is_valid() and add_spot_form.is_valid():
+            spot = spot_form.save()
+            spot.set_password(spot.password)
+            spot.save()
+
+            add_spot = add_spot_form.save(commit=False)
+            add_spot.user = spot
+            add_spot.save()
+
+            context = {"SpotCreate": True}
+        else:
+            logger.error(spot_form.errors)
+            context = {
+                "SpotCreate": False,
+                "spot_form": spot_form,
+                "add_spot_form": add_spot_form
+            }
+        return render(request, self.template_name, context=context)
