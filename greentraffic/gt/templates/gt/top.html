@@ -51,7 +51,11 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* 影の効果（オプショナル） */
     overflow-y: auto; /* スクロールを有効にする */
   }
-
+  @media (max-width: 600px) { /* 画面の幅が600px以下の場合に適用される */
+    #floating-panel {
+      top: 120px; /* ヘッダーの高さに合わせて調整 */
+    }
+  }
   .mode-selector {
     margin-top: 10px;
   }
@@ -133,7 +137,16 @@
 
 {% block content %}
 <body onload="initMap()">
-  <div id="floating-panel">
+  
+  <!--フォームの表示非表示-->
+  <div>
+    <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
+  </div>
+  <div>
+    <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
+  </div>
+  <div id="map-container">
+    <div id="floating-panel">
     <!-- <h1>最短検索</h1> -->
     <label>出発地: </label>
     <input type="text" id="start" placeholder="出発地を入力してください" />
@@ -175,14 +188,6 @@
     <span hidden><div id="id_keido">経度</div></span>
     <span hidden><div id="id_address">住所</div></span>
   </div>
-  <!--フォームの表示非表示-->
-  <div>
-    <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
-  </div>
-  <div>
-    <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
-  </div>
-  <div id="map-container">
     <div id="map"></div>
     <div id="directions-panel">
       <div class="tab" onclick="toggleTab('content')">Content</div>
@@ -202,7 +207,7 @@
     var map;
     let directionsService, directionsRenderer;
     let currentLocationMarker;
-
+    
     function toggleInputForm() {
       var x = document.getElementById('floating-panel');
       var icon = document.getElementById('toggle-icon');
