@@ -4,15 +4,12 @@
 
 {% block head %}
 <style>
-  body, html {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
 
   #map-container {
+    margin-top: -47.9px; /* 上のマージンを取り除く */
+    padding-top: 0; /* 上のパディングを取り除く */
     position: relative;
-    height: 100vh;
+    height: calc(100vh - 40px);
   }
 
   #map {

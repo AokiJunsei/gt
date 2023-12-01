@@ -103,13 +103,7 @@ footer.footer {
 /* メインコンテンツの下部にフッターの高さ分のスペースを確保 */
 body, html {
   margin: 0;
-  padding-bottom: 60px; /* フッターの高さに合わせて調整してください */
 }
-
-.container.text-center {
-  text-align: center;
-}
-
 @media (max-width: 768px) {
   table.reg_form {
     display: block;
