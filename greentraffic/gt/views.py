@@ -13,12 +13,14 @@ from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Account, Map
+from .models import Account, MapCar ,MapBike
 from .forms import AccountForm, AddAccountForm, AccountDeleteForm, AccountUpdateForm, LocationForm
 
+from django.db import transaction
 import requests
 import json
 import logging
+from django.contrib import messages
 
 # ロガーの設定
 logger = logging.getLogger(__name__)
@@ -27,66 +29,159 @@ logger = logging.getLogger(__name__)
 def top_page(request):
     return render(request, 'gt/top.html')
 
+# 最安検索のビュー
+def user_search_cheap(request):
+    return render(request, 'gt/user_search_cheap.html')
+
+# シェアリング検索（車）のビュー
+def user_search_share_car(request):
+    return render(request, 'gt/user_search_share_car.html')
+
+# シェアリング検索（自転車）のビュー
+def user_search_share_bike(request):
+    return render(request, 'gt/user_search_share_bike.html')
+
+# 履歴を残す検索のビュー
+def user_my_map(request):
+    return render(request, 'gt/user_my_map.html')
+
+# 管理者用ユーザー情報閲覧ページのビュー
+def admin_user_info(request):
+    return render(request, 'gt/admin_user_info.html')
+
 # 管理者用トップページのビュー
 @login_required
 def admin_top(request):
-    map_list = Map.objects.all()
-    return render(request, 'gt/admin_top.html', {'map_list' : map_list})
+    map_car = MapCar.objects.all()
+    map_bike = MapBike.objects.all()
+    return render(request, 'gt/admin_top.html', {'map_car' : map_car, 'map_bike' : map_bike})
 
 
-# 管理者用マップ変更ビュー
+# 管理者用マップ登録ビュー
 @login_required
-def admin_map_change(request, pk):
-    map_change = get_object_or_404(Map, pk=pk)
+def admin_map_register(request):
     if request.method == 'POST':
         form = LocationForm(request.POST)
         if form.is_valid():
-            map_change.name = form.cleaned_data['name']
-            map_change.address = form.cleaned_data['address']
+            name = form.cleaned_data['name']
+            address = form.cleaned_data['address']
+            vehicle_type = form.cleaned_data['vehicle_type']
 
             # ここで外部APIを呼び出し、JSONデータを取得
             api_url = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
-            response = requests.get(api_url, params={'address': map_change.address})
+            response = requests.get(api_url, params={'address': address})
 
             if response.status_code == 200:
                 data = response.json()
+
                 location_data = data['results'][0]['geometry']['location']
-                map_change.lat = location_data['lat']  # 緯度
-                map_change.lng = location_data['lng']  # 経度
+                lat = location_data['lat']  # 緯度
+                lng = location_data['lng']  # 経度
 
                 # 緯度と経度のみを含む辞書を作成
-                location_only = {'lat': map_change.lat, 'lng': map_change.lng}
+                location_only = {'lat': lat, 'lng': lng}
 
                 # 辞書をJSONにシリアライズ
-                map_change.json_data = json.dumps(location_only)
+                json_data = json.dumps(location_only)
 
                 # データベースに保存
-                map_change.save()
+                if vehicle_type == 'car':
+                    MapCar.objects.create(name=name, address=address, json_data=json_data)
+                elif vehicle_type == 'bike':
+                    MapBike.objects.create(name=name, address=address, json_data=json_data)
 
                 message_success = "データが保存されました"
                 alert_API = "APIからデータを取得できませんでした"
                 alert_form = "フォームが無効です"
                 show_modal = True
                 show_alert = True
+                return render(request, 'gt/admin_map_register.html', {'form': form,'message': message_success, 'json_data': json_data,'show_modal': show_modal})
+            else:
+                return render(request, 'gt/admin_map_register.html', {'form': form,'message': alert_API, 'show_alert': show_alert})
+        else:
+            return render(request, 'gt/admin_map_register.html', {'form': form,'message': alert_form, 'show_alert': show_alert})
+    else:
+        form = LocationForm()
+        return render(request, 'gt/admin_map_register.html', {'form': form})
+
+
+# 管理者用マップ変更ビュー
+@login_required
+def admin_map_change(request,vehicle_type, pk):
+    # 既存のインスタンスを取得するかどうか判断
+    map_change = None
+    if pk:
+        # 車種タイプに基づいてオブジェクトを取得
+        if vehicle_type == 'car':
+            map_change = get_object_or_404(MapCar, pk=pk)
+        elif vehicle_type == 'bike':
+            map_change = get_object_or_404(MapBike, pk=pk)
+        else:
+            messages.error(request, "不正な車両タイプが指定されました。")
+            return redirect('gt:admin_top')
+    if map_change:
+        form = LocationForm(initial={
+            'name': map_change.name,
+            'address': map_change.address,
+            'vehicle_type': vehicle_type
+        })
+    else:
+        form = LocationForm()
+
+    if request.method == 'POST':
+        form = LocationForm(request.POST)
+        if form.is_valid():
+            if not map_change or form.cleaned_data['vehicle_type'] != vehicle_type:
+                # Delete the old instance if the vehicle type has changed
+                if map_change:
+                    map_change.delete()
+                # Create a new instance based on the form's vehicle_type
+                map_change = MapCar() if form.cleaned_data['vehicle_type'] == 'car' else MapBike()
+
+            map_change.address = form.cleaned_data['address']
+            # ここで外部APIを呼び出し、JSONデータを取得
+            api_url = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
+            response = requests.get(api_url, params={'address': map_change.address})
+
+            if response.status_code == 200:
+                with transaction.atomic():
+                    data = response.json()
+                    location_data = data['results'][0]['geometry']['location']
+                    map_change.lat = location_data['lat']  # 緯度
+                    map_change.lng = location_data['lng']  # 経度
+
+                    # 緯度と経度のみを含む辞書を作成
+                    location_only = {'lat': map_change.lat, 'lng': map_change.lng}
+
+                    # 辞書をJSONにシリアライズ
+                    map_change.json_data = json.dumps(location_only)
+
+                    map_change.name = form.cleaned_data['name']
+                    map_change.json_data = map_change.json_data
+                    map_change.save()
+
+                    message_success = "データが保存されました"
                 return render(request, 'gt/admin_map_register.html', {
                     'form': form,
                     'message': message_success,
                     'json_data': map_change.json_data,
-                    'show_modal': show_modal
+                    'show_modal': True
                 })
             else:
+                alert_API = "APIからデータを取得できませんでした"
                 # APIからデータを取得できなかった場合の処理
                 return render(request, 'gt/admin_map_change.html', {
                     'form': form,
                     'message': alert_API,
-                    'show_alert': show_alert
+                    'show_alert': True
                 })
         else:
             # フォームが無効な場合の処理
+            alert_form = "フォームが無効です"
             return render(request, 'gt/admin_map_change.html', {
                 'form': form,
                 'message': alert_form,
-                'show_alert': show_alert
+                'show_alert': True
             })
     else:
         # GETリクエストの場合、フォームを既存のデータで初期化
@@ -95,15 +190,23 @@ def admin_map_change(request, pk):
 
 # 管理者用マップ削除ビュー
 @login_required
-def admin_map_delete(request, pk):
-    map_delete = get_object_or_404(Map, pk=pk)
+def admin_map_delete(request, pk, vehicle_type):
+    if vehicle_type == 'car':
+        map_delete = get_object_or_404(MapCar, pk=pk)
+    elif vehicle_type == 'bike':
+        map_delete = get_object_or_404(MapBike, pk=pk)
+    else:
+        return redirect('gt:admin_top')
     map_delete.delete()
     return redirect(reverse('gt:admin_top'))
 
 # 管理者用マップ詳細ビュー
 @login_required
-def admin_map_detail(request, pk):
-    map_detail = get_object_or_404(Map, pk=pk)
+def admin_map_detail(request, pk, vehicle_type):
+    if vehicle_type == 'car':
+        map_detail = get_object_or_404(MapCar, pk=pk)
+    elif vehicle_type == 'bike':
+        map_detail = get_object_or_404(MapBike, pk=pk)
     return render(request, 'gt/admin_map_detail.html', {'map_detail': map_detail})
 
 
@@ -193,14 +296,26 @@ def user_info(request):
 # ユーザー情報更新ビュー
 @login_required
 def user_update_view(request):
+    user = request.user
+    account = user.account
+
     if request.method == 'POST':
-        form = AccountUpdateForm(request.POST, instance=request.user.account)
+        form = AccountUpdateForm(request.POST, instance=account)
         if form.is_valid():
+            # User モデルの更新
+            user.username = form.cleaned_data['username']
+            user.email = form.cleaned_data['email']
+            user.password = form.cleaned_data['password']
+            user.save()
+
+            # Account モデルの更新
             form.save()
             return redirect('gt:user_info')
     else:
-        form = AccountUpdateForm(instance=request.user.account)
+        form = AccountUpdateForm(instance=account, initial={'username': user.username, 'email': user.email})
+
     return render(request, 'user_update.html', {'form': form})
+
 
 # ユーザー退会ビュー
 @login_required
@@ -212,50 +327,3 @@ def user_delete_view(request):
         return redirect('gt:register')  # ログインページにリダイレクト
     else:
         return render(request, 'user_delete.html')
-
-
-# 管理者用マップ登録ビュー
-@login_required
-def admin_map_register(request):
-    if request.method == 'POST':
-        form = LocationForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            address = form.cleaned_data['address']
-
-            # ここで外部APIを呼び出し、JSONデータを取得
-            api_url = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
-            response = requests.get(api_url, params={'address': address})
-
-            if response.status_code == 200:
-                data = response.json()
-
-                # デバックコンソール
-                # print("Data:", data)
-
-                location_data = data['results'][0]['geometry']['location']
-                lat = location_data['lat']  # 緯度
-                lng = location_data['lng']  # 経度
-
-                # 緯度と経度のみを含む辞書を作成
-                location_only = {'lat': lat, 'lng': lng}
-
-                # 辞書をJSONにシリアライズ
-                json_data = json.dumps(location_only)
-
-                # データベースに保存
-                Map.objects.create(name=name, address=address, json_data=json_data)
-
-                message_success = "データが保存されました"
-                alert_API = "APIからデータを取得できませんでした"
-                alert_form = "フォームが無効です"
-                show_modal = True
-                show_alert = True
-                return render(request, 'gt/admin_map_register.html', {'form': form,'message': message_success, 'json_data': json_data,'show_modal': show_modal})
-            else:
-                return render(request, 'gt/admin_map_register.html', {'form': form,'message': alert_API, 'show_alert': show_alert})
-        else:
-            return render(request, 'gt/admin_map_register.html', {'form': form,'message': alert_form, 'show_alert': show_alert})
-    else:
-        form = LocationForm()
-        return render(request, 'gt/admin_map_register.html', {'form': form})

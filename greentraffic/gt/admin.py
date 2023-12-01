@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Account, SearchHistory, Spot, Map
+from .models import Account, SearchHistory, Spot, MapCar ,MapBike
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
@@ -19,8 +19,16 @@ class SpotAdmin(admin.ModelAdmin):
     search_fields = ('spot_name', 'account__name', 'category', 'address')
     #スポットテーブル
 
-@admin.register(Map)
-class MapAdmin(admin.ModelAdmin):
+@admin.register(MapCar)
+class MapCarAdmin(admin.ModelAdmin):
+    list_display = ('name', 'address', 'json_data_display')
+
+    def json_data_display(self, obj):
+        return obj.json_data
+    json_data_display.short_description = 'JSON Data'
+
+@admin.register(MapBike)
+class MapBikeAdmin(admin.ModelAdmin):
     list_display = ('name', 'address', 'json_data_display')
 
     def json_data_display(self, obj):

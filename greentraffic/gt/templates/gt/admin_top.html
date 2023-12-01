@@ -4,7 +4,6 @@
 {% block title %}管理サイト{% endblock %}
 
 {% block map_list %} active {% endblock %}
-{% comment %} TODO DBに登録済みのマップ情報を一覧表示するリストを記載 {% endcomment %}
 
 {% block head %}
 <style>
@@ -63,49 +62,106 @@
 <div class="container px-4 px-lg-5 my-div-style">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
-            {% for map in map_list %}
-            <div class="post-preview d-flex justify-content-between align-items-center">
-                <div>
-                    <a href="{% url 'gt:admin_map_detail' map.pk %}">
-                        <h2 class="post-title">{{ map.name }}</h2>
-                        <h3 class="post-subtitle">{{ map.address|truncatechars:20 }}</h3>
-                    </a>
+            {% comment %} 検索のインプットフォーム {% endcomment %}
+            <input type="text" id="searchInput" placeholder="検索...">
+
+            {% comment %} 自転車と車のリストの切り替え {% endcomment %}
+            <select id="modelSelector">
+                <option value="model1">自動車</option>
+                <option value="model2">自転車</option>
+            </select>
+
+            <hr>
+
+            <div id="model1List" class="model-list" style="display: block;">
+                {% for map in map_car %}
+                <div class="post-preview list-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'gt:admin_map_detail' vehicle_type='car' pk=map.pk %}">
+                            <h2 class="post-title">{{ map.name }}</h2>
+                            <h3 class="post-subtitle">{{ map.address|truncatechars:20 }}</h3>
+                        </a>
+                    </div>
+                    <div>
+                        <a class="btn btn-success" href="{% url 'gt:admin_map_change' vehicle_type='car' pk=map.pk %}">変更</a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
+                            削除
+                        </button>
+                    </div>
                 </div>
-                <div>
-                    <a class="btn btn-success" href="{% url 'gt:admin_map_change' map.pk %}">変更</a>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
-                        削除
-                    </button>
-                </div>
-            </div>
-            <hr class="my-4" />
-            <!--削除するためのモーダルウィンドウ -->
-            <div class="modal fade" id="deleteModal-{{ map.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ map.pk }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel-{{ map.pk }}">削除確認</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
-                        </div>
-                        <div class="modal-body">
-                        本当に削除しますか？
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-                        <form method="post" action="{% url 'gt:admin_map_delete' map.pk %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="map_id" value="{{ map.pk }}">
-                            <button type="submit" class="btn btn-danger">削除</button>
-                        </form>
+                <hr class="my-4" />
+                <!--削除するためのモーダルウィンドウ -->
+                <div class="modal fade" id="deleteModal-{{ map.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ map.pk }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel-{{ map.pk }}">削除確認</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                            </div>
+                            <div class="modal-body">
+                            本当に削除しますか？
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                            <form method="post" action="{% url 'gt:admin_map_delete' vehicle_type='car' pk=map.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="map_id" value="{{ map.pk }}">
+                                <button type="submit" class="btn btn-danger">削除</button>
+                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                {% empty %}
+                <p>マップ情報が見つかりません。</p>
+                {% endfor %}
             </div>
 
-            {% empty %}
-            <p>マップ情報が見つかりません。</p>
-            {% endfor %}
+            <div id="model2List" class="model-list" style="display: none;">
+                {% for map in map_bike %}
+                <div class="post-preview list-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'gt:admin_map_detail' vehicle_type='bike' pk=map.pk %}">
+                            <h2 class="post-title">{{ map.name }}</h2>
+                            <h3 class="post-subtitle">{{ map.address|truncatechars:20 }}</h3>
+                        </a>
+                    </div>
+                    <div>
+                        <a class="btn btn-success" href="{% url 'gt:admin_map_change' vehicle_type='bike' pk=map.pk %}">変更</a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
+                            削除
+                        </button>
+                    </div>
+                </div>
+                <hr class="my-4" />
+                <!--削除するためのモーダルウィンドウ -->
+                <div class="modal fade" id="deleteModal-{{ map.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ map.pk }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel-{{ map.pk }}">削除確認</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                            </div>
+                            <div class="modal-body">
+                            本当に削除しますか？
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                            <form method="post" action="{% url 'gt:admin_map_delete'  vehicle_type='bike' pk=map.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="map_id" value="{{ map.pk }}">
+                                <button type="submit" class="btn btn-danger">削除</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                {% empty %}
+                <p>マップ情報が見つかりません。</p>
+                {% endfor %}
+            </div>
             <!-- ページネーション処理 -->
             {% if is_paginated %}
             <ul class="pagination">
@@ -147,11 +203,40 @@
     <div class="d-flex justify-content-end mb-4">
         <a class="btn btn-primary" href="{% url 'gt:admin_map_register' %}">追加する</a>
     </div>
+    <div class="d-flex justify-content-end mb-4">
+        <a class="btn btn-primary" href="{% url 'gt:admin_user_info' %}">利用者情報を閲覧する</a>
+    </div>
+
+    {% comment %} 表示するリストを切り替える関数 {% endcomment %}
+    <script>
+        // ドロップダウンの変更を監視
+        document.getElementById('modelSelector').addEventListener('change', function() {
+            var selectedModel = this.value;
+            // すべてのリストを非表示に
+            document.querySelectorAll('.model-list').forEach(function(list) {
+                list.style.display = 'none';
+            });
+
+            // 選択されたリストを表示
+            document.getElementById(selectedModel + 'List').style.display = 'block';
+
+            // 検索ボックスをクリア
+            document.getElementById('searchInput').value = '';
+        });
+
+        // 検索機能
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            var searchQuery = this.value.toLowerCase();
+            var visibleList = document.querySelector('.model-list:not([style*="display: none"])');
+
+            if (visibleList) {
+                visibleList.querySelectorAll('.list-item').forEach(function(item) {
+                    var text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(searchQuery) ? '' : 'none';
+                });
+            }
+        });
+
+    </script>
 </div>
 {% endblock content %}
-
-
-{% comment %} <div class="d-flex justify-content-end mb-4">
-	TODO 利用者情報閲覧ページへのルーティングボタンを追加
-	<a class="btn btn-primary" href="{% url 'gt:admin_map_register' %}">利用者情報を閲覧する</a>
-</div> {% endcomment %}
