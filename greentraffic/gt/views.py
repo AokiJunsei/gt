@@ -21,9 +21,16 @@ import requests
 import json
 import logging
 from django.contrib import messages
+from django.core.mail import send_mail
+import random
+import string
+
 
 # ロガーの設定
 logger = logging.getLogger(__name__)
+
+def generate_activation_code():
+    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
 
 # トップページのビュー
 def top_page(request):
@@ -245,23 +252,33 @@ class AccountRegistration(TemplateView):
         add_account_form = AddAccountForm(data=request.POST)
 
         if account_form.is_valid() and add_account_form.is_valid():
-            account = account_form.save()
+            account = account_form.save(commit=False)
             account.set_password(account.password)
+            account.activation_code = generate_activation_code()
             account.save()
 
             add_account = add_account_form.save(commit=False)
             add_account.user = account
             add_account.save()
 
+            # メール送信処理
+            send_mail(
+                'Your Activation Code',
+                f'Your activation code is: {account.activation_code}',
+                'from@example.com',  # 実際のメールアドレスに変更
+                [account.email],
+                fail_silently=False,
+            )
+
             context = {"AccountCreate": True}
         else:
-            logger.error(account_form.errors)
             context = {
                 "AccountCreate": False,
                 "account_form": account_form,
                 "add_account_form": add_account_form
             }
         return render(request, self.template_name, context=context)
+        
 
 
 # ログインビュー
@@ -337,3 +354,22 @@ def user_delete_view(request):
 def user_spot_list(request):
     spot = Spot.objects.all()
     return render(request, 'gt/user_spot_list.html', {'spot' : spot})
+
+def activate_account(request, activation_code):
+    User = get_user_model()
+    try:
+        user = User.objects.get(activation_code=activation_code)
+        user.email_confirmed = True
+        user.activation_code = ''
+        user.save()
+        # アカウントが認証されたことを通知
+        # ここで例えば認証成功のメッセージを表示するページにリダイレクトする
+        return redirect('activation_success')
+    except User.DoesNotExist:
+        # 認証コードが見つからない場合のエラー処理
+        # 例えばエラーメッセージを表示するページにリダイレクトする
+        return redirect('activation_error')
+
+
+
+

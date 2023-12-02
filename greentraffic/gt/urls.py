@@ -31,6 +31,7 @@ urlpatterns = [
     path('register/', views.AccountRegistration.as_view(), name='register'),
     
     path('spot_list/', views.user_spot_list, name='user_spot_list'),
+    path('activate/<str:activation_code>/', views.activate_account, name='activate_account'),
 ]
 
 

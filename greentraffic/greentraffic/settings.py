@@ -123,6 +123,15 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' #設定しなくてもデフォルトでこの値になるっぽい
+EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST = 'smtp.googlemail.com' #これでもいける
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'duema3611@gmail.com'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # send_mailのfromがNoneの場合自動で入る。
+EMAIL_HOST_PASSWORD = '0801koBA'
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
