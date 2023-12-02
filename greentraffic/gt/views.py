@@ -13,7 +13,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Account, MapCar ,MapBike
+from .models import Account, MapCar ,MapBike ,Spot
 from .forms import AccountForm, AddAccountForm, AccountDeleteForm, AccountUpdateForm, LocationForm
 
 from django.db import transaction
@@ -60,6 +60,13 @@ def admin_top(request):
 # 管理者用マップ登録ビュー
 @login_required
 def admin_map_register(request):
+    message_success = "データが保存されました。"
+    alert_API = "APIからデータを取得できませんでした。"
+    alert_form = "フォームが無効です。正しく記入してください。"
+    none_data = "データを取得できませんでした。正しい住所を入力してください。"
+    show_modal = True
+    show_alert = True
+
     if request.method == 'POST':
         form = LocationForm(request.POST)
         if form.is_valid():
@@ -73,6 +80,9 @@ def admin_map_register(request):
 
             if response.status_code == 200:
                 data = response.json()
+
+                if data['status'] == 'ZERO_RESULTS':
+                    return render(request, 'gt/admin_map_register.html', {'form': form,'message': none_data, 'show_alert': show_alert})
 
                 location_data = data['results'][0]['geometry']['location']
                 lat = location_data['lat']  # 緯度
@@ -89,12 +99,6 @@ def admin_map_register(request):
                     MapCar.objects.create(name=name, address=address, json_data=json_data)
                 elif vehicle_type == 'bike':
                     MapBike.objects.create(name=name, address=address, json_data=json_data)
-
-                message_success = "データが保存されました"
-                alert_API = "APIからデータを取得できませんでした"
-                alert_form = "フォームが無効です"
-                show_modal = True
-                show_alert = True
                 return render(request, 'gt/admin_map_register.html', {'form': form,'message': message_success, 'json_data': json_data,'show_modal': show_modal})
             else:
                 return render(request, 'gt/admin_map_register.html', {'form': form,'message': alert_API, 'show_alert': show_alert})
@@ -226,7 +230,7 @@ def log_detail_view(request):
 
 # 新規登録ビュー
 class AccountRegistration(TemplateView):
-    template_name = "gt/register.html"
+    template_name = "gt/user_register.html"
 
     def get(self, request):
         context = {
@@ -327,3 +331,9 @@ def user_delete_view(request):
         return redirect('gt:register')  # ログインページにリダイレクト
     else:
         return render(request, 'user_delete.html')
+
+# スポット一覧のビュー
+@login_required
+def user_spot_list(request):
+    spot = Spot.objects.all()
+    return render(request, 'gt/user_spot_list.html', {'spot' : spot})

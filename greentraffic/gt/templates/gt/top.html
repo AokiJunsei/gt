@@ -192,7 +192,6 @@
       <div id="content-tab" class="tab-content active"></div>
       <div id="details-tab" class="tab-content"></div>
     </div>
-    <!-- <div id="map_canvas" style="width:100%;height:300px"></div> -->
   </div>
 
   <script
@@ -402,6 +401,7 @@
           /*fetchRouteAndDisplayOnMap();*/
           let coordinates = extractCoordinates(routeData);
           displayRouteOnMap(coordinates, map);
+          displayRouteInfo(routeData);
       }else{
         calculateAndDisplayRoute()
       }
@@ -719,12 +719,38 @@
       .then(data => {
         //取得したルート情報を地図上に表示する
         //displayRouteOnMap(data);
+        //displayRouteInfo(data)
         alert(JSON.stringify(data,null,2));
       })
       .catch(error => {
         console.error('Error:',error)
       });
     }*/
+
+
+    function displayRouteInfo(routeData) {
+      const contentTab = document.getElementById("content-tab");
+      contentTab.innerHTML = "";
+
+
+      // 経路詳細を表示
+      const summary = document.createElement("div");
+      contentTab.appendChild(summary);
+      routeData.NorikaeBizApiResult.body.route[0].path.forEach(segment => {
+        const segmentInfo = document.createElement("div");
+
+        segmentInfo.innerHTML += `<p>出発駅: ${routeData.NorikaeBizApiResult.body.route[0].path[0].from}</p>`;
+        segmentInfo.innerHTML += `<p>到着駅: ${routeData.NorikaeBizApiResult.body.route[0].path[0].to}</p>`;
+        segmentInfo.innerHTML += `<p>${segment.rosen} ${segment.lineType}(${segment.lineIndex}) 線</p>`;
+        segmentInfo.innerHTML += `<p>所要時間: ${segment.jikan}分</p>`;
+        segmentInfo.innerHTML += `<p>距離: ${segment.kyori}km</p>`;
+        segmentInfo.innerHTML += `<p>乗車区分: ${segment.seatKubun.num}車両</p>`;
+        //segmentInfo.innerHTML += `<p>発着時刻: ${segment.fromTime} ～ ${segment.toTime}</p>`;
+        segmentInfo.innerHTML += `<p>運賃きっぷ: ${segment.untin}円</p>`;
+        segmentInfo.innerHTML += `<p>交通系IC:${segment.icUntin}円</p>`;
+        contentTab.appendChild(segmentInfo);
+    });
+  }
 
 
       /*座標データの抽出*/
