@@ -14,7 +14,7 @@ class Account(models.Model):
     address_2 = models.CharField(max_length=100, blank=True)
     gender = models.CharField(max_length=1, choices=[('M', '男'), ('F', '女'), ('O', 'その他')], blank=True)  # 性別
     # 追加部分
-    email_confirmed = models.BooleanField(default=False)
+    email_verified = models.BooleanField(default=False)  # メール認証状態を追跡
     activation_code = models.CharField(max_length=20, blank=True)
 
     def __str__(self):

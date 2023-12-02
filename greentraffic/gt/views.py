@@ -24,7 +24,10 @@ from django.contrib import messages
 from django.core.mail import send_mail
 import random
 import string
-
+from django.shortcuts import redirect
+from django.views.generic import TemplateView
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth import get_user_model
 
 # ロガーの設定
 logger = logging.getLogger(__name__)
@@ -252,34 +255,61 @@ class AccountRegistration(TemplateView):
         add_account_form = AddAccountForm(data=request.POST)
 
         if account_form.is_valid() and add_account_form.is_valid():
-            account = account_form.save(commit=False)
-            account.set_password(account.password)
-            account.activation_code = generate_activation_code()
-            account.save()
+            email = account_form.cleaned_data.get('email')
 
-            add_account = add_account_form.save(commit=False)
-            add_account.user = account
-            add_account.save()
+        # filter() と first() を使用してユーザーを取得
+            user = User.objects.filter(email=email).first()
 
-            # メール送信処理
-            send_mail(
-                'Your Activation Code',
-                f'Your activation code is: {account.activation_code}',
-                'from@example.com',  # 実際のメールアドレスに変更
-                [account.email],
-                fail_silently=False,
-            )
-
-            context = {"AccountCreate": True}
+            if user:
+            # ユーザーが存在する場合、認証プロセスを実行
+                token = default_token_generator.make_token(user)
+                activation_link = request.build_absolute_uri(
+                    reverse('gt:activate_account', kwargs={'token': token})
+                )
+                send_mail(
+                    'Account Activation',
+                    f'Please click on the following link to activate your account: {activation_link}',
+                    'duema3611@gmail.com',
+                    [email],
+                    fail_silently=False,
+                )
+            return redirect('gt:activation_required')
         else:
-            context = {
-                "AccountCreate": False,
+            # フォームが無効な場合の処理
+            return render(request, 'gt/user_register.html', {
                 "account_form": account_form,
                 "add_account_form": add_account_form
-            }
-        return render(request, self.template_name, context=context)
+            })
         
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from .models import Account
 
+def activate_account(request, token):
+    # トークンからユーザーを特定するロジックを実装
+    for user in User.objects.all():
+        if default_token_generator.check_token(user, token):
+            # トークンが一致する場合の処理
+            try:
+                account = Account.objects.get(user=user)
+                account.email_verified = True
+                account.save()
+
+                # ユーザーをログインさせる処理を追加することもできます
+                # login(request, user)
+
+                # 認証成功ページへリダイレクト
+                return redirect('gt:top')
+            except Account.DoesNotExist:
+                # アカウントが見つからない場合の処理
+                return render(request, 'activation_required.html')
+
+    # トークンが無効な場合の処理
+    return render(request, 'activation_invalid.html')
+
+class ActivationRequiredView(TemplateView):
+    template_name = 'activation_required.html'  # 認証が必要であることを示すテンプレート
 
 # ログインビュー
 def Login(request):
@@ -354,22 +384,4 @@ def user_delete_view(request):
 def user_spot_list(request):
     spot = Spot.objects.all()
     return render(request, 'gt/user_spot_list.html', {'spot' : spot})
-
-def activate_account(request, activation_code):
-    User = get_user_model()
-    try:
-        user = User.objects.get(activation_code=activation_code)
-        user.email_confirmed = True
-        user.activation_code = ''
-        user.save()
-        # アカウントが認証されたことを通知
-        # ここで例えば認証成功のメッセージを表示するページにリダイレクトする
-        return redirect('activation_success')
-    except User.DoesNotExist:
-        # 認証コードが見つからない場合のエラー処理
-        # 例えばエラーメッセージを表示するページにリダイレクトする
-        return redirect('activation_error')
-
-
-
 
