@@ -13,7 +13,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Account, MapCar ,MapBike
+from .models import Account, MapCar ,MapBike ,Spot
 from .forms import AccountForm, AddAccountForm, AccountDeleteForm, AccountUpdateForm, LocationForm
 
 from django.db import transaction
@@ -230,7 +230,7 @@ def log_detail_view(request):
 
 # 新規登録ビュー
 class AccountRegistration(TemplateView):
-    template_name = "gt/register.html"
+    template_name = "gt/user_register.html"
 
     def get(self, request):
         context = {
@@ -331,3 +331,9 @@ def user_delete_view(request):
         return redirect('gt:register')  # ログインページにリダイレクト
     else:
         return render(request, 'user_delete.html')
+
+# スポット一覧のビュー
+@login_required
+def user_spot_list(request):
+    spot = Spot.objects.all()
+    return render(request, 'gt/user_spot_list.html', {'spot' : spot})
