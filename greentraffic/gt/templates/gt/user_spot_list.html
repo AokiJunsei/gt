@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block title %}管理サイト{% endblock %}
+
+{% block spot %} active {% endblock %}
+
+{% block content %}
+<div class="container px-4 px-lg-5 my-div-style">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            {% if user_spots %}
+                {% for spot in user_spots %}
+                <div class="post-preview d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'gt:user_spot_detail' spot.pk %}">
+                            <h2 class="post-title">{{ spot.spot_name }}</h2>
+                            <h3 class="post-subtitle">{{ spot.address|truncatechars:20 }}</h3>
+                        </a>
+                    </div>
+                    <div>
+                        <a class="btn btn-success" href="{% url 'gt:user_spot_change' spot.pk %}">変更</a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ spot.pk }}">
+                            削除
+                        </button>
+                    </div>
+                </div>
+                <hr class="my-4" />
+                <!--削除するためのモーダルウィンドウ -->
+                <div class="modal fade" id="deleteModal-{{ spot.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ spot.pk }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel-{{ spot.pk }}">削除確認</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                            </div>
+                            <div class="modal-body">
+                            本当に削除しますか？
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                            <form method="post" action="{% url 'gt:user_spot_delete' spot.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="spot_id" value="{{ spot.pk }}">
+                                <button type="submit" class="btn btn-danger">削除</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% empty %}
+                <p>スポット情報が見つかりません。</p>
+                {% endfor %}
+
+            {% else %}
+                <!-- ユーザーがログインしていない、またはスポットがない場合のメッセージ -->
+                <p>スポットが見つかりません。</p>
+            {% endif %}
+
+            <!-- ページネーション処理 -->
+            {% if is_paginated %}
+            <ul class="pagination">
+            <!-- 前ページへのリンク -->
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- ページ数表示 -->
+            {% for page_num in page_obj.paginator.page_range %}
+            {% if page_obj.number == page_num %}
+            <li class="page-item active">
+                <a class="page-link" href="#">{{ page_num }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+            </li>
+            {% endif %} {% endfor %}
+
+            <!-- 次ページへのリンク -->
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- '追加する'ボタンをフッター直前に配置 -->
+    <div class="d-flex justify-content-end mb-4">
+        <a class="btn btn-primary" href="{% url 'gt:user_spot_register' %}">追加する</a>
+    </div>
+</div>
+{% endblock content %}
