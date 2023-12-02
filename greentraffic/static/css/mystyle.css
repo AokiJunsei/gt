@@ -104,7 +104,10 @@ footer.footer {
 body, html {
   margin: 0;
 }
-
-.container.text-center {
-  text-align: center;
+@media (max-width: 768px) {
+  table.reg_form {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 }
