@@ -31,7 +31,10 @@ urlpatterns = [
     path('register/', views.AccountRegistration.as_view(), name='register'),
     
     path('spot_list/', views.user_spot_list, name='user_spot_list'),
-    path('activate/<str:activation_code>/', views.activate_account, name='activate_account'),
+    path('spot_change/<int:pk>/', views.user_spot_change, name='user_spot_change'),
+    path('spot_delete/<int:pk>/', views.user_spot_delete, name='user_spot_delete'),
+    path('spot_detail/<int:pk>/', views.user_spot_detail, name='user_spot_detail'),
+    path('spot_register/', views.user_spot_register, name='user_spot_register'),
 ]
 
 
