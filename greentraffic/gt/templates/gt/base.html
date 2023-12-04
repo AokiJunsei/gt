@@ -64,9 +64,15 @@
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% if request.user.is_authenticated %}
                   {% if request.user.username == "admin" %}
-                  <li class="nav-item"><a class="nav-link" href="{% url 'gt:admin_top' %}">マップ情報一覧</a></li>
-                  <li class="nav-item"><a class="nav-link" href="{% url 'gt:admin_map_register' %}">マップ情報追加</a></li>
-                  <li class="nav-item"><a class="nav-link" href="{% url 'gt:admin_user_info' %}">利用者情報閲覧</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'admin_top' %}active{% endif %}" href="{% url 'gt:admin_top' %}">マップ情報一覧</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'admin_map_register' %}active{% endif %}" href="{% url 'gt:admin_map_register' %}">マップ情報追加</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'admin_user_info' %}active{% endif %}" href="{% url 'gt:admin_user_info' %}">利用者情報閲覧</a>
+                  </li>
                   {% else %}
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'top' %}active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -168,13 +174,13 @@
                       <a class="nav-link" href="#"><div id="text"></div></a>
                     </li>
                     <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'user_info' or request.resolver_match.url_name == 'user_spot_list' or request.resolver_match.url_name == 'account_history' %}active{% endif %}" id="navbarDropdownMenuLink" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-cog fa-lg"></i>
                       </a>
                       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{% url 'gt:user_info' %}">マイプロフィール</a></li>
-                        <li><a class="dropdown-item" href="{% url 'gt:user_spot_list' %}">スポットリスト</a></li>
-                        <li><a class="dropdown-item" href="{% url 'gt:account_history' %}">履歴リスト</a></li>
+                        <li><a class="dropdown-item {% if request.resolver_match.url_name == 'user_info' %}active{% endif %}" href="{% url 'gt:user_info' %}">マイプロフィール</a></li>
+                        <li><a class="dropdown-item {% if request.resolver_match.url_name == 'user_spot_list' %}active{% endif %}" href="{% url 'gt:user_spot_list' %}">スポットリスト</a></li>
+                        <li><a class="dropdown-item {% if request.resolver_match.url_name == 'account_history' %}active{% endif %}" href="{% url 'gt:account_history' %}">履歴リスト</a></li>
                       </ul>
                     </li>
                   {% endif %}
@@ -190,10 +196,10 @@
                     <a class="nav-link" href="#"><div id="text"></div></a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'gt:register' %}">新規登録</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'gt:register' %}">新規登録</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'gt:user_login' %}">ログイン</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'user_login' %}active{% endif %}" href="{% url 'gt:user_login' %}">ログイン</a>
                   </li>
                 {% endif %}
               </ul>
