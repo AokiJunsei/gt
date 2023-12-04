@@ -5,40 +5,40 @@
 {% block content %}
 <main>
   <!-- アラートメッセージ -->
-  <div id="alert" class="container mt-3" style="display: none;">
-		<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	<div id="alert" class="container mt-3">
+		<div class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
 			{{ message|safe }}
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>
 	</div>
 
-	<div class="container">
-		<h2>更新内容を入力してください</h2>
-		<form method="post">
-				{% csrf_token %}
-				{{ form.as_p }}
-				<button type="submit" class="btn btn-primary">更新</button>
-		</form>
-		<a class="btn btn-secondary" href="{% url 'gt:admin_top' %}">戻る</a>
-	</div>
+  <div class="container">
+    <h2>更新内容を入力してください</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">更新</button>
+    </form>
+    <a class="btn btn-secondary" href="{% url 'gt:user_spot_list' %}">戻る</a>
+  </div>
 
 	<!-- 成功時に表示するモーダル -->
 	<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-				<h5 class="modal-title" id="successModalLabel">{{ message|safe }}</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
+          <h5 class="modal-title" id="successModalLabel">{{ message|safe }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
 				</div>
 				<div class="modal-body" onload="initMap()">
 					<h3>{{ message|safe }}<h3>
 					<div id="map" style="width: 100%; height: 400px;"></div>
 				</div>
 				<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-				<a href="{% url 'gt:admin_top' %}" class="btn btn-primary">TOPページに戻る</a>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+          <a href="{% url 'gt:user_spot_list' %}" class="btn btn-primary">スポット一覧ページに戻る</a>
 				</div>
 			</div>
 		</div>
@@ -82,8 +82,9 @@
 
 		//失敗した場合のアラート
 		$(document).ready(function() {
-			if ('{{ show_alert|safe }}' === 'True') {
-				$('#alert').css('display', 'block'); // アラートを表示
+			// show_modal 変数が true の場合、モーダルを表示し、地図を初期化
+			if ('{{ show_alert|safe }}') {
+				$('#alert').show();
 			}
 		});
 

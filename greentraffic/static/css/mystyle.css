@@ -5,11 +5,10 @@ h1 {
 
 div.reg {
   background-color: #EEEEEE;
-  margin-left: 20%;
-  margin-right: 20%;  
-  display: flex;
-  justify-content: center;
+  margin: auto; /* 中央揃えに */
+  max-width: 640px; /* 最大幅を設定 */
   padding-top: 10px;
+  padding: 10px;
 }
 
 .message {
@@ -41,8 +40,7 @@ table.reg_form small{
 .button-container {
   justify-content: center;
   align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 20px;
   margin: auto; /* 中央揃え */
 }
 input::placeholder {
@@ -105,9 +103,11 @@ footer.footer {
 /* メインコンテンツの下部にフッターの高さ分のスペースを確保 */
 body, html {
   margin: 0;
-  padding-bottom: 60px; /* フッターの高さに合わせて調整してください */
 }
-
-.container.text-center {
-  text-align: center;
+@media (max-width: 768px) {
+  table.reg_form {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 }
