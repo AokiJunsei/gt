@@ -143,49 +143,6 @@
   </div>
   <div id="map-container">
     <div id="floating-panel">
-<<<<<<< HEAD
-    <!-- <h1>最短検索</h1> -->
-    <label>出発地: </label>
-    <input type="text" id="start" placeholder="出発地を入力してください" />
-    <i id="current-location-icon" class="fas fa-compass" onclick="getCurrentLocation()"></i>
-    {% comment %} <i id="toggle-form-icon" class="fas fa-eye"></i><br> {% endcomment %}
-    <div id="waypoint1-group" class="form-group">
-      <label id="waypoint1-label" for="waypoint1">中継地点１:</label>
-      <input type="text" id="waypoint1" placeholder="中継地点を入力してください">
-    </div>
-    <div id="waypoint2-group" class="form-group">
-      <label id="waypoint2-label" for="waypoint2">中継地点２:</label>
-      <input type="text" id="waypoint2" placeholder="中継地点を入力してください">
-    </div>
-    <label>目的地: </label>
-    <input type="text" id="end" placeholder="目的地を入力してください" /><br>
-    <!--入れ替えボタン　未対応-->
-    {% comment %} <i id="swap-icon" class="fas fa-arrow-right-arrow-left" onclick="swapStartEnd()"></i> {% endcomment %}
-    <label>出発時刻: </label>
-    <input type="date" id="departure-date" />
-    <input type="time" id="departure-time" />
-
-    <div class="mode-selector">
-      <input type="checkbox" id="mode-driving" checked />
-      <label for="mode-driving">自動車</label>
-
-      <input type="checkbox" id="mode-transit"  />
-      <label for="mode-transit">電車</label>
-
-      <input type="checkbox" id="mode-walking"  />
-      <label for="mode-walking">徒歩</label>
-
-      <input type="checkbox" id="mode-bicycling"  />
-      <label for="mode-bicycling">自転車</label>
-
-      <button class="button-class"onclick="trainTF()">検索</button>
-
-    </div>
-    <span hidden><div id="id_ido">緯度</div></span>
-    <span hidden><div id="id_keido">経度</div></span>
-    <span hidden><div id="id_address">住所</div></span>
-  </div>
-=======
       <!-- <h1>最短検索</h1> -->
       <label>出発地: </label>
       <input type="text" id="start" placeholder="出発地を入力してください" />
@@ -227,7 +184,6 @@
       <span hidden><div id="id_keido">経度</div></span>
       <span hidden><div id="id_address">住所</div></span>
     </div>
->>>>>>> main
     <div id="map"></div>
     <div id="directions-panel">
       <div class="tab" onclick="toggleTab('content')">Content</div>

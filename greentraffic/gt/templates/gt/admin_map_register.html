@@ -27,9 +27,12 @@
                 {{ form.vehicle_type.label_tag }}
                 {{ form.vehicle_type }}
             </div>
-            <button type="button" class="btn btn-primary" id="saveButton">登録</button>
-        </form>
-		<a class="btn btn-secondary" href="{% url 'gt:admin_top' %}">戻る</a>
+            
+		<div class="button-container">
+			<a class="btn btn-secondary" href="{% url 'gt:admin_top' %}">戻る</a>
+			<button type="button" class="btn btn--radius btn--cubic btn-submit" id="saveButton">登録</button>
+		  </div>
+		</form>
     </div>
 
 	<!-- 成功時に表示するモーダル -->
@@ -50,6 +53,7 @@
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
 				<a href="{% url 'gt:admin_top' %}" class="btn btn-primary">TOPページに戻る</a>
 				</div>
+
 			</div>
 		</div>
 	</div>
