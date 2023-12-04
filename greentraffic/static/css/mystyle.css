@@ -118,3 +118,15 @@ body, html {
     white-space: nowrap;
   }
 }
+@media (max-width: 768px) {
+  table.reg_form {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+/* ヘッダーiconの隣にスペースを確保 */
+.mr-2 {
+  margin-right: 8px; /* こちらも調整可能 */
+}
