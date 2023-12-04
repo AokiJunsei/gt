@@ -111,3 +111,8 @@ body, html {
     white-space: nowrap;
   }
 }
+
+/* ヘッダーiconの隣にスペースを確保 */
+.mr-2 {
+  margin-right: 8px; /* こちらも調整可能 */
+}
