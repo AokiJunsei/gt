@@ -4,8 +4,8 @@
 
 {% block content %}
 <main>
-  <!-- アラートメッセージ -->
-  <div id="alert" class="container mt-3" style="display: none;">
+	<!-- アラートメッセージ -->
+	<div id="alert" class="container mt-3" style="display: none;">
 		<div class="alert alert-warning alert-dismissible fade show" role="alert">
 			{{ message|safe }}
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -44,11 +44,11 @@
 		</div>
 	</div>
 
-  <script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
-	></script>
+	<script async defer
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
+		></script>
 
-  <script>
+	<script>
 		function initMap() {
 			var jsonData = JSON.parse('{{ json_data|safe }}');
 
@@ -65,10 +65,10 @@
 
     // 保存ボタンがクリックされたら確認ダイアログを表示
     document.getElementById("saveButton").addEventListener("click", function () {
-      if (confirm("このデータを保存しますか？")) {
-        // フォームを送信
-        document.getElementById("locationForm").submit();
-      }
+		if (confirm("このデータを保存しますか？")) {
+			// フォームを送信
+			document.getElementById("locationForm").submit();
+		}
     });
 
 		//成功した場合のモーダルウィンドウ
@@ -95,6 +95,6 @@
 				$('#successModal').modal('hide');
 			});
 		});
-  </script>
+	</script>
 </main>
 {% endblock content %}

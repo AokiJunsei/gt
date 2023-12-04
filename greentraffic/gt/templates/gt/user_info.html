@@ -13,7 +13,6 @@
             <th>氏名</th>
             <td>{{ user.account.last_name }} {{ user.account.first_name }}</td>
         </tr>
-        
         <tr>
             <th>郵便番号</th>
             <td>{{ user.account.zipcode }}</td>
@@ -31,7 +30,6 @@
         <a href="{% url 'gt:user_update' %}" class="btn btn--radius btn--cubic btn-submit">編集</a>
         <a href="{% url 'gt:user_delete' %}" class="btn btn--radius btn--cubic btn-cancel">削除</a>
     </div>
-    
 </div>
 {% endif %}
 {% endblock %}
