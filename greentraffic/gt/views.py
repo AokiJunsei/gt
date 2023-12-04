@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 # トップページのビュー(車)
 def top_page(request):
-    return render(request, 'gt/top.html')
+    return render(request, 'gt/user_search_car.html')
 
 # 徒歩の検索
 def user_search_walk(request):
