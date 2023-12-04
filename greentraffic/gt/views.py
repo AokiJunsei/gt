@@ -26,11 +26,27 @@ from django.contrib import messages
 # ロガーの設定
 logger = logging.getLogger(__name__)
 
-# トップページのビュー
+# トップページのビュー(車)
 def top_page(request):
     return render(request, 'gt/top.html')
 
-# 最安検索のビュー
+# 徒歩の検索
+def user_search_walk(request):
+    return render(request, 'gt/user_search_walk.html')
+
+# 自転車の検索
+def user_search_bike(request):
+    return render(request, 'gt/user_search_bike.html')
+
+# トップページのビュー(車)
+def top_page(request):
+    return render(request, 'gt/top.html')
+
+# 電車最短検索のビュー
+def user_search_short(request):
+    return render(request, 'gt/user_search_short.html')
+
+# 電車最安検索のビュー
 def user_search_cheap(request):
     return render(request, 'gt/user_search_cheap.html')
 
