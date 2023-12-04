@@ -12,28 +12,26 @@
 		</div>
 	</div>
     <div>
-        <form method="post" id="locationForm">
-            {% csrf_token %}
-            <div class="mb-3">
-				<h5 class="card-title">登録したい場所を入力してください</h5>
-                {{ form.name.label_tag }}
-                {{ form.name }}
-            </div>
-            <div class="mb-3">
-                {{ form.address.label_tag }}
-                {{ form.address }}
-            </div>
-			<div class="mb-3">
-                {{ form.vehicle_type.label_tag }}
-                {{ form.vehicle_type }}
-            </div>
-            
-		<div class="button-container">
-			<a class="btn btn-secondary" href="{% url 'gt:admin_top' %}">戻る</a>
-			<button type="button" class="btn btn--radius btn--cubic btn-submit" id="saveButton">登録</button>
-		  </div>
-		</form>
-    </div>
+		<div class="reg">
+			<form method="post" id="locationForm">
+				{% csrf_token %}
+					<h5 class="card-title">登録したい場所を入力してください</h5>
+					<table class="reg_form">
+						<tr>
+							<th>{{ form.name.label_tag }}</th>
+							<td>{{ form.name }}</td>
+							<th>{{ form.address.label_tag }}</th>
+							<td>{{ form.address }}</td>
+							<th>{{ form.vehicle_type.label_tag }}</th>
+							<td>{{ form.vehicle_type }}</td>
+					</table>
+				
+				<div class="button-container">
+					<a class="btn btn-secondary" href="{% url 'gt:admin_top' %}">戻る</a>
+					<button type="button" class="btn btn--radius btn--cubic btn-submit" id="saveButton">登録</button>
+				  </div>
+			</form>
+		</div>
 
 	<!-- 成功時に表示するモーダル -->
 	<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
@@ -53,7 +51,6 @@
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
 				<a href="{% url 'gt:admin_top' %}" class="btn btn-primary">TOPページに戻る</a>
 				</div>
-
 			</div>
 		</div>
 	</div>
