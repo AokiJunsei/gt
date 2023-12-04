@@ -116,3 +116,14 @@ body, html {
 .mr-2 {
   margin-right: 8px; /* こちらも調整可能 */
 }
+
+/* ヘッダー画面該当ページを白くする */
+.nav-link.active, .dropdown-item.active {
+  color: #fff;
+}
+
+/* ドロップダウンメニュー内のアクティブな項目の背景色を灰色に設定 */
+.navbar .dropdown-menu .dropdown-item.active,
+.navbar .dropdown-menu .dropdown-item:active {
+  background-color: #6c757d; /* Bootstrapの灰色 */
+}
