@@ -38,10 +38,6 @@ def user_search_walk(request):
 def user_search_bike(request):
     return render(request, 'gt/user_search_bike.html')
 
-# トップページのビュー(車)
-def top_page(request):
-    return render(request, 'gt/top.html')
-
 # 電車最短検索のビュー
 def user_search_short(request):
     return render(request, 'gt/user_search_short.html')
