@@ -1,4 +1,3 @@
-<!-- user_update.html -->
 {% extends 'base.html' %}
 {% block title %}登録情報更新ページ{% endblock %}
 {% block content %}
@@ -28,19 +27,19 @@
               <th>{{ form.first_name.label_tag }}</th>
               <td>{{ form.first_name }}</td>
             </tr>
-            
+
             <tr>
               <th>{{ form.gender.label_tag }}</th>
               <td>{{ form.gender }}</td>
             </tr>
-            
+
             <tr>
               <th>{{ form.zipcode.label_tag }}</th>
               <td>{{ form.zipcode }}</td>
               <th>{{ form.state.label_tag }}</th>
               <td>{{ form.state }}</td>
             </tr>
-            
+
             <tr>
               <th>{{ form.city.label_tag }}</th>
               <td>{{ form.city }}</td>
@@ -51,15 +50,12 @@
               <th>{{ form.address_2.label_tag }}</th>
               <td>{{ form.address_2 }}</td>
             </tr>
-            
-            
+
           </table>
         <div class="button-container">
             <a href="{% url 'gt:user_info' %}" class="btn btn--radius btn--cubic btn-cancel">戻る</a>
             <button class="btn btn--radius btn--cubic btn-submit" type="submit">変更</button>
         </div>
-        
     </form>
-    
 </div>
 {% endblock %}
