@@ -80,12 +80,19 @@ input::placeholder {
 
 /* キャンセルボタンのホバー時のスタイルを暗い赤色に変更 */
 .btn-cancel:hover {
-  background-color: #c00000; /* 暗い赤色に変更 */
+  background-color: #666; /* 暗い赤色に変更 */
 }
 .btn-submit:hover {
-  background-color: #809999; /* 暗い赤色に変更 */
+  background-color: #666; /* 暗い赤色に変更 */
 }
-
+.btn-cancel:focus {
+  color:  #ff0000; /* フォーカスやアクティブ状態での文字色を指定 */
+  /* 必要に応じて他のスタイルもここに追加 */
+}
+.btn-cancel:focus {
+  color: #809999; /* フォーカスやアクティブ状態での文字色を指定 */
+  /* 必要に応じて他のスタイルもここに追加 */
+}
 /*footer*/
 
 footer.footer {
@@ -162,11 +169,13 @@ body, html {
   width: 30%;
   max-height: 100vh;
   overflow-y: auto;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.9);
   padding: 10px;
   box-sizing: border-box;
   transition: width 0.3s ease;
 }
+
+
 
 #directions-panel.collapsed {
   width: 0;
@@ -174,18 +183,21 @@ body, html {
 
 
 #floating-panel {
-  position: absolute; /* または `fixed` を使用してもよい */
-  right: 20px; /* 地図の左端からの距離 */
-  transform: translateX(-50%); /* 左に50%ずらして中央寄せ */
-  top: 104; /* 画面の上端からの距離 */
-  z-index: 10; /* 他の要素より上に表示する */
-  max-width: 90%; /* 地図のコンテナの幅に合わせて調整する */
-  box-sizing: border-box; /* paddingとborderがwidthに含まれるように */
-  padding: 10px; /* 内側の余白 */
-  background-color: rgba(255, 255, 255, 0.9); /* 背景色と透明度（必要に応じて） */
-  border-radius: 5px; /* 角の丸み */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* 影の効果（オプショナル） */
-  overflow-y: auto; /* スクロールを有効にする */
+  margin-right: 20px; /* 余白を20ピクセルに設定します。 */
+  position: fixed; /* Keep the panel fixed within the viewport */
+  z-index: 5; /* Ensure it stays above other elements */
+  background-color: rgba(255, 255, 255, 0.9); /* Set background color with some transparency */
+  padding: 10px; /* Add padding inside the panel */
+  border-radius: 5px; /* Round the corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+  top: 60px; /* Position from the top */
+  left: 700px; /* Position from the left */
+  width: auto; /* Auto width to fit content */
+  max-width: 200px; /* Maximum width taking into account margins */
+  box-sizing: border-box; /* Include padding and border in width and height */
+  overflow: auto; /* Add scrollbars if content overflows */
+  word-wrap: break-word; /* Ensure long words do not cause overflow */
+  white-space: normal; /* Allow text to wrap within the panel */
 }
 
 .mode-selector {

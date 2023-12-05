@@ -31,7 +31,7 @@
                     </div>
                     <div>
                         <a class="btn btn-success" href="{% url 'gt:admin_map_change' vehicle_type='car' pk=map.pk %}">変更</a>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
+                        <button type="button" class="btn btn--radius btn--cubic btn-cancel" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
                             削除
                         </button>
                     </div>
@@ -53,7 +53,7 @@
                             <form method="post" action="{% url 'gt:admin_map_delete' vehicle_type='car' pk=map.pk %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="map_id" value="{{ map.pk }}">
-                                <button type="submit" class="btn btn-danger">削除</button>
+                                <button type="submit" class="btn btn--radius btn--cubic btn-cancel">削除</button>
                             </form>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                     </div>
                     <div>
                         <a class="btn btn-success" href="{% url 'gt:admin_map_change' vehicle_type='bike' pk=map.pk %}">変更</a>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
+                        <button type="button" class="btn btn--radius btn--cubic btn-cancel" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
                             削除
                         </button>
                     </div>

@@ -2861,7 +2861,13 @@ textarea.form-control-lg {
   --bs-btn-disabled-bg: #0d6efd;
   --bs-btn-disabled-border-color: #0d6efd;
 }
-
+.btn-primary:hover{
+  color: #333;
+}
+.btn-primary:focus, .btn-primary:active {
+  color: #6c757d; /* フォーカスやアクティブ状態での文字色を指定 */
+  /* 必要に応じて他のスタイルもここに追加 */
+}
 .btn-secondary {
   --bs-btn-color: #fff;
   --bs-btn-bg: #6c757d;
@@ -2882,7 +2888,7 @@ textarea.form-control-lg {
   color: #333;
 }
 .btn-secondary:focus, .btn-secondary:active {
-  color: #333; /* フォーカスやアクティブ状態での文字色を指定 */
+  color: #6c757d; /* フォーカスやアクティブ状態での文字色を指定 */
   /* 必要に応じて他のスタイルもここに追加 */
 }
 .btn-success {
@@ -2901,7 +2907,13 @@ textarea.form-control-lg {
   --bs-btn-disabled-bg: #198754;
   --bs-btn-disabled-border-color: #198754;
 }
-
+.btn-success:hover{
+  color: #333;
+}
+.btn-success:focus {
+  color: #157347; /* フォーカスやアクティブ状態での文字色を指定 */
+  /* 必要に応じて他のスタイルもここに追加 */
+}
 .btn-info {
   --bs-btn-color: #000;
   --bs-btn-bg: #0dcaf0;
