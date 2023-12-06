@@ -12,20 +12,24 @@
 		</div>
 	</div>
     <div>
-        <form method="post" id="locationForm">
-            {% csrf_token %}
-            <div class="mb-3">
-				<h5 class="card-title">登録したい場所を入力してください</h5>
-                {{ form.name.label_tag }}
-                {{ form.name }}
-            </div>
-            <div class="mb-3">
-                {{ form.address.label_tag }}
-                {{ form.address }}
-            </div>
-            <button type="button" class="btn btn-primary" id="saveButton">登録</button>
-        </form>
-		<a class="btn btn-secondary" href="{% url 'gt:user_spot_list' %}">戻る</a>
+        <div class="reg">
+			<form method="post" id="locationForm">
+				{% csrf_token %}
+					<h5 class="card-title">登録したい場所を入力してください</h5>
+					<table class="reg_form">
+						<tr>
+							<th>{{ form.name.label_tag }}</th>
+							<td>{{ form.name }}</td>
+							<th>{{ form.address.label_tag }}</th>
+							<td>{{ form.address }}</td>
+					</table>
+				
+				<div class="button-container">
+					<a class="btn btn-secondary" href="{% url 'gt:user_spot_list' %}">戻る</a>
+					<button type="button" class="btn btn--radius btn--cubic btn-submit" id="saveButton">登録</button>
+				  </div>
+			</form>
+
     </div>
 
 	<!-- 成功時に表示するモーダル -->

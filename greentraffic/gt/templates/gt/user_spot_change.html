@@ -11,16 +11,23 @@
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>
 	</div>
-
-	<div class="container">
-		<h2>更新内容を入力してください</h2>
-		<form method="post">
-			{% csrf_token %}
-			{{ form.as_p }}
-			<button type="submit" class="btn btn-primary">更新</button>
-		</form>
-		<a class="btn btn-secondary" href="{% url 'gt:user_spot_list' %}">戻る</a>
-	</div>
+	<div class="reg">
+		<form method="post" id="locationForm">
+		{% csrf_token %}
+		<h5 class="card-title">更新内容を入力してください</h5>
+		<form method="post">			
+				<table class="reg_form">
+					<tr>
+						<th>{{ form.name.label_tag }}</th>
+						<td>{{ form.name }}</td>
+						<th>{{ form.address.label_tag }}</th>
+						<td>{{ form.address }}</td>
+					</tr>
+				</table>
+				<div class="button-container">
+				<a class="btn btn-secondary" href="{% url 'gt:user_spot_list' %}">戻る</a>
+				<button type="submit" class="btn btn--radius btn--cubic btn-submit">更新</button>
+			</div>
 
 	<!-- 成功時に表示するモーダル -->
 	<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
