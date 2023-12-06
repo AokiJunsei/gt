@@ -39,6 +39,7 @@
       <div id="content-tab" class="tab-content active"></div>
       <div id="details-tab" class="tab-content"></div>
     </div>
+    
   </div>
 
   <script
@@ -232,6 +233,7 @@
         if (status === "OK") {
           directionsRenderer.setDirections(response);
           showRouteInformation(response);
+          expandPanel();
         } else {
           window.alert("Directions request failed due to " + status);
         }
@@ -367,6 +369,12 @@ document.addEventListener('mousemove', function(e) {
     }
   });
 });
+
+function expandPanel() {
+  var panel = document.getElementById('directions-panel');
+  panel.classList.add('expanded'); // expanded クラスを追加して拡大します
+}
+
   </script>
 </body>
 {% endblock content %}

@@ -164,21 +164,21 @@ body, html {
 
 #directions-panel {
   position: absolute;
-  top: 0;
+  top: 60px;
   left: 0;
+  bottom: 20px;
   width: 30%;
-  max-height: 100vh;
+  max-height: 100px; /* 初期の最大高さ */
   overflow-y: auto;
   background-color: rgba(255, 255, 255, 0.9);
   padding: 10px;
   box-sizing: border-box;
-  transition: width 0.3s ease;
+  transition: max-height 0.3s ease;
+  
 }
 
-
-
-#directions-panel.collapsed {
-  width: 0;
+#directions-panel.expanded {
+  max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
 }
 
 
@@ -199,7 +199,12 @@ body, html {
   word-wrap: break-word; /* Ensure long words do not cause overflow */
   white-space: normal; /* Allow text to wrap within the panel */
 }
-
+@media screen and (max-width: 800px) {
+  #floating-panel {
+    left: 50%; /* 画面が狭い時は左から50ピクセルの位置に設定 */
+    /* 他に必要なスタイルの変更をここに追加 */
+  }
+}
 .mode-selector {
   margin-top: 10px;
 }
