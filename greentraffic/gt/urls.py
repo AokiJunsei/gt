@@ -33,6 +33,7 @@ urlpatterns = [
     path('logout/', views.Logout, name='logout'),
     path('register/', views.AccountRegistration.as_view(), name='register'),
     path('activate/<str:username>/<str:token>/', activate_account, name='activate'),
+    path('registration_complete/', views.registration_complete, name='registration_complete'),
 
     path('spot_list/', views.user_spot_list, name='user_spot_list'),
     path('spot_change/<int:pk>/', views.user_spot_change, name='user_spot_change'),
