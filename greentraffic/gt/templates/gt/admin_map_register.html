@@ -53,41 +53,6 @@
 			</div>
 		</div>
 	</div>
-	
-	<div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <!-- アラートメッセージ -->
-                <div id="alert" class="mt-3" style="display: none;">
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        {{ message|safe }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                </div>
-                
-                <!-- フォーム -->
-                <form method="post" id="locationForm" class="form">
-                    {% csrf_token %}
-                    <h5 class="card-title">登録したい場所を入力してください</h5>
-                    <div class="mb-3">
-                        {{ form.name.label_tag }}
-                        {{ form.name }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.address.label_tag }}
-                        {{ form.address }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.vehicle_type.label_tag }}
-                        {{ form.vehicle_type }}
-                    </div>
-                    <div class="button-container">
-                        <a class="btn btn-secondary" href="{% url 'gt:admin_top' %}">戻る</a>
-                        <button type="button" class="btn btn--radius btn--cubic btn-submit" id="saveButton">登録</button>
-                    </div>
-                </form>
-            </div>
-        </div>
 
 	<script async defer
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
