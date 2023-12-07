@@ -14,9 +14,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Account, MapCar ,MapBike ,Spot
-from .forms import AccountForm, AddAccountForm, AccountDeleteForm, AccountUpdateForm, LocationForm ,SpotForm
+from .forms import AccountForm, AddAccountForm, AccountDeleteForm, AccountUpdateForm, LocationForm
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 import requests
 import json
@@ -25,28 +24,22 @@ from django.contrib import messages
 from django.core.mail import send_mail
 import random
 import string
-
+from django.shortcuts import redirect
+from django.views.generic import TemplateView
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth import get_user_model
 
 # ロガーの設定
 logger = logging.getLogger(__name__)
 
-# トップページのビュー(車)
+def generate_activation_code():
+    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
+
+# トップページのビュー
 def top_page(request):
-    return render(request, 'gt/user_search_car.html')
+    return render(request, 'gt/top.html')
 
-# 徒歩の検索
-def user_search_walk(request):
-    return render(request, 'gt/user_search_walk.html')
-
-# 自転車の検索
-def user_search_bike(request):
-    return render(request, 'gt/user_search_bike.html')
-
-# 電車最短検索のビュー
-def user_search_short(request):
-    return render(request, 'gt/user_search_short.html')
-
-# 電車最安検索のビュー
+# 最安検索のビュー
 def user_search_cheap(request):
     return render(request, 'gt/user_search_cheap.html')
 
@@ -262,34 +255,61 @@ class AccountRegistration(TemplateView):
         add_account_form = AddAccountForm(data=request.POST)
 
         if account_form.is_valid() and add_account_form.is_valid():
-            account = account_form.save(commit=False)
-            account.set_password(account.password)
-            account.activation_code = generate_activation_code()
-            account.save()
+            email = account_form.cleaned_data.get('email')
 
-            add_account = add_account_form.save(commit=False)
-            add_account.user = account
-            add_account.save()
+        # filter() と first() を使用してユーザーを取得
+            user = User.objects.filter(email=email).first()
 
-            # メール送信処理
-            send_mail(
-                'Your Activation Code',
-                f'Your activation code is: {account.activation_code}',
-                'from@example.com',  # 実際のメールアドレスに変更
-                [account.email],
-                fail_silently=False,
-            )
-
-            context = {"AccountCreate": True}
+            if user:
+            # ユーザーが存在する場合、認証プロセスを実行
+                token = default_token_generator.make_token(user)
+                activation_link = request.build_absolute_uri(
+                    reverse('gt:activate_account', kwargs={'token': token})
+                )
+                send_mail(
+                    'Account Activation',
+                    f'Please click on the following link to activate your account: {activation_link}',
+                    'duema3611@gmail.com',
+                    [email],
+                    fail_silently=False,
+                )
+            return redirect('gt:activation_required')
         else:
-            context = {
-                "AccountCreate": False,
+            # フォームが無効な場合の処理
+            return render(request, 'gt/user_register.html', {
                 "account_form": account_form,
                 "add_account_form": add_account_form
-            }
-        return render(request, self.template_name, context=context)
+            })
         
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from .models import Account
 
+def activate_account(request, token):
+    # トークンからユーザーを特定するロジックを実装
+    for user in User.objects.all():
+        if default_token_generator.check_token(user, token):
+            # トークンが一致する場合の処理
+            try:
+                account = Account.objects.get(user=user)
+                account.email_verified = True
+                account.save()
+
+                # ユーザーをログインさせる処理を追加することもできます
+                # login(request, user)
+
+                # 認証成功ページへリダイレクト
+                return redirect('gt:top')
+            except Account.DoesNotExist:
+                # アカウントが見つからない場合の処理
+                return render(request, 'activation_required.html')
+
+    # トークンが無効な場合の処理
+    return render(request, 'activation_invalid.html')
+
+class ActivationRequiredView(TemplateView):
+    template_name = 'activation_required.html'  # 認証が必要であることを示すテンプレート
 
 # ログインビュー
 def Login(request):
@@ -359,130 +379,9 @@ def user_delete_view(request):
     else:
         return render(request, 'user_delete.html')
 
-
 # スポット一覧のビュー
 @login_required
 def user_spot_list(request):
-    if request.user.is_authenticated:
-        try:
-            account_instance = Account.objects.get(user=request.user)
-            user_spots = Spot.objects.filter(account=account_instance)
-        except ObjectDoesNotExist:
-            user_spots = None
-    else:
-        user_spots = None
-    return render(request,'user_spot_list.html',{'user_spots':user_spots})
+    spot = Spot.objects.all()
+    return render(request, 'gt/user_spot_list.html', {'spot' : spot})
 
-
-# スポット登録ビュー
-@login_required
-def user_spot_register(request):
-    account = Account.objects.get(user=request.user)
-    form = SpotForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-
-        message_success = "データが保存されました"
-        alert_API = "APIからデータを取得できませんでした"
-        none_data = "データを取得できませんでした。正しい住所を入力してください。"
-        show_modal = True
-        show_alert = True
-        name = form.cleaned_data['name']
-        address = form.cleaned_data['address']
-
-        # ここで外部APIを呼び出し、JSONデータを取得
-        api_url = 'https://maps.googleapis.com/maps/api/geocode/json'
-        response = requests.get(api_url, params={'address': address,'key':'AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'})
-
-        if response.status_code == 200:
-            data = response.json()
-            if data['status'] == 'ZERO_RESULTS':
-                return render(request, 'gt/user_spot_register.html', {'form': form,'message': none_data, 'show_alert': show_alert})
-
-            location_data = data['results'][0]['geometry']['location']
-            lat = location_data['lat']  # 緯度
-            lng = location_data['lng']  # 経度
-
-            # 緯度と経度のみを含む辞書を作成
-            location_only = {'lat': lat, 'lng': lng}
-
-            # 辞書をJSONにシリアライズ
-            json_data = json.dumps(location_only)
-
-            # データベースに保存
-            Spot.objects.create(spot_name = name,address=address, json_data=json_data,account = account)
-
-            return render(request, 'gt/user_spot_register.html', {'form': form,'message': message_success, 'json_data': json_data,'show_modal': show_modal})
-        else:
-            return render(request, 'gt/user_spot_register.html', {'form': form,'message': alert_API, 'show_alert': show_alert})
-
-    else:
-        return render(request, 'gt/user_spot_register.html', {'form': form})
-
-
-
-# スポット変更ビュー
-@login_required
-def user_spot_change(request, pk):
-    spot_change = get_object_or_404(Spot, pk=pk)
-    form = SpotForm(request.POST or None)
-    account = Account.objects.get(user = request.user)
-    if request.method == 'POST' and form.is_valid():
-        spot_change.spot_name = form.cleaned_data['name']
-        spot_change.address = form.cleaned_data['address']
-        spot_change.account = account
-        message_success = "データが保存されました"
-        alert_API = "APIからデータを取得できませんでした"
-        show_modal = True
-        show_alert = True
-
-        # ここで外部APIを呼び出し、JSONデータを取得
-        api_url = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
-        response = requests.get(api_url, params={'address': spot_change.address})
-
-        if response.status_code == 200:
-            data = response.json()
-            location_data = data['results'][0]['geometry']['location']
-            spot_change.lat = location_data['lat']  # 緯度
-            spot_change.lng = location_data['lng']  # 経度
-
-            # 緯度と経度のみを含む辞書を作成
-            location_only = {'lat': spot_change.lat, 'lng': spot_change.lng}
-
-            # 辞書をJSONにシリアライズ
-            spot_change.json_data = json.dumps(location_only)
-
-            # データベースに保存
-            spot_change.save()
-
-            return render(request, 'gt/user_spot_change.html', {
-                'form': form,
-                'message': message_success,
-                'json_data': spot_change.json_data,
-                'show_modal': show_modal,
-            })
-        else:
-            # APIからデータを取得できなかった場合の処理
-            return render(request, 'gt/user_spot_change.html', {
-                'form': form,
-                'message': alert_API,
-                'show_alert': show_alert
-            })
-    else:
-        # GETリクエストの場合、フォームを既存のデータで初期化
-        form = SpotForm(initial={'name': spot_change.spot_name, 'address': spot_change.address})
-        return render(request, 'gt/user_spot_change.html', {'form': form})
-
-
-# スポット削除ビュー
-@login_required
-def user_spot_delete(request, pk):
-    spot_delete = get_object_or_404(Spot, pk=pk)
-    spot_delete.delete()
-    return redirect(reverse('gt:user_spot_list'))
-
-
-# スポット詳細ビュー
-@login_required
-def user_spot_detail(request, pk):
-    spot_detail = get_object_or_404(Spot, pk=pk)
-    return render(request, 'gt/user_spot_detail.html', {'spot_detail': spot_detail})

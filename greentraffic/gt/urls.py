@@ -1,5 +1,5 @@
 from django.urls import path
-
+from .views import activate_account  # 必要に応じてビューをインポート
 from . import views
 
 app_name = 'gt'
@@ -32,6 +32,7 @@ urlpatterns = [
     path('accounts/login/', views.Login, name='user_login'),
     path('logout/', views.Logout, name='logout'),
     path('register/', views.AccountRegistration.as_view(), name='register'),
+    path('activate/<str:username>/<str:token>/', activate_account, name='activate'),
 
     path('spot_list/', views.user_spot_list, name='user_spot_list'),
     path('spot_change/<int:pk>/', views.user_spot_change, name='user_spot_change'),
