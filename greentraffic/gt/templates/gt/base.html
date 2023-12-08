@@ -173,7 +173,7 @@
 
                   {% comment %} urlsから拾ってきてね（まだHTMLないから作ってHTMLをレンダリングさせるviewsも書いてね） {% endcomment %}
                   <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_share_car' or request.resolver_match.url_name == 'search_share_bike' or request.resolver_match.url_name == 'search_share_car_walk' %}active{% endif %}" href="#" id="handshakeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_share_car_car' or request.resolver_match.url_name == 'search_share_car_bike' or request.resolver_match.url_name == 'search_share_car_walk' %}active{% endif %}" href="#" id="handshakeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       <i class="fas fa-share-alt fa-lg mr-2"></i>
                       <i class="fas fa-car mr-2"></i>
                     </a>
