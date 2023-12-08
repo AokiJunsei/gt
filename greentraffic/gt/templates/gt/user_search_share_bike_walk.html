@@ -315,7 +315,7 @@
 					const nearestWaypointToStart = findNearestWaypoint(start, waypoints);
 					const nearestWaypointToEnd = findNearestWaypoint(end, waypoints);
 
-					if (!nearestWaypointToStart || !nearestWaypointToEnd) {
+					if (!nearestWaypointToStart || !nearestWaypointToEnd)walking {
 							throw new Error("中継地点を見つけることができませんでした。");
 					}
 

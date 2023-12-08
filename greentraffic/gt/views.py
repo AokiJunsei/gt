@@ -47,12 +47,24 @@ def user_search_cheap(request):
     return render(request, 'gt/user_search_cheap.html')
 
 # シェアリング検索（車）のビュー
-def user_search_share_car(request):
-    return render(request, 'gt/user_search_share_car.html')
+def user_search_share_car_car(request):
+    return render(request, 'gt/user_search_share_car_car.html')
 
 # シェアリング検索（自転車）のビュー
-def user_search_share_bike(request):
-    return render(request, 'gt/user_search_share_bike.html')
+def user_search_share_car_bike(request):
+    return render(request, 'gt/user_search_share_car_bike.html')
+# シェアリング検索（徒歩）のビュー
+def user_search_share_car_walk(request):
+    return render(request, 'gt/user_search_share_car_walk.html')
+# シェアリング検索（車１）のビュー
+def user_search_share_bike_car(request):
+    return render(request, 'gt/user_search_share_bike_car.html')
+# シェアリング検索（自転車１）のビュー
+def user_search_share_bike_bike(request):
+    return render(request, 'gt/user_search_share_bike_bike.html')
+# シェアリング検索（徒歩１）のビュー
+def user_search_share_bike_walk(request):
+    return render(request, 'gt/user_search_share_bike_walk.html')
 
 # 履歴を残す検索のビュー
 def user_my_map(request):
