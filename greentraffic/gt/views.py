@@ -297,7 +297,7 @@ class AccountRegistration(TemplateView):
                 "AccountCreate": False,
                 "account_form": account_form,
                 "add_account_form": add_account_form,
-                "error_message": "もう一度登録してください"
+                "error_message": "既に同じユーザーIDが登録されています。もう一度登録してください。"
             }
         return render(request, self.template_name, context=context)
     def send_activation_email(self, request, email, username, token):
