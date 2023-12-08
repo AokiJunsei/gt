@@ -12,6 +12,7 @@
   <h1>メールを確認してください</h1>
   <a href="{% url 'gt:top' %}" class="btn btn-cancel">topに戻る</a>
 {% else %}
+
 <h1>新規登録</h1>
   <div class="reg">
     {% if error_message %}
@@ -78,5 +79,6 @@
       </div>
     </form>
   </div>
+  
 {% endif %}
 {% endblock %}

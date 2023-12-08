@@ -273,30 +273,24 @@ class AccountRegistration(TemplateView):
         account_form = AccountForm(data=request.POST)
         add_account_form = AddAccountForm(data=request.POST)
         username = request.POST.get('username')  # ユーザーネームフィールドの名前に応じて変更
-
-        # ユーザーネームの重複チェック
-        if User.objects.filter(username=username).exists():
-            return render(request, self.template_name, {
-                "account_form": account_form,
-                "add_account_form": add_account_form,
-                "error_message": "同じ名前で登録されています。"
-            })
         
-
         if account_form.is_valid() and add_account_form.is_valid():
-            account = account_form.save(commit=False)
-            account.set_password(account.password)
-            account.is_active = False  # アカウントを非アクティブに設定
-            account.save()
+        # ユーザーネームの重複チェック
+            if User.objects.filter(username=username).exists():
+                return render(request, self.template_name, {
+                    "account_form": account_form,
+                    "add_account_form": add_account_form,
+                    "error_message": "同じ名前で登録されています。"
+                })
+        
+            request.session['account_data'] = account_form.cleaned_data
+            request.session['add_account_data'] = add_account_form.cleaned_data
 
-            add_account = add_account_form.save(commit=False)
-            add_account.user = account
-            add_account.save()
+            # 一意の認証トークンを生成し、メール送信
+            token = default_token_generator.make_token(User())
+            self.send_activation_email(request, account_form.cleaned_data['email'], account_form.cleaned_data['username'], token)
 
-            token = default_token_generator.make_token(account)
-            self.send_activation_email(request, account.email, account.username, token)
-            
-
+            # メール確認ページへのリダイレクト
             context = {"AccountCreate": True}
         else:
             context = {
@@ -314,15 +308,42 @@ class AccountRegistration(TemplateView):
 
 
 def activate_account(request, username, token):
-    user = get_object_or_404(User, username=username)
-    if default_token_generator.check_token(user, token):
-        user.is_active = True
-        user.save()
-        # 任意でログイン処理やリダイレクトを追加
-        return redirect('gt:registration_complete')  # 例: ホームページやログインページなど
-    else:
-        # エラー処理
-        return render(request, 'エラーページのテンプレート', {'エラーメッセージ': '無効なトークンです。'})
+    if User.objects.filter(username=username).exists():
+        user = User.objects.get(username=username)
+        if user.is_active:
+            # 既にアクティブな場合、top.htmlにエラーメッセージを表示
+            context = {'registered': 'このアカウントは既に登録されています。'}
+            return render(request, 'user_login.html', context)
+    if 'account_data' in request.session and 'add_account_data' in request.session:
+        account_data = request.session['account_data']
+        add_account_data = request.session['add_account_data']
+        if default_token_generator.check_token(User(), token):
+            user = User.objects.create_user(
+                username=account_data['username'],
+                email=account_data['email'],
+                password=account_data['password']
+            )
+            user.is_active = True
+            user.save()
+            account = Account(
+                user=user,
+                last_name=add_account_data['last_name'],
+                first_name=add_account_data['first_name'],
+                zipcode=add_account_data.get('zipcode', ''),
+                state=add_account_data.get('state', ''),
+                city=add_account_data.get('city', ''),
+                address=add_account_data.get('address', ''),
+                address_1=add_account_data.get('address_1', ''),
+                address_2=add_account_data.get('address_2', ''),
+                gender=add_account_data.get('gender', '未選択'),
+                # 他の必要なフィールドを追加...
+            )
+            account.save()
+            del request.session['account_data']
+            del request.session['add_account_data']
+            return redirect('gt:registration_complete')
+        else:
+           return render(request, 'gt:top', {'エラーメッセージ': '無効なトークンです。'})
 def registration_complete(request):
     return render(request, 'registration_complete.html')
 # ログインビュー
@@ -341,7 +362,11 @@ def Login(request):
             else:
                 return HttpResponse("アカウントが有効ではありません")
         else:
-            return HttpResponse("ログインIDまたはパスワードが間違っています")
+        # ログイン試行時に、is_activeがFalseの場合はメール確認を促す
+            if user is not None and not user.is_active:
+                return HttpResponse("メールアドレスを確認し、アカウントを有効化してください。")
+            else:
+                return HttpResponse("ログインIDまたはパスワードが間違っています")
 
     else:
         return render(request, 'gt/user_login.html')
