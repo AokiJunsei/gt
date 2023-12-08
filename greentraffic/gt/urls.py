@@ -38,15 +38,14 @@ urlpatterns = [
     path('spot_delete/<int:pk>/', views.user_spot_delete, name='user_spot_delete'),
     path('spot_detail/<int:pk>/', views.user_spot_detail, name='user_spot_detail'),
     path('spot_register/', views.user_spot_register, name='user_spot_register'),
-    
-    
-    path('', views.get_accounts, name='get_accounts'),
-    path('', views.get_search_histories, name='get_search_histories'),
-    path('', views.get_spots, name='get_spots'),
-    path('', views.get_map_cars, name='get_map_cars'),
-    path('', views.get_map_bikes, name='get_map_bikes'),
-    
-    #↑APIのエンドポイントわかりませんでした    
+
+
+    path('api/user_accounts/', views.get_accounts, name='get_accounts'),
+    path('api/user_histories', views.get_search_histories, name='get_search_histories'),
+    path('api/user_spots', views.get_spots, name='get_spots'),
+    path('api/maps', views.get_map_cars, name='get_map_cars'),
+    path('api/bikes', views.get_map_bikes, name='get_map_bikes'),
+
     ]
 
 
