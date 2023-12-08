@@ -79,6 +79,8 @@
 		const waypoints = [
 		{lat: 35.6905, lng: 139.6995, name: "新宿"},
 		{lat: 35.7377, lng: 139.7074, name: "池袋"},
+    {lat: 35.7973, lng: 139.5933, name: "朝霞駅"},
+    {lat: 35.7074, lng: 139.7520, name: "後楽園駅"},
 		// 他の中継地点...
 		];
 
@@ -99,15 +101,34 @@
       const trafficLayer = new google.maps.TrafficLayer();
       trafficLayer.setMap(map);
 
-			/*ジオコードオブジェクト化*/
+			/*ジオコードインスタンス化*/
 			geocoder = new google.maps.Geocoder();
 
-      //検索結果を左のタブに表示
+      // 赤色を指定
+      var polylineOptionsRed = {
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 6 // 線の太さを6ピクセルに設定
+    };
+
+      //検索結果を左のタブに表示するためのインスタンス化
       directionsService = new google.maps.DirectionsService();
-      directionsRenderer = new google.maps.DirectionsRenderer({
+      directionsRendererStartToShare = new google.maps.DirectionsRenderer({
+        map: map,
+        panel: document.getElementById("content-tab"),
+        polylineOptions : polylineOptionsRed
+      });
+
+      directionsRendererShareToShare = new google.maps.DirectionsRenderer({
         map: map,
         panel: document.getElementById("content-tab"),
       });
+
+      directionsRendererShareToEnd = new google.maps.DirectionsRenderer({
+        map: map,
+        panel: document.getElementById("content-tab"),
+        polylineOptions: polylineOptionsRed
+    });
 
       //ジオコーディング
       function geocode(){  var geocoder = new google.maps.Geocoder();
@@ -236,7 +257,7 @@
         console.error("Map object is not initialized yet.");
         return;
       }
-        calculateAndDisplayRoute(directionsService, directionsRenderer,  geocoder, waypoints,'DRIVING', 'WALKING', 'BICYCLING');
+        calculateAndDisplayRoute(directionsService, directionsRendererStartToShare, directionsRendererShareToShare, directionsRendererShareToEnd, geocoder, waypoints);
     }
 
 		// 最も近い中継地点を見つける関数
@@ -271,7 +292,7 @@
 	}
 
     /*経路検索メソッド*/
-		async function calculateAndDisplayRoute(directionsService, directionsRenderer, geocoder, waypoints, travelMode1, travelMode2, travelMode3) {
+		async function calculateAndDisplayRoute(directionsService, directionsRendererStartToShare, directionsRendererShareToShare, directionsRendererShareToEnd, geocoder, waypoints) {
 			try {
 
 					if (!directionsService) {
@@ -298,16 +319,46 @@
 							throw new Error("中継地点を見つけることができませんでした。");
 					}
 
-					const request = {
-						origin: nearestWaypointToStart,
-						destination: nearestWaypointToEnd,
-						travelMode: google.maps.TravelMode.BICYCLING,
+          const request1 = {
+						origin: start,
+						destination: nearestWaypointToStart,
+						travelMode: google.maps.TravelMode.DRIVING,
 					};
 
-					directionsService.route(request, (response, status) => {
+          const request2 = {
+						origin: nearestWaypointToStart,
+						destination: nearestWaypointToEnd,
+						travelMode: google.maps.TravelMode.DRIVING,
+					};
+
+					const request3 = {
+						origin: nearestWaypointToEnd,
+						destination: end,
+						travelMode: google.maps.TravelMode.DRIVING,
+					};
+
+					directionsService.route(request1, (response1, status) => {
 						if (status === "OK") {
-							directionsRenderer.setDirections(response);
-							showRouteInformation(response);
+							directionsRendererStartToShare.setDirections(response1);
+							showRouteInformation(response1);
+						} else {
+							window.alert("Directions request failed due to " + status);
+						}
+					});
+
+          directionsService.route(request2, (response2, status) => {
+						if (status === "OK") {
+							directionsRendererShareToShare.setDirections(response2);
+							showRouteInformation(response2);
+						} else {
+							window.alert("Directions request failed due to " + status);
+						}
+					});
+
+          directionsService.route(request3, (response3, status) => {
+						if (status === "OK") {
+							directionsRendererShareToEnd.setDirections(response3);
+							showRouteInformation(response3);
 						} else {
 							window.alert("Directions request failed due to " + status);
 						}
