@@ -47,8 +47,8 @@ urlpatterns = [
     path('api/user_accounts/', views.get_accounts, name='get_accounts'),
     path('api/user_histories', views.get_search_histories, name='get_search_histories'),
     path('api/user_spots', views.get_spots, name='get_spots'),
-    path('api/maps', views.get_map_cars, name='get_map_cars'),
-    path('api/bikes', views.get_map_bikes, name='get_map_bikes'),
+    path('api/map_cars', views.get_map_cars, name='get_map_cars'),
+    path('api/map_bikes', views.get_map_bikes, name='get_map_bikes'),
 
     ]
 

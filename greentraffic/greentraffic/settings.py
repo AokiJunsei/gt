@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'gt',
 ]
 
@@ -58,7 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'greentraffic.urls'
@@ -159,3 +160,8 @@ CSRF_COOKIE_SECURE=False
 
 LOGIN_URL = 'user_login'
 LOGIN_REDIRECT_URL = 'top'
+
+# 特定のオリジンだけを許可
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+]
