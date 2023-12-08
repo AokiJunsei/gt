@@ -107,15 +107,31 @@
                       <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_cheap' %}active{% endif %}" href="{% url 'gt:search_cheap' %}">最安</a></li>
                     </ul>
                   </li>
+
+                  {% comment %} urlsから拾ってきてね（まだHTMLないから作ってHTMLをレンダリングさせるviewsも書いてね） {% endcomment %}
                   <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_share_car' or request.resolver_match.url_name == 'search_share_bike' %}active{% endif %}" href="#" id="handshakeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_share_car_car' or request.resolver_match.url_name == 'search_share_car_bike' %}active{% endif %}" href="#" id="handshakeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       <i class="fas fa-share-alt fa-lg mr-2"></i>
+                      <i class="fas fa-car mr-2"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="handshakeDropdown">
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_car_car' %}active{% endif %}" href="{% url 'gt:search_share_car_car' %}">自動車</a></li>
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_car_bike' %}active{% endif %}" href="{% url 'gt:search_share_car_bike' %}">自転車</a></li>
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_car' %}active{% endif %}" href="{% url 'gt:search_share_car' %}">自動車</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_share_bike_car' or request.resolver_match.url_name == 'search_share_bike' %}active{% endif %}" href="#" id="handshakeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-share-alt fa-lg mr-2"></i>
+                      <i class="fas fa-biking mr-2"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="handshakeDropdown">
                       <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_car' %}active{% endif %}" href="{% url 'gt:search_share_car' %}">自動車</a></li>
                       <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_bike' %}active{% endif %}" href="{% url 'gt:search_share_bike' %}">自転車</a></li>
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_bike' %}active{% endif %}" href="{% url 'gt:search_share_bike' %}">自転車</a></li>
                     </ul>
                   </li>
+
                   <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'my_map' %}active{% endif %}" href="{% url 'gt:my_map' %}">My Map</a>
                   </li>
@@ -154,15 +170,31 @@
                       <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_cheap' %}active{% endif %}" href="{% url 'gt:search_cheap' %}">最安</a></li>
                     </ul>
                   </li>
+
+                  {% comment %} urlsから拾ってきてね（まだHTMLないから作ってHTMLをレンダリングさせるviewsも書いてね） {% endcomment %}
                   <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_share_car' or request.resolver_match.url_name == 'search_share_bike' %}active{% endif %}" href="#" id="handshakeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_share_car_car' or request.resolver_match.url_name == 'search_share_car_bike' or request.resolver_match.url_name == 'search_share_car_walk' %}active{% endif %}" href="#" id="handshakeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       <i class="fas fa-share-alt fa-lg mr-2"></i>
+                      <i class="fas fa-car mr-2"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="handshakeDropdown">
-                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_car' %}active{% endif %}" href="{% url 'gt:search_share_car' %}">自動車</a></li>
-                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_bike' %}active{% endif %}" href="{% url 'gt:search_share_bike' %}">自転車</a></li>
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_car_car' %}active{% endif %}" href="{% url 'gt:search_share_car_car' %}">車</a></li>
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_car_bike' %}active{% endif %}" href="{% url 'gt:search_share_car_bike' %}">自転車</a></li>
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_car_walk' %}active{% endif %}" href="{% url 'gt:search_share_car_walk' %}">歩き</a></li>
                     </ul>
                   </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_share_bike_car' or request.resolver_match.url_name == 'search_share_bike_bike' or request.resolver_match.url_name == 'search_share_bike_walk' %}active{% endif %}" href="#" id="handshakeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-share-alt fa-lg mr-2"></i>
+                      <i class="fas fa-biking mr-2"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="handshakeDropdown">
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_bike_car' %}active{% endif %}" href="{% url 'gt:search_share_bike_car' %}">車</a></li>
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_bike_bike' %}active{% endif %}" href="{% url 'gt:search_share_bike_bike' %}">自転車</a></li>
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_bike_walk' %}active{% endif %}" href="{% url 'gt:search_share_bike_walk' %}">歩き</a></li>
+                    </ul>
+                  </li>
+
                 {% endif %}
               </ul>
 
