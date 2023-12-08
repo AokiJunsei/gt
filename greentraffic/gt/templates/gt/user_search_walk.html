@@ -1,0 +1,315 @@
+{% extends "gt/base.html" %}
+{% load static %}
+{% block title %}Green Traffic{% endblock %}
+
+{% block content %}
+<body onload="initMap()">
+  <!--フォームの表示非表示-->
+  <div>
+    <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
+  </div>
+  <div>
+    <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
+  </div>
+  <div id="map-container">
+    <div id="floating-panel">
+      <label>出発地: </label>
+      <input type="text" id="start" placeholder="出発地を入力してください" />
+      <i id="current-location-icon" class="fas fa-compass" onclick="getCurrentLocation()"></i>
+      {% comment %} <i id="toggle-form-icon" class="fas fa-eye"></i><br> {% endcomment %}
+      <div id="waypoint1-group" class="form-group">
+        <label id="waypoint1-label" for="waypoint1">中継地点１:</label>
+        <input type="text" id="waypoint1" placeholder="中継地点を入力してください">
+      </div>
+      <div id="waypoint2-group" class="form-group">
+        <label id="waypoint2-label" for="waypoint2">中継地点２:</label>
+        <input type="text" id="waypoint2" placeholder="中継地点を入力してください">
+      </div>
+      <label>目的地: </label>
+      <input type="text" id="end" placeholder="目的地を入力してください" />
+      <i id="swap-icon" class="fas fa-exchange-alt" onclick="swapStartEnd()"></i>
+      <div class="mode-selector">
+        <button class="button-class"onclick="calculateAndDisplayRoute()">検索</button>
+      </div>
+    </div>
+    <div id="map"></div>
+    <div id="directions-panel">
+      <div class="tab" onclick="toggleTab('content')">Content</div>
+      <div class="tab" onclick="toggleTab('details')">Details</div>
+      <div id="content-tab" class="tab-content active"></div>
+      <div id="details-tab" class="tab-content"></div>
+    </div>
+  </div>
+
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
+    defer
+  ></script>
+
+  <script>
+    var map;
+    let directionsService, directionsRenderer;
+    let currentLocationMarker;
+
+    function toggleInputForm() {
+      var x = document.getElementById('floating-panel');
+      var icon = document.getElementById('toggle-icon');
+
+      if (!x.style.display || x.style.display === 'block') {
+        x.style.display = 'none'; // フォームを非表示にする
+        icon.className = 'fas fa-eye-slash'; // アイコンを非表示アイコンに変更
+      } else {
+        x.style.display = 'block'; // フォームを表示にする
+        icon.className = 'fas fa-eye'; // アイコンを表示アイコンに変更
+      }
+    }
+
+    /*document.getElementById('toggle-form-icon').addEventListener('click', function() {
+      // 各要素の参照を取得
+      var wp1Group = document.getElementById('waypoint1-group');
+      var wp2Group = document.getElementById('waypoint2-group');
+      var icon = this;
+
+      // waypointグループの表示状態をトグルする
+      var isWp1Visible = wp1Group.style.display === 'flex';
+      wp1Group.style.display = isWp1Visible ? 'none' : 'flex';
+      wp2Group.style.display = isWp1Visible ? 'none' : 'flex';
+
+      // アイコンのクラスをトグルする
+      icon.className = isWp1Visible ? 'fas fa-eye-slash' : 'fas fa-eye';
+    });*/
+
+
+
+    //マップ情報
+    function initMap() {
+      var Marker;
+      const initial_location = { lat: 35.689, lng: 139.692 };
+
+      /*現在地更新を5000秒ごとに繰り返す*/
+      setInterval(updateCurrentLocation, 5000);
+
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 17,
+        center: initial_location,
+      });
+
+      /*交通情報*/
+      const trafficLayer = new google.maps.TrafficLayer();
+      trafficLayer.setMap(map);
+
+      //検索結果を左のタブに表示
+      directionsService = new google.maps.DirectionsService();
+      directionsRenderer = new google.maps.DirectionsRenderer({
+        map: map,
+        panel: document.getElementById("content-tab"),
+      });
+
+      //ジオコーディング
+      function geocode(){  var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'location': Marker.getPosition()},
+          function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK && results[0]){
+          document.getElementById('id_address').innerHTML =
+              results[0].formatted_address.replace(/^日本, /, '');
+        }else{
+          document.getElementById('id_address').innerHTML =
+            "Geocode 取得に失敗しました";
+          alert("Geocode 取得に失敗しました reason: "
+                + status);
+        }
+        });
+      }
+
+     //HTMLTagを更新
+      function infotable(ido,keido,level){
+        document.getElementById('id_ido').innerHTML = ido;
+        document.getElementById('id_keido').innerHTML = keido;
+        document.getElementById('id_address').innerHTML = level;
+        document.getElementById("waypoint1").value =   ido + ","+ keido;
+      }
+    }
+
+    /*上記までがinitMap()*/
+
+    /*現在地を出発地に指定*/
+    function getCurrentLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const currentLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+
+            // Set center and add marker
+            map.setCenter(currentLocation);
+            addCurrentLocationMarker(currentLocation);
+
+            // Set the start input value
+            //document.getElementById("start").value = "現在地" ;
+            document.getElementById("start").value = currentLocation.lat + ", " + currentLocation.lng;
+          },
+          () => {
+            console.error("Error getting current location");
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser");
+      }
+    }
+
+    /*現在地に常時ピン差し一回目*/
+    function addCurrentLocationMarker(location) {
+      // Remove existing marker if any
+      if (currentLocationMarker) {
+        currentLocationMarker.setMap(null);
+      }
+
+      // Add marker
+      currentLocationMarker = new google.maps.Marker({
+        position: location,
+        map: map,
+        title: "Current Location",
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 10,
+          fillColor: "#4285F4",
+          fillOpacity: 1,
+          strokeColor: "#ffffff",
+          strokeWeight: 2,
+        },
+      });
+    }
+
+    /*現在地を取得しマーカーを置く(2回目以降)*/
+    function updateCurrentLocationMarker(location) {
+      // If the marker doesn't exist, create it
+      if (!currentLocationMarker) {
+        currentLocationMarker = new google.maps.Marker({
+          map: map,
+          title: "Current Location",
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 10,
+            fillColor: "#4285F4",
+            fillOpacity: 1,
+            strokeColor: "#ffffff",
+            strokeWeight: 2,
+          },
+        });
+      }
+
+      /*更新された現在地をマーカーにセットする*/
+      currentLocationMarker.setPosition(location);
+
+      /*地図の中央地を更新された現在地に変更する*/
+      map.setCenter(location);
+    }
+
+    /*経路検索メソッド*/
+    function calculateAndDisplayRoute() {
+      const start = document.getElementById("start").value;
+      const waypoint1 = document.getElementById("waypoint1").value;
+      const waypoint2 = document.getElementById("waypoint2").value;
+      const end = document.getElementById("end").value;
+
+      const request = {
+        origin: start,
+        destination: end,
+        travelMode: google.maps.TravelMode.WALKING,
+      };
+
+      if (waypoint1) {
+        request.waypoints = [{ location: waypoint1 }];
+      }
+      if (waypoint2) {
+        if (!request.waypoints) request.waypoints = [];
+        request.waypoints.push({ location: waypoint2 });
+      }
+
+      directionsService.route(request, (response, status) => {
+        if (status === "OK") {
+          directionsRenderer.setDirections(response);
+          showRouteInformation(response);
+        } else {
+          window.alert("Directions request failed due to " + status);
+        }
+      });
+    }
+
+    /*検索結果をinnerHTMLで記載*/
+    function showRouteInformation(response) {
+      const directionsPanel = document.getElementById("details-tab");
+      directionsPanel.innerHTML = "";
+
+      for (let i = 0; i < response.routes.length; i++) {
+        const route = response.routes[i];
+
+        const summary = document.createElement("div");
+        summary.innerHTML = `<b>${route.summary}</b>`;
+        directionsPanel.appendChild(summary);
+
+        const steps = route.legs[0].steps;
+        for (let j = 0; j < steps.length; j++) {
+          const stepInfo = document.createElement("div");
+          stepInfo.innerHTML = steps[j].instructions;
+          directionsPanel.appendChild(stepInfo);
+        }
+      }
+    }
+
+    /*検索結果のタブの開閉*/
+    function toggleDirectionsPanel() {
+      const directionsPanel = document.getElementById("directions-panel");
+      directionsPanel.classList.toggle("collapsed");
+    }
+
+    function toggleTab(tabName) {
+      const contentTab = document.getElementById("content-tab");
+      const detailsTab = document.getElementById("details-tab");
+
+      if (tabName === "content") {
+        contentTab.classList.add("active");
+        detailsTab.classList.remove("active");
+      } else {
+        contentTab.classList.remove("active");
+        detailsTab.classList.add("active");
+      }
+    }
+
+    /*出発地と到着地の内容を入れ替える関数*/
+    function swapStartEnd() {
+      const startInput = document.getElementById("start");
+      const endInput = document.getElementById("end");
+
+      // 入れ替えボタン
+      const temp = startInput.value;
+      startInput.value = endInput.value;
+      endInput.value = temp;
+    }
+
+    /*リアルタイムで現在地を取得する*/
+    function updateCurrentLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const currentLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+
+            /* 現在地のピンを打つ*/
+            updateCurrentLocationMarker(currentLocation);
+          },
+          () => {
+            console.error("Error getting current location");
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser");
+      }
+    }
+  </script>
+</body>
+{% endblock content %}

@@ -61,30 +61,50 @@ input::placeholder {
   margin: 0 10px;
   border: none;
   color: white;
-  font-size: 1em;
+  font-size: 18px;
   cursor: pointer;
   transition: background-color 0.3s ease; /* 背景色の変化を滑らかに */
 }
 
 /* キャンセルボタンのスタイル */
 .btn-cancel {
-  background-color: #ff0000;
+  --bs-btn-bg: #ff3333; /* 明るく鮮やかな赤色 */
+  --bs-btn-color: white; /* 文字色 */
+  --bs-btn-hover-bg: #ff4d4d; /* ホバー時の背景色を明るく */
+  --bs-btn-hover-color: #333; /* ホバー時の文字色を濃く */
+  --bs-btn-active-bg: #ff4d4d; /* アクティブ時の背景色を明るく */
+  --bs-btn-active-color: #333; /* アクティブ時の文字色を濃く */
+  background-color: var(--bs-btn-bg);
+  color: var(--bs-btn-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 登録ボタンのスタイル */
+.btn-cancel:hover, .btn-cancel:active {
+  background-color: var(--bs-btn-hover-bg);
+  color: var(--bs-btn-hover-color);
+}
+
+
+
 .btn-submit {
-  background-color: #009999;
+  --bs-btn-bg: #009999; /* 元の色 */
+  --bs-btn-color: white; /* 文字色 */
+  --bs-btn-hover-bg: #33cccc; /* ホバー時の背景色を明るく */
+  --bs-btn-hover-color: #333; /* ホバー時の文字色を濃く */
+  --bs-btn-active-bg: #33cccc; /* アクティブ時の背景色を明るく */
+  --bs-btn-active-color: #333; /* アクティブ時の文字色を濃く */
+  background-color: var(--bs-btn-bg);
+  color: var(--bs-btn-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* ボタンのホバー効果 */
+.btn-submit:hover, .btn-submit:active {
+  background-color: var(--bs-btn-hover-bg);
+  color: var(--bs-btn-hover-color);
+}
 
-/* キャンセルボタンのホバー時のスタイルを暗い赤色に変更 */
-.btn-cancel:hover {
-  background-color: #c00000; /* 暗い赤色に変更 */
-}
-.btn-submit:hover {
-  background-color: #809999; /* 暗い赤色に変更 */
-}
+
+
 
 /*footer*/
 
@@ -110,4 +130,192 @@ body, html {
     overflow-x: auto;
     white-space: nowrap;
   }
+}
+@media (max-width: 768px) {
+  table.reg_form {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+@media (max-width: 768px) {
+  table.reg_form {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+/* ヘッダーiconの隣にスペースを確保 */
+.mr-2 {
+  margin-right: 8px;
+}
+
+/* ヘッダー画面該当ページを白くする */
+.nav-link.active, .dropdown-item.active {
+  color: #fff;
+}
+
+/* ドロップダウンメニュー内のアクティブな項目の背景色を灰色に設定 */
+.navbar .dropdown-menu .dropdown-item.active,
+.navbar .dropdown-menu .dropdown-item:active {
+  background-color: #6c757d; /* Bootstrapの灰色 */
+}
+
+
+/* 検索のcss */
+#map-container {
+  margin-top: -47.9px; /* 上のマージンを取り除く */
+  padding-top: 0; /* 上のパディングを取り除く */
+  position: relative;
+  height: calc(100vh - 40px);
+}
+
+#map {
+  height: 100%;
+}
+
+#directions-panel {
+  position: absolute;
+  top: 100px;
+  left: 0;
+  bottom: 20px;
+  width: 30%;
+  max-height: 100px; /* 初期の最大高さ */
+  overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  box-sizing: border-box;
+  transition: max-height 0.3s ease;
+  
+}
+
+#directions-panel.expanded {
+  max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
+}
+
+
+#floating-panel {
+  margin-right: 20px; /* 余白を20ピクセルに設定します。 */
+  position: fixed; /* Keep the panel fixed within the viewport */
+  z-index: 5; /* Ensure it stays above other elements */
+  background-color: rgba(255, 255, 255, 0.9); /* Set background color with some transparency */
+  padding: 10px; /* Add padding inside the panel */
+  border-radius: 5px; /* Round the corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+  top: 60px; /* Position from the top */
+  left: 700px; /* Position from the left */
+  width: auto; /* Auto width to fit content */
+  max-width: 200px; /* Maximum width taking into account margins */
+  box-sizing: border-box; /* Include padding and border in width and height */
+  overflow: auto; /* Add scrollbars if content overflows */
+  word-wrap: break-word; /* Ensure long words do not cause overflow */
+  white-space: normal; /* Allow text to wrap within the panel */
+}
+@media screen and (max-width: 800px) {
+  #floating-panel {
+    left: 50%; /* 画面が狭い時は左から50ピクセルの位置に設定 */
+    /* 他に必要なスタイルの変更をここに追加 */
+  }
+}
+.mode-selector {
+  margin-top: 10px;
+}
+
+.tab {
+  display: inline-block;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.tab-content {
+  display: none;
+}
+
+.active {
+  display: block;
+}
+
+
+#toggle-icon {
+  position: fixed; /* ボタンを固定位置にする */
+  top: 70px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+  right: 30px; /* 右端から10pxの位置に設定 */
+  z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
+}
+
+#toggle-button {
+  position: fixed; /* ボタンを固定位置にする */
+  top: 90px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+  right: 30px; /* 右端から10pxの位置に設定 */
+  z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
+}
+
+#current-location-icon {
+  cursor: pointer; /* アイコンがクリック可能であることを示す */
+  font-size: 24px; /* アイコンのサイズを設定 */
+  color: #000; /* アイコンの色を設定 */
+  /* その他のスタイリングを必要に応じて追加 */
+}
+
+#swap-icon {
+  cursor: pointer; /* アイコンにマウスを合わせたときにカーソルをポインタに変更 */
+  color: #000; /* アイコンの色を設定 */
+  font-size: 24px; /* アイコンのサイズを設定 */
+}
+
+  /* 表示されたときに横一列に並べるためのスタイル */
+.form-group {
+  /* display: flex; */
+  align-items: center; /* フォーム要素を垂直方向の中央に配置 */
+  gap: 8px; /* 要素間の隙間 */
+}
+
+label {
+  font-weight: bold;
+}
+
+.button-class {
+  background-color: #000000; /* 緑色の背景 */
+  color: white; /* 白色のテキスト */
+  border: none; /* 枠線なし */
+  border-radius: 5px; /* 角を丸くする */
+}
+
+.button-class {
+  transition: all 0.3s ease;
+}
+.button-class:hover {
+    transform: scale(1.1);
+}
+
+
+/* admin_topのcss */
+.post-preview {
+  background-color: #f8f9fa; /* 薄い背景色 */
+  border: 1px solid #e0e0e0; /* 境界線 */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 影 */
+  margin-bottom: 15px; /* 下部の余白 */
+  padding: 15px; /* 内側の余白 */
+}
+
+.post-title {
+  font-size: 1.25rem; /* タイトルのフォントサイズ */
+  color: #333; /* 文字色 */
+}
+
+.post-subtitle {
+  font-size: 1rem; /* サブタイトルのフォントサイズ */
+  color: #666; /* 文字色 */
+}
+
+
+.pagination .page-item .page-link {
+  margin: 0 5px; /* 余白 */
+  color: #007bff; /* リンク色 */
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #007bff; /* アクティブなページの背景色 */
+  color: white; /* アクティブなページの文字色 */
 }

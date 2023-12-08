@@ -128,13 +128,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_HOST = 'smtp.googlemail.com' #これでもいける
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'duema3611@gmail.com'
+EMAIL_HOST_USER = 'gtgreen12345@gmail.com'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # send_mailのfromがNoneの場合自動で入る。
-EMAIL_HOST_PASSWORD = 'zplp rhqa zjmn voup'
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
+EMAIL_HOST_PASSWORD = 'mkrw jaox mluk hwzw'
 LANGUAGE_CODE = 'ja'
 
 TIME_ZONE = 'Asia/Tokyo'

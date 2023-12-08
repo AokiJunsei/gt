@@ -65,30 +65,104 @@
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% if request.user.is_authenticated %}
                   {% if request.user.username == "admin" %}
-                  <li class="nav-item"><a class="nav-link" href="{% url 'gt:admin_top' %}">マップ情報一覧</a></li>
-                  <li class="nav-item"><a class="nav-link" href="{% url 'gt:admin_map_register' %}">マップ情報追加</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">利用者情報閲覧</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'admin_top' %}active{% endif %}" href="{% url 'gt:admin_top' %}">マップ情報一覧</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'admin_map_register' %}active{% endif %}" href="{% url 'gt:admin_map_register' %}">マップ情報追加</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'admin_user_info' %}active{% endif %}" href="{% url 'gt:admin_user_info' %}">利用者情報閲覧</a>
+                  </li>
                   {% else %}
-                  <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'gt:top' %}">最短検索</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">最安検索</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">シェアリングサービス検索</a></li>
                   <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">バリアフリー検索</a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                      <li><a class="dropdown-item" href="#">最短</a></li>
-                      <li><a class="dropdown-item" href="#">最安</a></li>
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'top' %}active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-car fa-lg mr-2"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'top' %}active{% endif %}" href="{% url 'gt:top' %}">最短</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_walk' %}active{% endif %}" href="#" id="walkingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-walking fa-lg mr-2"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="walkingDropdown">
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_walk' %}active{% endif %}" href="{% url 'gt:search_walk' %}">最短</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_bike' %}active{% endif %}" href="#" id="bikingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-biking fa-lg mr-2"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="bikingDropdown">
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_bike' %}active{% endif %}" href="{% url 'gt:search_bike' %}">最短</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_short' or request.resolver_match.url_name == 'search_cheap' %}active{% endif %}" href="#" id="trainDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-train fa-lg mr-2"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="trainDropdown">
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_short' %}active{% endif %}" href="{% url 'gt:search_short' %}">最短</a></li>
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_cheap' %}active{% endif %}" href="{% url 'gt:search_cheap' %}">最安</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_share_car' or request.resolver_match.url_name == 'search_share_bike' %}active{% endif %}" href="#" id="handshakeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-share-alt fa-lg mr-2"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="handshakeDropdown">
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_car' %}active{% endif %}" href="{% url 'gt:search_share_car' %}">自動車</a></li>
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_bike' %}active{% endif %}" href="{% url 'gt:search_share_bike' %}">自転車</a></li>
                     </ul>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#"><div id="text"></div></a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'my_map' %}active{% endif %}" href="{% url 'gt:my_map' %}">My Map</a>
                   </li>
                   {% endif %}
                 {% else %}
-                  <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'gt:top' %}">最短検索</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">最安検索</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">シェアリングサービス検索</a></li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#"><div id="text"></div></a>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'top' %}active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-car fa-lg mr-2"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'top' %}active{% endif %}" href="{% url 'gt:top' %}">最短</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_walk' %}active{% endif %}" href="#" id="walkingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-walking fa-lg mr-2"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="walkingDropdown">
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_walk' %}active{% endif %}" href="{% url 'gt:search_walk' %}">最短</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_bike' %}active{% endif %}" href="#" id="bikingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-biking fa-lg mr-2"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="bikingDropdown">
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_bike' %}active{% endif %}" href="{% url 'gt:search_bike' %}">最短</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_short' or request.resolver_match.url_name == 'search_cheap' %}active{% endif %}" href="#" id="trainDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-train fa-lg mr-2"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="trainDropdown">
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_short' %}active{% endif %}" href="{% url 'gt:search_short' %}">最短</a></li>
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_cheap' %}active{% endif %}" href="{% url 'gt:search_cheap' %}">最安</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'search_share_car' or request.resolver_match.url_name == 'search_share_bike' %}active{% endif %}" href="#" id="handshakeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-share-alt fa-lg mr-2"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="handshakeDropdown">
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_car' %}active{% endif %}" href="{% url 'gt:search_share_car' %}">自動車</a></li>
+                      <li><a class="dropdown-item {% if request.resolver_match.url_name == 'search_share_bike' %}active{% endif %}" href="{% url 'gt:search_share_bike' %}">自転車</a></li>
+                    </ul>
                   </li>
                 {% endif %}
               </ul>
@@ -96,23 +170,38 @@
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% if request.user.is_authenticated %}
                   {% if request.user.username != "admin" %}
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">設定</a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                      <li><a class="dropdown-item" href="{% url 'gt:user_info' %}">マイプロフィール</a></li>
-                      <li><a class="dropdown-item" href="{% url 'gt:user_spot_list' %}">スポットリスト</a></li>
-                      <li><a class="dropdown-item" href="{% url 'gt:account_history' %}">履歴リスト</a></li>
-                    </ul>
-                  </li>
+                    <!-- ログインしている非管理者ユーザー向けのナビゲーションアイテム -->
+                    <li class="nav-item d-flex align-items-center">
+                      <a class="nav-link" href="#"><div id="text"></div></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'user_info' or request.resolver_match.url_name == 'user_spot_list' or request.resolver_match.url_name == 'account_history' %}active{% endif %}" id="navbarDropdownMenuLink" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-cog fa-lg"></i>
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item {% if request.resolver_match.url_name == 'user_info' %}active{% endif %}" href="{% url 'gt:user_info' %}">マイプロフィール</a></li>
+                        <li><a class="dropdown-item {% if request.resolver_match.url_name == 'user_spot_list' %}active{% endif %}" href="{% url 'gt:user_spot_list' %}">スポットリスト</a></li>
+                        <li><a class="dropdown-item {% if request.resolver_match.url_name == 'account_history' %}active{% endif %}" href="{% url 'gt:account_history' %}">履歴リスト</a></li>
+                      </ul>
+                    </li>
                   {% endif %}
-                <li class="nav-item">
-                  <button type="button" class="btn btn-link nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                  <li class="nav-item d-flex align-items-center">
+                    <a class="nav-link" href="#"><div id="text"></div></a>
+                    <button type="button" class="btn-link btn nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
                       ログアウト
-                  </button>
-                </li>
+                    </button>
+                  </li>
                 {% else %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'gt:register' %}">新規登録</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'gt:user_login' %}">ログイン</a></li>
+                  <!-- 未ログイン時のナビゲーションアイテム -->
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"><div id="text"></div></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'gt:register' %}">新規登録</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'user_login' %}active{% endif %}" href="{% url 'gt:user_login' %}">ログイン</a>
+                  </li>
                 {% endif %}
               </ul>
             </div>
