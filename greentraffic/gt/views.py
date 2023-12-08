@@ -472,3 +472,62 @@ def user_spot_delete(request, pk):
 def user_spot_detail(request, pk):
     spot_detail = get_object_or_404(Spot, pk=pk)
     return render(request, 'gt/user_spot_detail.html', {'spot_detail': spot_detail})
+
+
+
+
+#内部API
+
+from django.http import JsonResponse
+from .models import SearchHistory
+
+
+def get_accounts(request):
+    if request.method == 'GET':
+        
+        accounts = Account.objects.all().values()
+        
+        
+        return JsonResponse(list(accounts), safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def get_search_histories(request):
+    if request.method == 'GET':
+        
+        search_histories = SearchHistory.objects.all().values()
+        
+        
+        return JsonResponse(list(search_histories), safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def get_spots(request):
+    if request.method == 'GET':
+        
+        spots = Spot.objects.all().values()
+        
+        
+        return JsonResponse(list(spots), safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def get_map_cars(request):
+    if request.method == 'GET':
+        
+        map_cars = MapCar.objects.all().values()
+        
+        
+        return JsonResponse(list(map_cars), safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def get_map_bikes(request):
+    if request.method == 'GET':
+        
+        map_bikes = MapBike.objects.all().values()
+        
+        
+        return JsonResponse(list(map_bikes), safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
