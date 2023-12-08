@@ -5,13 +5,14 @@
 {% block content %}
 <body onload="initMap()">
   <!--フォームの表示非表示-->
-  <div>
-    <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
-  </div>
-  <div>
-    <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
-  </div>
+  
   <div id="map-container">
+    <div>
+      <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
+    </div>
+    <div>
+      <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
+    </div>
     <div id="floating-panel">
       <label>出発地: </label>
       <input type="text" id="start" placeholder="出発地を入力してください" />

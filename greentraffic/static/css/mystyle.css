@@ -4,7 +4,7 @@ h1 {
 }
 
 div.reg {
-  background-color: #EEEEEE;
+  background-color: #eeeeee;
   margin: auto; /* 中央揃えに */
   max-width: 640px; /* 最大幅を設定 */
   padding-top: 10px;
@@ -28,14 +28,31 @@ table.reg_form td {
   white-space: nowrap; /* 改行を防止 */
   padding-right: 5px;
 }
-table.reg_form th{
+table.reg_form th {
   padding-left: 5px;
   white-space: nowrap; /* 改行を防止 */
 }
 
-table.reg_form small{
+table.reg_form small {
   white-space: nowrap; /* 改行を防止 */
 }
+table.reg_form td input,
+table.reg_form td select,
+table.reg_form td textarea {
+  width: 100%; /* Set the width relative to the parent container */
+  box-sizing: border-box; /* Include padding and border in the element's total width */
+}
+
+table.reg_form input::placeholder {
+  padding-left: 2px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: nowrap; /* Prevent text wrapping inside the placeholder */
+}
+
+
 /* ボタンコンテナのスタイル */
 .button-container {
   justify-content: center;
@@ -53,8 +70,11 @@ input::placeholder {
 .button-container button:last-child {
   margin-left: 20px; /* 左のボタンからの距離 */
 }
-
-
+.button-container input[type="submit"].btn-submit {
+  /* ここにカスタムスタイルを追加します */
+  width: auto; /* 必要な幅に設定 */ /* パディングを調整 */
+  /* その他のスタイル... */
+}
 /* ボタンの共通スタイル */
 .btn {
   padding: 10px 30px;
@@ -64,8 +84,20 @@ input::placeholder {
   font-size: 18px;
   cursor: pointer;
   transition: background-color 0.3s ease; /* 背景色の変化を滑らかに */
+  display: inline-block; /* ボタンをインラインブロック要素に */
+  min-width: 60px; /* 最小幅を設定 */
+  max-width: 100%; /* 最大幅を親要素の100%に設定 */
+  white-space: nowrap; /* テキストが折り返されないように設定 */
+  overflow: hidden; /* コンテンツがオーバーフローした場合に非表示にする */
+  text-overflow: ellipsis; /* オーバーフローしたテキストの末尾に三点リーダを表示する */
 }
-
+.post-title,
+.post-subtitle {
+  max-width: 250px; /* 最大幅を250pxに設定 */
+  overflow: hidden; /* はみ出したテキストを隠す */
+  text-overflow: ellipsis; /* はみ出したテキストを三点リーダーで表示 */
+  white-space: nowrap; /* テキストの折り返しを防止 */
+}
 /* キャンセルボタンのスタイル */
 .btn-cancel {
   --bs-btn-bg: #ff3333; /* 明るく鮮やかな赤色 */
@@ -79,12 +111,11 @@ input::placeholder {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.btn-cancel:hover, .btn-cancel:active {
+.btn-cancel:hover,
+.btn-cancel:active {
   background-color: var(--bs-btn-hover-bg);
   color: var(--bs-btn-hover-color);
 }
-
-
 
 .btn-submit {
   --bs-btn-bg: #009999; /* 元の色 */
@@ -98,13 +129,11 @@ input::placeholder {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.btn-submit:hover, .btn-submit:active {
+.btn-submit:hover,
+.btn-submit:active {
   background-color: var(--bs-btn-hover-bg);
   color: var(--bs-btn-hover-color);
 }
-
-
-
 
 /*footer*/
 
@@ -121,7 +150,8 @@ footer.footer {
 }
 
 /* メインコンテンツの下部にフッターの高さ分のスペースを確保 */
-body, html {
+body,
+html {
   margin: 0;
 }
 @media (max-width: 768px) {
@@ -152,7 +182,8 @@ body, html {
 }
 
 /* ヘッダー画面該当ページを白くする */
-.nav-link.active, .dropdown-item.active {
+.nav-link.active,
+.dropdown-item.active {
   color: #fff;
 }
 
@@ -161,7 +192,6 @@ body, html {
 .navbar .dropdown-menu .dropdown-item:active {
   background-color: #6c757d; /* Bootstrapの灰色 */
 }
-
 
 /* 検索のcss */
 #map-container {
@@ -187,19 +217,22 @@ body, html {
   padding: 10px;
   box-sizing: border-box;
   transition: max-height 0.3s ease;
-  
 }
 
 #directions-panel.expanded {
   max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
 }
 
-
 #floating-panel {
   margin-right: 20px; /* 余白を20ピクセルに設定します。 */
   position: fixed; /* Keep the panel fixed within the viewport */
   z-index: 5; /* Ensure it stays above other elements */
-  background-color: rgba(255, 255, 255, 0.9); /* Set background color with some transparency */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* Set background color with some transparency */
   padding: 10px; /* Add padding inside the panel */
   border-radius: 5px; /* Round the corners */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
@@ -236,21 +269,34 @@ body, html {
   display: block;
 }
 
-
 #toggle-icon {
-  position: fixed; /* ボタンを固定位置にする */
-  top: 70px; /* ヘッダーや他の要素との重なりを避けるために調整 */
-  right: 30px; /* 右端から10pxの位置に設定 */
+  position: absolute; /* ボタンを固定位置にする */
+  top: 10px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+  right: -22px; /* 右端から10pxの位置に設定 */
   z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
 }
 
 #toggle-button {
-  position: fixed; /* ボタンを固定位置にする */
-  top: 90px; /* ヘッダーや他の要素との重なりを避けるために調整 */
-  right: 30px; /* 右端から10pxの位置に設定 */
+  position: absolute; /* ボタンを固定位置にする */
+  top: 30px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+  right: -20px; /* 右端から10pxの位置に設定 */
   z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
 }
-
+@media (max-width: 530px) {
+  #toggle-icon {
+    position: absolute; /* ボタンを固定位置にする */
+    top: 60px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+    right: 22px; /* 右端から10pxの位置に設定 */
+    z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
+  }
+  
+  #toggle-button {
+    position: absolute; /* ボタンを固定位置にする */
+    top: 80px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+    right: 24px; /* 右端から10pxの位置に設定 */
+    z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
+  }
+}
 #current-location-icon {
   cursor: pointer; /* アイコンがクリック可能であることを示す */
   font-size: 24px; /* アイコンのサイズを設定 */
@@ -264,7 +310,7 @@ body, html {
   font-size: 24px; /* アイコンのサイズを設定 */
 }
 
-  /* 表示されたときに横一列に並べるためのスタイル */
+/* 表示されたときに横一列に並べるためのスタイル */
 .form-group {
   /* display: flex; */
   align-items: center; /* フォーム要素を垂直方向の中央に配置 */
@@ -286,9 +332,8 @@ label {
   transition: all 0.3s ease;
 }
 .button-class:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
-
 
 /* admin_topのcss */
 .post-preview {
@@ -308,7 +353,6 @@ label {
   font-size: 1rem; /* サブタイトルのフォントサイズ */
   color: #666; /* 文字色 */
 }
-
 
 .pagination .page-item .page-link {
   margin: 0 5px; /* 余白 */
