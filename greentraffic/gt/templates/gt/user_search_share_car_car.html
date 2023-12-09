@@ -74,16 +74,6 @@
       icon.className = isWp1Visible ? 'fas fa-eye-slash' : 'fas fa-eye';
     });*/
 
-
-		// 出発地、目的地、中継地点の座標（仮の例）
-		{% comment %} const waypoints = [
-		{lat: 35.6905, lng: 139.6995, name: "新宿"},
-		{lat: 35.7377, lng: 139.7074, name: "池袋"},
-    {lat: 35.7973, lng: 139.5933, name: "朝霞駅"},
-    {lat: 35.7074, lng: 139.7520, name: "後楽園駅"},
-		// 他の中継地点...
-		]; {% endcomment %}
-
     //マップ情報
     function initMap() {
       var Marker;
@@ -151,7 +141,7 @@
       fetch('/gt/api/map_cars')
         .then(response => response.json())
         .then(data => {
-            const waypoints = data.map(waypoint => ({
+            waypoints = data.map(waypoint => ({
                 ...JSON.parse(waypoint.json_data),
                 name: waypoint.name
             }));
@@ -291,6 +281,7 @@
     function findNearestWaypoint(location, waypoints) {
       let nearestWaypoint = null;
       let minDist = Infinity;
+      console.log(waypoints)
 
       waypoints.forEach(waypoint => {
         const dist = google.maps.geometry.spherical.computeDistanceBetween(
@@ -354,7 +345,7 @@
               }
 
           const request1 = {
-						origin: start,
+						origin: startLocation,
 						destination: nearestWaypointToStart,
 						travelMode: google.maps.TravelMode.DRIVING,
 					};
@@ -367,8 +358,8 @@
 
 					const request3 = {
 						origin: nearestWaypointToEnd,
-						destination: end,
-						travelMode: google.maps.TravelMode.DRIVING,
+						destination: endLocation,
+						travelMode: google.maps.TravelMode.WALKING,
 					};
 
           await new Promise((resolve, reject) => {
