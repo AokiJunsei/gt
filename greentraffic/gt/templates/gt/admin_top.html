@@ -10,14 +10,17 @@
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
             {% comment %} 検索のインプットフォーム {% endcomment %}
-            <input type="text" id="searchInput" placeholder="検索...">
 
             {% comment %} 自転車と車のリストの切り替え {% endcomment %}
-            <select id="modelSelector">
-                <option value="model1">自動車</option>
-                <option value="model2">自転車</option>
-            </select>
-
+            <div class="cp_ipselect">
+                <select id="modelSelector" class="cp_sl06" required>
+                    <option value="model1">車</option>
+                    <option value="model2">自転車</option>
+                </select>
+                <span class="cp_sl06_highlight"></span>
+                <span class="cp_sl06_selectbar"></span>
+                <label class="cp_sl06_selectlabel">Choose</label>
+            </div>
             <hr>
 
             <div id="model1List" class="model-list" style="display: block;">
@@ -29,7 +32,7 @@
                             <h3 class="post-subtitle">{{ map.address|truncatechars:20 }}</h3>
                         </a>
                     </div>
-                    <div>
+                    <div class="button-container">
                         <a class="btn btn-success" href="{% url 'gt:admin_map_change' vehicle_type='car' pk=map.pk %}">変更</a>
                         <button type="button" class="btn btn--radius btn--cubic btn-cancel" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
                             削除

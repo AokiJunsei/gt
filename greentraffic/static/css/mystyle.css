@@ -98,6 +98,15 @@ input::placeholder {
   text-overflow: ellipsis; /* はみ出したテキストを三点リーダーで表示 */
   white-space: nowrap; /* テキストの折り返しを防止 */
 }
+@media (max-width: 768px) {
+  .post-title,
+  .post-subtitle {
+  max-width: 150px; /* 最大幅を250pxに設定 */
+  overflow: hidden; /* はみ出したテキストを隠す */
+  text-overflow: ellipsis; /* はみ出したテキストを三点リーダーで表示 */
+  white-space: nowrap; /* テキストの折り返しを防止 */
+}
+}
 /* キャンセルボタンのスタイル */
 .btn-cancel {
   --bs-btn-bg: #ff3333; /* 明るく鮮やかな赤色 */
@@ -251,8 +260,112 @@ html {
     /* 他に必要なスタイルの変更をここに追加 */
   }
 }
+
+.cp_ipselect {
+	position: relative;
+	width: 90%;
+	margin: 2em auto;
+	text-align: center;
+}
+.cp_sl06 {
+	position: relative;
+	font-family: inherit;
+	background-color: transparent;
+	width: 100%;
+	padding: 10px 10px 10px 0;
+	font-size: 18px;
+	border-radius: 0;
+	border: none;
+	border-bottom: 1px solid rgba(0,0,0, 0.3);
+}
+.cp_sl06:focus {
+	outline: none;
+	border-bottom: 1px solid rgba(0,0,0, 0);
+}
+.cp_ipselect .cp_sl06 {
+	appearance: none;
+	-webkit-appearance:none
+}
+.cp_ipselect select::-ms-expand {
+	display: none;
+}
+.cp_ipselect:after {
+	position: absolute;
+	top: 18px;
+	right: 10px;
+	width: 0;
+	height: 0;
+	padding: 0;
+	content: '';
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-top: 6px solid rgba(0, 0, 0, 0.3);
+	pointer-events: none;
+}
+.cp_sl06_selectlabel {
+	color: rgba(0,0,0, 0.5);
+	font-size: 18px;
+	font-weight: normal;
+	position: absolute;
+	pointer-events: none;
+	left: 0;
+	top: 10px;
+	transition: 0.2s ease all;
+}
+.cp_sl06:focus ~ .cp_sl06_selectlabel, .cp_sl06:valid ~ .cp_sl06_selectlabel {
+	color: #da3c41;
+	top: -20px;
+	transition: 0.2s ease all;
+	font-size: 14px;
+}
+.cp_sl06_selectbar {
+	position: relative;
+	display: block;
+	width: 100%;
+}
+.cp_sl06_selectbar:before, .cp_sl06_selectbar:after {
+	content: '';
+	height: 2px;
+	width: 0;
+	bottom: 1px;
+	position: absolute;
+	background: #da3c41;
+	transition: 0.2s ease all;
+}
+.cp_sl06_selectbar:before {
+	left: 50%;
+}
+.cp_sl06_selectbar:after {
+	right: 50%;
+}
+.cp_sl06:focus ~ .cp_sl06_selectbar:before, .cp_sl06:focus ~ .cp_sl06_selectbar:after {
+	width: 50%;
+}
+.cp_sl06_highlight {
+	position: absolute;
+	top: 25%;
+	left: 0;
+	pointer-events: none;
+	opacity: 0.5;
+}
+
 .mode-selector {
   margin-top: 10px;
+}
+
+.jjj {
+  box-sizing: border-box;
+  overflow: auto; /* Add scrollbars if content overflows */
+  word-wrap: break-word; /* Ensure long words do not cause overflow */
+  white-space: normal; /* Allow text to wrap within the panel */
+}
+@media only screen and (max-width: 600px) {
+  .jjj .btn, .jjj a.btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
 }
 
 .tab {
