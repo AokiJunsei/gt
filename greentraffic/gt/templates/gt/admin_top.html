@@ -1,115 +1,189 @@
 {% extends "base.html" %}
-{% comment %} TODO blockの名称をbaseに合わせる {% endcomment %}
 
 {% load static %}
 {% block title %}管理サイト{% endblock %}
 
 {% block map_list %} active {% endblock %}
-{% comment %} TODO DBに登録済みのマップ情報を一覧表示するリストを記載 {% endcomment %}
 
+{% block content %}
+<div class="container px-4 px-lg-5 my-div-style">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            {% comment %} 検索のインプットフォーム {% endcomment %}
+            <input type="text" id="searchInput" placeholder="検索...">
 
-{%block head%}
-<head class = "">
-    <div class = "">
-        <h1>- マップ情報管理 -</h1>
-        <span class="">サブタイトルをどうぞ</span>
-    </div>
-    <link href="{% static 'css/' %}" rel="stylesheet">
-    {% comment %} cssのリンクをどうぞ {% endcomment %}
-</head>
-{% endblock %}
+            {% comment %} 自転車と車のリストの切り替え {% endcomment %}
+            <select id="modelSelector">
+                <option value="model1">自動車</option>
+                <option value="model2">自転車</option>
+            </select>
 
+            <hr>
 
-{% block contents %}
-<div class ="">
-
-    {% comment %} TODO filterするためのInputタグを記載 {% endcomment %}
-
-    {% comment %} マップ情報を一覧表示 {% endcomment %}
-    {% for maps in map_list%}
-    {% comment %} TODO map_listはあとで変数合わせる {% endcomment %}
-    {% comment %} titleの隣に変更へ続くボタンと削除へ続くボタンを配置 {% endcomment %}
-
-    <div class = "post-preview">
-        {% comment %} TODO 以下はDBに保存される内容に合わせる {% endcomment %}
-        <p class = "post-title">{{maps.title}}</p>
-        <p class = "post-subtitle">{{maps.content|truncatechars:20}}</p>
-        <a href="{% url 'gt:map_detail' gt.pk %}">
-
-        <button><a class="btn btn-success mt-5 mb-3" href="{% url 'gt:map_change' object.pk %}">変更</a></button>
-        <button><a class="btn btn-danger mt-5 ml-2 mb-3" href="{% url 'gt:map_delete' object.pk %}">削除</a></button>
-    </div>
-
-    {% empty %}
-    <p>マップ情報が見つかりません。</p>
-    {% endfor %}
-
-    <div class="d-flex justify-content-end mb-4">
-        {% comment %} TODO マップ情報追加ページへのルーティングボタンを追加 {% endcomment %}
-        <a class="btn btn-primary float-right" href="{% url 'gt:map_register' %}">追加する</a>
-    </div>
-
-
-    <div class="d-flex justify-content-end mb-4">
-        {% comment %} TODO 利用者情報閲覧ページへのルーティングボタンを追加 {% endcomment %}
-        <a class="btn btn-primary float-right" href="{% url 'gt:user_detail' %}">利用者情報を閲覧する</a>
-    </div>
-
-
-    {% comment %}ペネトレーション {% endcomment %}
-    {% if is_paginated %}
-    <ul class="pagination">
-        <!-- 前ページへのリンク -->
-        {% if page_obj.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        {% endif %}
-
-        <!-- ページ数表示 -->
-        {% for page_num in page_obj.paginator.page_range %} {% if
-        page_obj.number == page_num %}
-        <li class="page-item active">
-            <a class="page-link" href="#">{{ page_num }}</a>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
-        </li>
-        {% endif %} {% endfor %}
-
-        <!-- 次ページへのリンク -->
-        {% if page_obj.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-        {% endif %}
-    </ul>
-    {% endif %}
-
-
-    {% comment %} 削除を確認するモーダル ダイアログ 検討中 {% endcomment %}
-    {% comment %} <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">確認</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div id="model1List" class="model-list" style="display: block;">
+                {% for map in map_car %}
+                <div class="post-preview list-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'gt:admin_map_detail' vehicle_type='car' pk=map.pk %}">
+                            <h2 class="post-title">{{ map.name }}</h2>
+                            <h3 class="post-subtitle">{{ map.address|truncatechars:20 }}</h3>
+                        </a>
+                    </div>
+                    <div>
+                        <a class="btn btn-success" href="{% url 'gt:admin_map_change' vehicle_type='car' pk=map.pk %}">変更</a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
+                            削除
+                        </button>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <p>ID: <span id="del_pk"></span> を削除しますか？</p>
+                <hr class="my-4" />
+                <!--削除するためのモーダルウィンドウ -->
+                <div class="modal fade" id="deleteModal-{{ map.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ map.pk }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel-{{ map.pk }}">削除確認</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                            </div>
+                            <div class="modal-body">
+                            本当に削除しますか？
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                            <form method="post" action="{% url 'gt:admin_map_delete' vehicle_type='car' pk=map.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="map_id" value="{{ map.pk }}">
+                                <button type="submit" class="btn btn-danger">削除</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <a href="{% url 'gt:top' %}" class="btn btn-primary" id="del_url">OK</a>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                </div>
+
+                {% empty %}
+                <p>マップ情報が見つかりません。</p>
+                {% endfor %}
             </div>
-        </div>
-    </div> {% endcomment %}
 
+            <div id="model2List" class="model-list" style="display: none;">
+                {% for map in map_bike %}
+                <div class="post-preview list-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'gt:admin_map_detail' vehicle_type='bike' pk=map.pk %}">
+                            <h2 class="post-title">{{ map.name }}</h2>
+                            <h3 class="post-subtitle">{{ map.address|truncatechars:20 }}</h3>
+                        </a>
+                    </div>
+                    <div>
+                        <a class="btn btn-success" href="{% url 'gt:admin_map_change' vehicle_type='bike' pk=map.pk %}">変更</a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
+                            削除
+                        </button>
+                    </div>
+                </div>
+                <hr class="my-4" />
+                <!--削除するためのモーダルウィンドウ -->
+                <div class="modal fade" id="deleteModal-{{ map.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ map.pk }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel-{{ map.pk }}">削除確認</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                            </div>
+                            <div class="modal-body">
+                            本当に削除しますか？
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                            <form method="post" action="{% url 'gt:admin_map_delete'  vehicle_type='bike' pk=map.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="map_id" value="{{ map.pk }}">
+                                <button type="submit" class="btn btn-danger">削除</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% empty %}
+                <p>マップ情報が見つかりません。</p>
+                {% endfor %}
+            </div>
+            <!-- ページネーション処理 -->
+            {% if is_paginated %}
+            <ul class="pagination">
+            <!-- 前ページへのリンク -->
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- ページ数表示 -->
+            {% for page_num in page_obj.paginator.page_range %}
+            {% if page_obj.number == page_num %}
+            <li class="page-item active">
+                <a class="page-link" href="#">{{ page_num }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+            </li>
+            {% endif %} {% endfor %}
+
+            <!-- 次ページへのリンク -->
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- '追加する'ボタンをフッター直前に配置 -->
+    <div class="d-flex justify-content-end mb-4">
+        <a class="btn btn-primary" href="{% url 'gt:admin_map_register' %}">追加する</a>
+    </div>
+    <div class="d-flex justify-content-end mb-4">
+        <a class="btn btn-primary" href="{% url 'gt:admin_user_info' %}">利用者情報を閲覧する</a>
+    </div>
+
+    {% comment %} 表示するリストを切り替える関数 {% endcomment %}
+    <script>
+        // ドロップダウンの変更を監視
+        document.getElementById('modelSelector').addEventListener('change', function() {
+            var selectedModel = this.value;
+            // すべてのリストを非表示に
+            document.querySelectorAll('.model-list').forEach(function(list) {
+                list.style.display = 'none';
+            });
+
+            // 選択されたリストを表示
+            document.getElementById(selectedModel + 'List').style.display = 'block';
+
+            // 検索ボックスをクリア
+            document.getElementById('searchInput').value = '';
+        });
+
+        // 検索機能
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            var searchQuery = this.value.toLowerCase();
+            var visibleList = document.querySelector('.model-list:not([style*="display: none"])');
+
+            if (visibleList) {
+                visibleList.querySelectorAll('.list-item').forEach(function(item) {
+                    var text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(searchQuery) ? '' : 'none';
+                });
+            }
+        });
+
+    </script>
 </div>
-{% endblock %}
+{% endblock content %}

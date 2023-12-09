@@ -1,92 +1,61 @@
 {% extends 'base.html' %}
-{% block title %} 登録情報更新ページ {% endblock %}
+{% block title %}登録情報更新ページ{% endblock %}
 {% block content %}
-<div class="ui grid stackable">
-    <div class="header">
-        <h3>登録情報の変更</h3>
-    </div>
-    <form class="" action="" method="POST">
+<h1>登録情報の変更</h1>
+<div class="reg">
+    <form action="{% url 'gt:user_update' %}" method="POST">
         {% csrf_token %}
-        {{form.as_p}}
-        <button class="" type="submit">変更</button>
+        <table class="reg_form">
+            <tr>
+              <th>{{ form.username.label_tag }}</th>
+              <td>{{ form.username }}</td>
+              <th>{{ form.email.label_tag }}</th>
+              <td>{{ form.email }}</td>
+            </tr>
+            <tr>
+              <th>{{ form.password.label_tag }}</th>
+              <td>
+                {{ form.password }}
+                {% if form.password.errors %}
+                <div class="error">{{ form.password.errors }}</div>
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th>{{ form.last_name.label_tag }}</th>
+              <td>{{ form.last_name }}</td>
+              <th>{{ form.first_name.label_tag }}</th>
+              <td>{{ form.first_name }}</td>
+            </tr>
+
+            <tr>
+              <th>{{ form.gender.label_tag }}</th>
+              <td>{{ form.gender }}</td>
+            </tr>
+
+            <tr>
+              <th>{{ form.zipcode.label_tag }}</th>
+              <td>{{ form.zipcode }}</td>
+              <th>{{ form.state.label_tag }}</th>
+              <td>{{ form.state }}</td>
+            </tr>
+
+            <tr>
+              <th>{{ form.city.label_tag }}</th>
+              <td>{{ form.city }}</td>
+              <th>{{ form.address_1.label_tag }}</th>
+              <td>{{ form.address_1 }}</td>
+            </tr>
+            <tr>
+              <th>{{ form.address_2.label_tag }}</th>
+              <td>{{ form.address_2 }}</td>
+            </tr>
+
+          </table>
+        <div class="button-container">
+            <a href="{% url 'gt:user_info' %}" class="btn btn--radius btn--cubic btn-cancel">戻る</a>
+            <button class="btn btn--radius btn--cubic btn-submit" type="submit">変更</button>
+        </div>
     </form>
-    <a href="{% url 'gt:account_info' %}">プロフィールに戻る</a>
 </div>
 {% endblock %}
-
-
-
-
-<!--forms.py(仮)-->
-
-<!--
-from django.forms import ModelForm
-from django.contrib.auth.models import User
-
-class UserChangeForm(ModelForm):
-    class Meta:
-        model = User
-        fields = [
-            'name',
-            'old',
-            'address',
-            'email'
-        ]
-
-    def __init__(self, name=None, old=None, address=None, mail=None *args, **kwargs):
-        kwargs.setdefault('label_suffix', '')
-        super().__init__(*args, **kwargs)
-        # ユーザーの更新前情報をフォームに挿入
-        if name:
-            self.fields['name'].widget.attrs['value'] = name
-        if old:
-            self.fields['old'].widget.attrs['value'] = old
-        if address:
-            self.fields['address'].widget.attrs['value'] = address
-        if mail:
-            self.fields['email'].widget.attrs['value'] = email
-
-    def update(self, user):
-        user.name = self.cleaned_data['name']
-        user.old = self.cleaned_data['old']
-        user.address = self.cleaned_data['address']
-        user.mail = self.cleaned_data['email']
-        user.save()
--->
-
-<!--views.py(仮)-->
-
-<!--
-from django.views.generic import FormView
-
-class UserChangeView(LoginRequiredMixin, FormView):
-    template_name = 'gt/user_update.html'
-    form_class = UserChangeForm
-    success_url = reverse_lazy('gt:account_info')
-
-    def form_valid(self, form):
-        #formのupdateメソッドにログインユーザーを渡して更新
-        form.update(user=self.request.user)
-        return super().form_valid(form)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        # 更新前のユーザー情報をkwargsとして渡す
-        kwargs.update({
-            'name' : self.request.user.name,
-            'old' : self.request.user.old,
-            'address' : self.request.user.address,
-            'email' : self.request.user.email
-        })
-        return kwargs
--->
-
-
-<!--urls.py(仮)-->
-
-<!--
-    app_name = 'gt'
-    urlpatterns = [
-        path('user_update/<int:user_id>/', views.user_update, name='user_update'),
-    ]
--->

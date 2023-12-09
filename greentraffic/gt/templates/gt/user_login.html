@@ -1,15 +1,30 @@
-<!DOCTYPE html>
-<html lang="ja">
-  <body>
-    <form method="POST" action="{% url 'create_account' %}">
-      {% csrf_token %}
-      <label>ユーザーID</label>
-      {{ form.username }}
-      {{ form.username.errors }}
-      <label>パスワード</label>
-      {{ form.password1 }}
-      {{ form.password1.errors }}
-      <button type = "submit"> 登録 </button>
-    </form>
-  </body>
-</html>
+{% extends "gt/base.html" %}
+{% load static %}
+
+{% block content %}
+<h1>ログイン画面</h1>
+
+<div class="reg">
+  <form method="post" action="{% url 'gt:user_login' %}">
+    {% csrf_token %}
+
+    <table class="reg_form">
+    <tr>
+    <th><label for="userid">ユーザーID:</label></th>
+    <td><input type="text" name="userid"></td>
+    <th><label for="password">パスワード：</label></th>
+    <td><input type="password" name="password"></td>
+    </tr>
+    </table>
+
+    <div class="button-container">
+        <input type="submit" class="btn btn-submit" value="ログイン">
+        <a href="{% url 'gt:top' %}" class="btn btn-cancel">キャンセル</a>
+    </div>
+
+</form>
+</div>
+<p class="message">アカウントをお持ちですか？：
+  <a href="{% url 'gt:register' %}">アカウントを作成</a>
+</p>
+{% endblock %}
