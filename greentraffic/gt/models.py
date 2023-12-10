@@ -30,16 +30,11 @@ class SearchHistory(models.Model):
 
 # スポットテーブル
 class Spot(models.Model):
-    spot_id = models.AutoField(primary_key=True, verbose_name="スポットID")
-    spot_name = models.CharField(max_length=100, verbose_name="スポット名")
-    account = models.ForeignKey(Account, on_delete=models.CASCADE, verbose_name="アカウントID")
-    category = models.CharField(max_length=100, verbose_name="カテゴリ")
-    address = models.CharField(max_length=100, verbose_name="住所")
-    contact_info = models.CharField(max_length=300, verbose_name="連絡先情報")
-    fee_info = models.CharField(max_length=100, verbose_name="料金情報", blank=True, null=True)
-    business_hours = models.CharField(max_length=100, verbose_name="営業時間", blank=True, null=True)
-    latitude = models. CharField(max_length=100, verbose_name="緯度")
-    longitude = models. CharField(max_length=100, verbose_name="経度")
+    spot_id = models.AutoField(primary_key=True)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    spot_name = models.CharField(max_length=100,blank=True)
+    address = models.CharField(max_length=100,blank=True)
+    json_data = models.TextField(blank=True)
 
     def __str__(self):
         return f"{self.spot_id} - {self.spot_name}"

@@ -5,11 +5,10 @@ h1 {
 
 div.reg {
   background-color: #EEEEEE;
-  margin-left: 20%;
-  margin-right: 20%;  
-  display: flex;
-  justify-content: center;
+  margin: auto; /* 中央揃えに */
+  max-width: 640px; /* 最大幅を設定 */
   padding-top: 10px;
+  padding: 10px;
 }
 
 .message {
@@ -41,8 +40,7 @@ table.reg_form small{
 .button-container {
   justify-content: center;
   align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 20px;
   margin: auto; /* 中央揃え */
 }
 input::placeholder {
@@ -105,9 +103,190 @@ footer.footer {
 /* メインコンテンツの下部にフッターの高さ分のスペースを確保 */
 body, html {
   margin: 0;
-  padding-bottom: 60px; /* フッターの高さに合わせて調整してください */
+}
+@media (max-width: 768px) {
+  table.reg_form {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 }
 
-.container.text-center {
-  text-align: center;
+/* ヘッダーiconの隣にスペースを確保 */
+.mr-2 {
+  margin-right: 8px;
+}
+
+/* ヘッダー画面該当ページを白くする */
+.nav-link.active, .dropdown-item.active {
+  color: #fff;
+}
+
+/* ドロップダウンメニュー内のアクティブな項目の背景色を灰色に設定 */
+.navbar .dropdown-menu .dropdown-item.active,
+.navbar .dropdown-menu .dropdown-item:active {
+  background-color: #6c757d; /* Bootstrapの灰色 */
+}
+
+
+/* 検索のcss */
+#map-container {
+  margin-top: -47.9px; /* 上のマージンを取り除く */
+  padding-top: 0; /* 上のパディングを取り除く */
+  position: relative;
+  height: calc(100vh - 40px);
+}
+
+#map {
+  height: 100%;
+}
+
+#directions-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30%;
+  max-height: 100vh;
+  overflow-y: auto;
+  background-color: #fff;
+  padding: 10px;
+  box-sizing: border-box;
+  transition: width 0.3s ease;
+}
+
+#directions-panel.collapsed {
+  width: 0;
+}
+
+
+#floating-panel {
+  position: absolute; /* または `fixed` を使用してもよい */
+  right: 20px; /* 地図の左端からの距離 */
+  transform: translateX(-50%); /* 左に50%ずらして中央寄せ */
+  top: 104; /* 画面の上端からの距離 */
+  z-index: 10; /* 他の要素より上に表示する */
+  max-width: 90%; /* 地図のコンテナの幅に合わせて調整する */
+  box-sizing: border-box; /* paddingとborderがwidthに含まれるように */
+  padding: 10px; /* 内側の余白 */
+  background-color: rgba(255, 255, 255, 0.9); /* 背景色と透明度（必要に応じて） */
+  border-radius: 5px; /* 角の丸み */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* 影の効果（オプショナル） */
+  overflow-y: auto; /* スクロールを有効にする */
+}
+
+.mode-selector {
+  margin-top: 10px;
+}
+
+.tab {
+  display: inline-block;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.tab-content {
+  display: none;
+}
+
+.active {
+  display: block;
+}
+
+
+#toggle-icon {
+  position: fixed; /* ボタンを固定位置にする */
+  top: 70px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+  right: 30px; /* 右端から10pxの位置に設定 */
+  z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
+}
+
+#toggle-button {
+  position: fixed; /* ボタンを固定位置にする */
+  top: 90px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+  right: 30px; /* 右端から10pxの位置に設定 */
+  z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
+}
+
+#current-location-icon {
+  cursor: pointer; /* アイコンがクリック可能であることを示す */
+  font-size: 24px; /* アイコンのサイズを設定 */
+  color: #000; /* アイコンの色を設定 */
+  /* その他のスタイリングを必要に応じて追加 */
+}
+
+#swap-icon {
+  cursor: pointer; /* アイコンにマウスを合わせたときにカーソルをポインタに変更 */
+  color: #000; /* アイコンの色を設定 */
+  font-size: 24px; /* アイコンのサイズを設定 */
+}
+
+  /* 表示されたときに横一列に並べるためのスタイル */
+.form-group {
+  /* display: flex; */
+  align-items: center; /* フォーム要素を垂直方向の中央に配置 */
+  gap: 8px; /* 要素間の隙間 */
+}
+
+label {
+  font-weight: bold;
+}
+
+.button-class {
+  background-color: #000000; /* 緑色の背景 */
+  color: white; /* 白色のテキスト */
+  border: none; /* 枠線なし */
+  border-radius: 5px; /* 角を丸くする */
+}
+
+.button-class {
+  transition: all 0.3s ease;
+}
+.button-class:hover {
+    transform: scale(1.1);
+}
+
+
+/* admin_topのcss */
+.post-preview {
+  background-color: #f8f9fa; /* 薄い背景色 */
+  border: 1px solid #e0e0e0; /* 境界線 */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 影 */
+  margin-bottom: 15px; /* 下部の余白 */
+  padding: 15px; /* 内側の余白 */
+}
+
+.post-title {
+  font-size: 1.25rem; /* タイトルのフォントサイズ */
+  color: #333; /* 文字色 */
+}
+
+.post-subtitle {
+  font-size: 1rem; /* サブタイトルのフォントサイズ */
+  color: #666; /* 文字色 */
+}
+
+.btn-success {
+  background-color: #28a745; /* 緑色の背景 */
+  color: white; /* 白文字 */
+}
+
+.btn-danger {
+  background-color: #dc3545; /* 赤色の背景 */
+  color: white; /* 白文字 */
+}
+
+.btn-primary {
+  background-color: #007bff; /* 青色の背景 */
+  color: white; /* 白文字 */
+}
+
+
+.pagination .page-item .page-link {
+  margin: 0 5px; /* 余白 */
+  color: #007bff; /* リンク色 */
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #007bff; /* アクティブなページの背景色 */
+  color: white; /* アクティブなページの文字色 */
 }

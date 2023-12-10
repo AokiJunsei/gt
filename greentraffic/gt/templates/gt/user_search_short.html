@@ -2,179 +2,8 @@
 {% load static %}
 {% block title %}Green Traffic{% endblock %}
 
-{% block head %}
-<style>
-  body, html {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
-  #map-container {
-    position: relative;
-    height: 100vh;
-  }
-
-  #map {
-    height: 100%;
-  }
-
-  #directions-panel {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 30%;
-    max-height: 100vh;
-    overflow-y: auto;
-    background-color: #fff;
-    padding: 10px;
-    box-sizing: border-box;
-    transition: width 0.3s ease;
-  }
-
-  #directions-panel.collapsed {
-    width: 0;
-  }
-
-
-  #floating-panel {
-    position: absolute; /* または `fixed` を使用してもよい */
-    right: 20px; /* 地図の左端からの距離 */
-    transform: translateX(-50%); /* 左に50%ずらして中央寄せ */
-    top: 104; /* 画面の上端からの距離 */
-    z-index: 10; /* 他の要素より上に表示する */
-    max-width: 90%; /* 地図のコンテナの幅に合わせて調整する */
-    box-sizing: border-box; /* paddingとborderがwidthに含まれるように */
-    padding: 10px; /* 内側の余白 */
-    background-color: rgba(255, 255, 255, 0.9); /* 背景色と透明度（必要に応じて） */
-    border-radius: 5px; /* 角の丸み */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* 影の効果（オプショナル） */
-    overflow-y: auto; /* スクロールを有効にする */
-  }
-
-  .mode-selector {
-    margin-top: 10px;
-  }
-
-  .tab {
-    display: inline-block;
-    padding: 10px;
-    cursor: pointer;
-  }
-
-  .tab-content {
-    display: none;
-  }
-
-  .active {
-    display: block;
-  }
-
-
-  #toggle-icon {
-    position: fixed; /* ボタンを固定位置にする */
-    top: 70px; /* ヘッダーや他の要素との重なりを避けるために調整 */
-    right: 30px; /* 右端から10pxの位置に設定 */
-    z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
-  }
-
-  #toggle-button {
-    position: fixed; /* ボタンを固定位置にする */
-    top: 90px; /* ヘッダーや他の要素との重なりを避けるために調整 */
-    right: 30px; /* 右端から10pxの位置に設定 */
-    z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
-  }
-
-  #current-location-icon {
-    cursor: pointer; /* アイコンがクリック可能であることを示す */
-    font-size: 24px; /* アイコンのサイズを設定 */
-    color: #000; /* アイコンの色を設定 */
-    /* その他のスタイリングを必要に応じて追加 */
-  }
-
-  #swap-icon {
-    cursor: pointer; /* アイコンにマウスを合わせたときにカーソルをポインタに変更 */
-    color: #007bff; /* アイコンの色を設定 */
-    font-size: 24px; /* アイコンのサイズを設定 */
-  }
-
-  #waypoint1, #waypoint2, #waypoint1-label, #waypoint2-label {
-    {% comment %} display: none; {% endcomment %}
-  }
-
-    /* 表示されたときに横一列に並べるためのスタイル */
-  .form-group {
-    {% comment %} display: flex; {% endcomment %}
-    align-items: center; /* フォーム要素を垂直方向の中央に配置 */
-    gap: 8px; /* 要素間の隙間 */
-  }
-
-  label {
-    font-weight: bold;
-  }
-
-  .button-class {
-    background-color: #000000; /* 緑色の背景 */
-    color: white; /* 白色のテキスト */
-    border: none; /* 枠線なし */
-    border-radius: 5px; /* 角を丸くする */
-  }
-
-  .button-class {
-    transition: all 0.3s ease;
-  }
-  .button-class:hover {
-      transform: scale(1.1);
-  }
-
-
-</style>
-{% endblock %}
-
 {% block content %}
 <body onload="initMap()">
-  <div id="floating-panel">
-    <!-- <h1>最短検索</h1> -->
-    <label>出発地: </label>
-    <input type="text" id="start" placeholder="出発地を入力してください" />
-    <i id="current-location-icon" class="fas fa-compass" onclick="getCurrentLocation()"></i>
-    {% comment %} <i id="toggle-form-icon" class="fas fa-eye"></i><br> {% endcomment %}
-    <div id="waypoint1-group" class="form-group">
-      <label id="waypoint1-label" for="waypoint1">中継地点１:</label>
-      <input type="text" id="waypoint1" placeholder="中継地点を入力してください">
-    </div>
-    <div id="waypoint2-group" class="form-group">
-      <label id="waypoint2-label" for="waypoint2">中継地点２:</label>
-      <input type="text" id="waypoint2" placeholder="中継地点を入力してください">
-    </div>
-    <label>目的地: </label>
-    <input type="text" id="end" placeholder="目的地を入力してください" /><br>
-    <!--入れ替えボタン　未対応-->
-    {% comment %} <i id="swap-icon" class="fas fa-arrow-right-arrow-left" onclick="swapStartEnd()"></i> {% endcomment %}
-    <label>出発時刻: </label>
-    <input type="date" id="departure-date" />
-    <input type="time" id="departure-time" />
-
-    <div class="mode-selector">
-      <input type="checkbox" id="mode-driving" checked />
-      <label for="mode-driving">自動車</label>
-
-      <input type="checkbox" id="mode-transit"  />
-      <label for="mode-transit">電車</label>
-
-      <input type="checkbox" id="mode-walking"  />
-      <label for="mode-walking">徒歩</label>
-
-      <input type="checkbox" id="mode-bicycling"  />
-      <label for="mode-bicycling">自転車</label>
-
-      <button class="button-class"onclick="trainTF()">検索</button>
-
-    </div>
-    <span hidden><div id="id_ido">緯度</div></span>
-    <span hidden><div id="id_keido">経度</div></span>
-    <span hidden><div id="id_address">住所</div></span>
-  </div>
   <!--フォームの表示非表示-->
   <div>
     <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
@@ -183,6 +12,31 @@
     <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
   </div>
   <div id="map-container">
+    <div id="floating-panel">
+      <!-- <h1>最短検索</h1> -->
+      <label>出発地: </label>
+      <input type="text" id="start" placeholder="出発地を入力してください" />
+      <i id="current-location-icon" class="fas fa-compass" onclick="getCurrentLocation()"></i><br>
+      {% comment %} <i id="toggle-form-icon" class="fas fa-eye"></i><br> {% endcomment %}
+      <div id="waypoint1-group" class="form-group">
+        <label id="waypoint1-label" for="waypoint1">中継地点１:</label>
+        <input type="text" id="waypoint1" placeholder="中継地点を入力してください">
+      </div>
+      <div id="waypoint2-group" class="form-group">
+        <label id="waypoint2-label" for="waypoint2">中継地点２:</label>
+        <input type="text" id="waypoint2" placeholder="中継地点を入力してください">
+      </div>
+      <label>目的地: </label>
+      <input type="text" id="end" placeholder="目的地を入力してください" />
+      <i id="swap-icon" class="fas fa-exchange-alt" onclick="swapStartEnd()"></i><br>
+      <label>出発時刻: </label>
+      <input type="date" id="departure-date" />
+      <input type="time" id="departure-time" />
+
+      <div class="mode-selector">
+        <button class="button-class"onclick="trainTF()">検索</button>
+      </div>
+    </div>
     <div id="map"></div>
     <div id="directions-panel">
       <div class="tab" onclick="toggleTab('content')">Content</div>
@@ -190,7 +44,6 @@
       <div id="content-tab" class="tab-content active"></div>
       <div id="details-tab" class="tab-content"></div>
     </div>
-    <!-- <div id="map_canvas" style="width:100%;height:300px"></div> -->
   </div>
 
   <script
@@ -257,33 +110,6 @@
         panel: document.getElementById("content-tab"),
       });
 
-      //地図クリックイベントの登録
-      google.maps.event.addListener(map, 'click',
-        function(event) {
-          if (Marker){Marker.setMap(null)};
-          Marker = new google.maps.Marker({
-          position: event.latLng,
-          draggable: true,
-          map: map
-        });
-        infotable(Marker.getPosition().lat(),
-        Marker.getPosition().lng(),map.getZoom());
-        geocode();
-        //マーカードラッグイベントの登録
-        google.maps.event.addListener(Marker,'dragend',
-        function(event) {
-        infotable(Marker.getPosition().lat(),
-        Marker.getPosition().lng(),map.getZoom());
-        geocode();
-        })
-        //地図ズームチェンジイベントの登録
-        google.maps.event.addListener(map, 'zoom_changed',
-        function(event) {
-        infotable(Marker.getPosition().lat(),
-        Marker.getPosition().lng(),map.getZoom());
-        })
-      })
-
       //ジオコーディング
       function geocode(){  var geocoder = new google.maps.Geocoder();
         geocoder.geocode({ 'location': Marker.getPosition()},
@@ -298,14 +124,6 @@
                 + status);
         }
         });
-      }
-
-     //HTMLTagを更新
-      function infotable(ido,keido,level){
-        document.getElementById('id_ido').innerHTML = ido;
-        document.getElementById('id_keido').innerHTML = keido;
-        document.getElementById('id_address').innerHTML = level;
-        document.getElementById("waypoint1").value =   ido + ","+ keido;
       }
     }
 
@@ -393,85 +211,10 @@
         console.error("Map object is not initialized yet.");
         return;
       }
-
-      var checkbox = document.getElementById('mode-transit');
-      if (checkbox.checked) {
-          /*デバックの為一次コメントアウト*/
-          /*fetchRouteAndDisplayOnMap();*/
-          let coordinates = extractCoordinates(routeData);
-          displayRouteOnMap(coordinates, map);
-      }else{
-        calculateAndDisplayRoute()
-      }
-    }
-
-    /*経路検索メソッド*/
-    function calculateAndDisplayRoute() {
-      const start = document.getElementById("start").value;
-      const waypoint1 = document.getElementById("waypoint1").value;
-      const waypoint2 = document.getElementById("waypoint2").value;
-      const end = document.getElementById("end").value;
-      const departureTime = document.getElementById("departure-date").value;
-
-      const drivingMode = document.getElementById("mode-driving").checked;
-      const walkingMode = document.getElementById("mode-walking").checked;
-      const bicyclingMode = document.getElementById("mode-bicycling").checked;
-
-      const travelModes = [];
-      if (drivingMode) travelModes.push(google.maps.TravelMode.DRIVING);
-      if (walkingMode) travelModes.push(google.maps.TravelMode.WALKING);
-      if (bicyclingMode) travelModes.push(google.maps.TravelMode.BICYCLING);
-
-      const request = {
-        origin: start,
-        destination: end,
-        travelMode: google.maps.TravelMode.DRIVING, // Default mode
-      };
-
-      if (waypoint1) {
-        request.waypoints = [{ location: waypoint1 }];
-      }
-      if (waypoint2) {
-        if (!request.waypoints) request.waypoints = [];
-        request.waypoints.push({ location: waypoint2 });
-      }
-      if (travelModes.length > 0) {
-        request.travelMode = travelModes[0];
-        request.transitOptions = {
-          modes: travelModes.slice(1),
-          departureTime: new Date(departureTime),
-        };
-      }
-
-      directionsService.route(request, (response, status) => {
-        if (status === "OK") {
-          directionsRenderer.setDirections(response);
-          showRouteInformation(response);
-        } else {
-          window.alert("Directions request failed due to " + status);
-        }
-      });
-    }
-
-    /*検索結果をinnerHTMLで記載*/
-    function showRouteInformation(response) {
-      const directionsPanel = document.getElementById("details-tab");
-      directionsPanel.innerHTML = "";
-
-      for (let i = 0; i < response.routes.length; i++) {
-        const route = response.routes[i];
-
-        const summary = document.createElement("div");
-        summary.innerHTML = `<b>${route.summary}</b>`;
-        directionsPanel.appendChild(summary);
-
-        const steps = route.legs[0].steps;
-        for (let j = 0; j < steps.length; j++) {
-          const stepInfo = document.createElement("div");
-          stepInfo.innerHTML = steps[j].instructions;
-          directionsPanel.appendChild(stepInfo);
-        }
-      }
+      /*fetchRouteAndDisplayOnMap();*/
+      let coordinates = extractCoordinates(routeData);
+      displayRouteOnMap(coordinates, map);
+      displayRouteInfo(routeData);
     }
 
     /*検索結果のタブの開閉*/
@@ -699,7 +442,7 @@
         opt3 : 1,
         opt4 : 0,
         max : 8,
-        sort : 4,
+        sort : 0,
         trtm : 3
       }
       const queryString = new URLSearchParams(queryParams).toString();
@@ -717,12 +460,38 @@
       .then(data => {
         //取得したルート情報を地図上に表示する
         //displayRouteOnMap(data);
+        //displayRouteInfo(data)
         alert(JSON.stringify(data,null,2));
       })
       .catch(error => {
         console.error('Error:',error)
       });
     }*/
+
+
+    function displayRouteInfo(routeData) {
+      const contentTab = document.getElementById("content-tab");
+      contentTab.innerHTML = "";
+
+
+      // 経路詳細を表示
+      const summary = document.createElement("div");
+      contentTab.appendChild(summary);
+      routeData.NorikaeBizApiResult.body.route[0].path.forEach(segment => {
+        const segmentInfo = document.createElement("div");
+
+        segmentInfo.innerHTML += `<p>出発駅: ${routeData.NorikaeBizApiResult.body.route[0].path[0].from}</p>`;
+        segmentInfo.innerHTML += `<p>到着駅: ${routeData.NorikaeBizApiResult.body.route[0].path[0].to}</p>`;
+        segmentInfo.innerHTML += `<p>${segment.rosen} ${segment.lineType}(${segment.lineIndex}) 線</p>`;
+        segmentInfo.innerHTML += `<p>所要時間: ${segment.jikan}分</p>`;
+        segmentInfo.innerHTML += `<p>距離: ${segment.kyori}km</p>`;
+        segmentInfo.innerHTML += `<p>乗車区分: ${segment.seatKubun.num}車両</p>`;
+        //segmentInfo.innerHTML += `<p>発着時刻: ${segment.fromTime} ～ ${segment.toTime}</p>`;
+        segmentInfo.innerHTML += `<p>運賃きっぷ: ${segment.untin}円</p>`;
+        segmentInfo.innerHTML += `<p>交通系IC:${segment.icUntin}円</p>`;
+        contentTab.appendChild(segmentInfo);
+    });
+  }
 
 
       /*座標データの抽出*/
@@ -800,8 +569,6 @@
           }
       }
   }
-
-
 
     /*電車のルートを地図上に描く*/
     function displayRouteOnMap(coordinates, map) {
