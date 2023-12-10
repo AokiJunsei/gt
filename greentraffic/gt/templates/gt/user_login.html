@@ -3,11 +3,12 @@
 
 {% block content %}
 <h1>ログイン画面</h1>
-{% if registered %}
+
+<div class="reg">
+  {% if registered %}
 <div class="error">{{ registered }}</div>
 
 {% endif %}
-<div class="reg">
   <form method="post" action="{% url 'gt:user_login' %}">
     {% csrf_token %}
 

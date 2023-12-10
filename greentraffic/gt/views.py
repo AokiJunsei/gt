@@ -309,14 +309,23 @@ class AccountRegistration(TemplateView):
                 "AccountCreate": False,
                 "account_form": account_form,
                 "add_account_form": add_account_form,
-                "error_message": "既に同じユーザーIDが登録されています。もう一度登録してください。"
             }
         return render(request, self.template_name, context=context)
     def send_activation_email(self, request, email, username, token):
-        activation_url = reverse('gt:activate', kwargs={'username': username, 'token': token})
-        link = request.build_absolute_uri(activation_url)
-        message = f'アクティベーションリンク: {link}'
-        send_mail('アカウントアクティベーション', message, settings.EMAIL_HOST_USER, [email])
+        verification_url = reverse('gt:activate', kwargs={'username': username, 'token': token})
+        link = request.build_absolute_uri(verification_url)
+        message = (
+            f'拝啓 {username} 様、\n\n'
+            'Green Trafficへようこそ。\n'
+            'ご登録いただいたメールアドレスの認証をお願いいたします。\n'
+            '下記のリンクをクリックして、メール認証を完了してください。\n\n'
+            f'メール認証リンク: {link}\n\n'
+            'メール認証を完了すると、すぐにGreen Trafficの全機能をご利用いただけます。\n'
+            'もし、このメールに覚えがない場合は、このメールを無視していただくか、当社のサポートチームまでご連絡をお願いいたします。\n\n'
+            '敬具,\n'
+            'Green Traffic サポートチーム'
+        )
+        send_mail('【Green Traffic】メールアドレスの認証について', message, settings.EMAIL_HOST_USER, [email])
 
 
 def activate_account(request, username, token):
