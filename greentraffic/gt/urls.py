@@ -11,8 +11,12 @@ urlpatterns = [
     path('search_walk/', views.user_search_walk, name="search_walk"),
     path('search_short/', views.user_search_short, name="search_short"),
     path('search_cheap/', views.user_search_cheap, name="search_cheap"),
-    path('search_share_car/', views.user_search_share_car, name="search_share_car"),
-    path('search_share_bike/', views.user_search_share_bike, name="search_share_bike"),
+    path('search_share_car_car/', views.user_search_share_car_car, name="search_share_car_car"),
+    path('search_share_car_bike/', views.user_search_share_car_bike, name="search_share_car_bike"),
+    path('search_share_car_walk/', views.user_search_share_car_walk, name="search_share_car_walk"),
+    path('search_share_bike_car/', views.user_search_share_bike_car, name="search_share_bike_car"),
+    path('search_share_bike_bike/', views.user_search_share_bike_bike, name="search_share_bike_bike"),
+    path('search_share_bike_walk/', views.user_search_share_bike_walk, name="search_share_bike_walk"),
     path('my_map/', views.user_my_map, name="my_map"),
 
     path('map_change/<str:vehicle_type>/<int:pk>/', views.admin_map_change, name='admin_map_change'),
@@ -40,8 +44,15 @@ urlpatterns = [
     path('spot_delete/<int:pk>/', views.user_spot_delete, name='user_spot_delete'),
     path('spot_detail/<int:pk>/', views.user_spot_detail, name='user_spot_detail'),
     path('spot_register/', views.user_spot_register, name='user_spot_register'),
-]
 
+
+    path('api/user_accounts/', views.get_accounts, name='get_accounts'),
+    path('api/user_histories', views.get_search_histories, name='get_search_histories'),
+    path('api/user_spots', views.get_spots, name='get_spots'),
+    path('api/map_cars', views.get_map_cars, name='get_map_cars'),
+    path('api/map_bikes', views.get_map_bikes, name='get_map_bikes'),
+
+    ]
 
 
 

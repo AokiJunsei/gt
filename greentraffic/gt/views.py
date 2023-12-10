@@ -63,12 +63,24 @@ def user_search_cheap(request):
     return render(request, 'gt/user_search_cheap.html')
 
 # シェアリング検索（車）のビュー
-def user_search_share_car(request):
-    return render(request, 'gt/user_search_share_car.html')
+def user_search_share_car_car(request):
+    return render(request, 'gt/user_search_share_car_car.html')
 
 # シェアリング検索（自転車）のビュー
-def user_search_share_bike(request):
-    return render(request, 'gt/user_search_share_bike.html')
+def user_search_share_car_bike(request):
+    return render(request, 'gt/user_search_share_car_bike.html')
+# シェアリング検索（徒歩）のビュー
+def user_search_share_car_walk(request):
+    return render(request, 'gt/user_search_share_car_walk.html')
+# シェアリング検索（車１）のビュー
+def user_search_share_bike_car(request):
+    return render(request, 'gt/user_search_share_bike_car.html')
+# シェアリング検索（自転車１）のビュー
+def user_search_share_bike_bike(request):
+    return render(request, 'gt/user_search_share_bike_bike.html')
+# シェアリング検索（徒歩１）のビュー
+def user_search_share_bike_walk(request):
+    return render(request, 'gt/user_search_share_bike_walk.html')
 
 # 履歴を残す検索のビュー
 def user_my_map(request):
@@ -545,3 +557,52 @@ def user_spot_delete(request, pk):
 def user_spot_detail(request, pk):
     spot_detail = get_object_or_404(Spot, pk=pk)
     return render(request, 'gt/user_spot_detail.html', {'spot_detail': spot_detail})
+
+
+
+
+#内部API
+
+from django.http import JsonResponse
+from .models import SearchHistory
+
+
+def get_accounts(request):
+    if request.method == 'GET':
+        accounts = Account.objects.all().values()
+
+        return JsonResponse(list(accounts), safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405 ,safe=False)
+
+def get_search_histories(request):
+    if request.method == 'GET':
+        search_histories = SearchHistory.objects.all().values()
+
+        return JsonResponse(list(search_histories), safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405 ,safe=False)
+
+def get_spots(request):
+    if request.method == 'GET':
+        spots = Spot.objects.all().values()
+
+        return JsonResponse(list(spots), safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405 ,safe=False)
+
+def get_map_cars(request):
+    if request.method == 'GET':
+        map_cars = MapCar.objects.all().values('map_id','name','address','json_data')
+
+        return JsonResponse(list(map_cars), safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405 ,safe=False)
+
+def get_map_bikes(request):
+    if request.method == 'GET':
+        map_bikes = MapBike.objects.all().values()
+
+        return JsonResponse(list(map_bikes), safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405 ,safe=False)
