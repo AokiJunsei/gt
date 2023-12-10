@@ -218,8 +218,8 @@ html {
   position: absolute;
   top: 100px;
   left: 0;
-  bottom: 20px;
   width: 30%;
+  bottom: 20px;
   max-height: 100px; /* 初期の最大高さ */
   overflow-y: auto;
   background-color: rgba(255, 255, 255, 0.9);
@@ -233,32 +233,67 @@ html {
 }
 
 #floating-panel {
-  margin-right: 20px; /* 余白を20ピクセルに設定します。 */
-  position: fixed; /* Keep the panel fixed within the viewport */
-  z-index: 5; /* Ensure it stays above other elements */
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.9
-  ); /* Set background color with some transparency */
-  padding: 10px; /* Add padding inside the panel */
-  border-radius: 5px; /* Round the corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
-  top: 60px; /* Position from the top */
-  left: 700px; /* Position from the left */
-  width: auto; /* Auto width to fit content */
-  max-width: 200px; /* Maximum width taking into account margins */
-  box-sizing: border-box; /* Include padding and border in width and height */
-  overflow: auto; /* Add scrollbars if content overflows */
-  word-wrap: break-word; /* Ensure long words do not cause overflow */
-  white-space: normal; /* Allow text to wrap within the panel */
+  /* 既存のスタイル */
+  position: fixed;
+  z-index: 5;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  top: 60px;
+  right: 500px;
+  width: auto;
+  max-width: 300px; /* 最大幅を設定 */
+  min-width: 300px;
+  box-sizing: border-box;
+  overflow: auto;
+  word-wrap: break-word;
+  white-space: normal;
+
+  /* 新規追加スタイル */
+  display: flex; /* フレックスボックスを有効にする */
+  flex-direction: column; /* 子要素を垂直方向に並べる */
+  align-items: center; /* 子要素を中央揃えにする */
 }
+
 @media screen and (max-width: 800px) {
   #floating-panel {
-    left: 50%; /* 画面が狭い時は左から50ピクセルの位置に設定 */
-    /* 他に必要なスタイルの変更をここに追加 */
+    left: 50%;
+    max-width: 100%; /* 小さい画面ではパネルの幅を画面の90%まで拡大 */
   }
+}
+
+
+.input-group {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 中央揃え */
+}
+
+.input-group label,
+.input-group input,
+.input-group i {
+  margin-top: 10px;
+  margin-right: 5px; /* 右のマージン */
+}
+
+.input-group i {
+  padding-top: 2px; /* アイコンの位置調整 */
+}
+
+/* ...他のスタイル... */
+
+.form-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap; /* 折り返しを防ぐ */
+  justify-content: center; /* 中央揃え */
+  margin-top: 5px;
+}
+
+.form-group label {
+  white-space: nowrap; /* ラベルの折り返しを防ぐ */
 }
 
 .cp_ipselect {
@@ -350,6 +385,12 @@ html {
 }
 
 .mode-selector {
+  margin-top: 15px;
+}
+#waypoint1-group, #waypoint2-group, #waypoint-label {
+  display: none;
+}
+.mode-Relay {
   margin-top: 10px;
 }
 
@@ -395,7 +436,7 @@ html {
   right: -20px; /* 右端から10pxの位置に設定 */
   z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
 }
-@media (max-width: 530px) {
+@media (max-width: 600px) {
   #toggle-icon {
     position: absolute; /* ボタンを固定位置にする */
     top: 60px; /* ヘッダーや他の要素との重なりを避けるために調整 */
@@ -421,8 +462,13 @@ html {
   cursor: pointer; /* アイコンにマウスを合わせたときにカーソルをポインタに変更 */
   color: #000; /* アイコンの色を設定 */
   font-size: 24px; /* アイコンのサイズを設定 */
+  transform: rotate(90deg); /* Rotate the first swap icon only */
 }
-
+#swap-icon-updown {
+  cursor: pointer; /* アイコンにマウスを合わせたときにカーソルをポインタに変更 */
+  color: #000; /* アイコンの色を設定 */
+  font-size: 24px; /* アイコンのサイズを設定 */
+}
 /* 表示されたときに横一列に並べるためのスタイル */
 .form-group {
   /* display: flex; */
