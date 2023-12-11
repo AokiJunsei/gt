@@ -1,20 +1,15 @@
 from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,redirect
 
-from .models import models
-
 from django.views.generic import TemplateView
 from .forms import AccountForm, AddAccountForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
-from django.views.generic import TemplateView
 from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Account, MapCar ,MapBike ,Spot
-from .forms import AccountForm, AddAccountForm, AccountDeleteForm, AccountUpdateForm, LocationForm ,SpotForm,RouteSearchForm
+from .models import Account, MapCar ,MapBike ,Spot ,SearchHistory ,User
+from .forms import AccountForm, AddAccountForm, AccountUpdateForm, LocationForm ,SpotForm,RouteSearchForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 import requests
@@ -22,23 +17,11 @@ import json
 import logging
 from django.contrib import messages
 from django.core.mail import send_mail
-import random
-import string
-from django.core.mail import send_mail
-from django.urls import reverse
-from django.conf import settings
-from django.core.mail import send_mail
-from django.urls import reverse
+
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
-from django.shortcuts import get_object_or_404, redirect, render
-from .forms import AccountForm, AddAccountForm  # 必要に応じてインポート
-from .models import User  # 必要に応じてモデルをインポート
-from django.views.generic import TemplateView
-from django.contrib.auth.tokens import default_token_generator
-from django.shortcuts import get_object_or_404, redirect
-from .models import User  # 必要に応じてモデルをインポート
 from django.utils import timezone
+
 # ロガーの設定
 logger = logging.getLogger(__name__)
 
@@ -81,14 +64,6 @@ def user_search_share_bike_bike(request):
 # シェアリング検索（徒歩１）のビュー
 def user_search_share_bike_walk(request):
     return render(request, 'gt/user_search_share_bike_walk.html')
-
-# 履歴を残す検索(車・自転車・歩き)ビュー
-def user_my_map(request):
-    return render(request, 'gt/user_my_map.html')
-
-# 履歴を残す検索(電車)のビュー
-def user_my_map_train(request):
-    return render(request, 'gt/user_my_map_train.html')
 
 # 管理者用ユーザー情報閲覧ページのビュー
 def admin_user_info(request):
@@ -257,21 +232,6 @@ def admin_map_detail(request, pk, vehicle_type):
     elif vehicle_type == 'bike':
         map_detail = get_object_or_404(MapBike, pk=pk)
     return render(request, 'gt/admin_map_detail.html', {'map_detail': map_detail})
-
-
-# アカウント履歴ビュー
-@login_required
-def account_history_view(request):
-    return render(request, 'gt/user_log.html')
-
-# ログ詳細ビュー
-@login_required
-def log_detail_view(request):
-    return render(request, 'gt/user_log_detail.html')
-
-
-
-##画面遷移の関数はここより上に書きます
 
 # 新規登録ビュー
 class AccountRegistration(TemplateView):
@@ -572,14 +532,7 @@ def user_spot_detail(request, pk):
     return render(request, 'gt/user_spot_detail.html', {'spot_detail': spot_detail})
 
 
-
-
 #内部API
-
-from django.http import JsonResponse
-from .models import SearchHistory
-
-
 def get_accounts(request):
     if request.method == 'GET':
         accounts = Account.objects.all().values()
@@ -620,13 +573,7 @@ def get_map_bikes(request):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405 ,safe=False)
 
-# views.py で user_my_map ビューを修正
-# views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Spot, SearchHistory
-from .forms import RouteSearchForm
-from django.utils import timezone
+# 履歴を残すタイプの検索
 
 @login_required
 def user_my_map(request):
@@ -660,10 +607,19 @@ def user_my_map(request):
 
     return render(request, 'gt/user_my_map.html', {'form': form, 'user_spots': user_spots})
 
-# views.py 内の account_history_view ビューを修正
+# 履歴を残す検索(電車)のビュー
+def user_my_map_train(request):
+    return render(request, 'gt/user_my_map_train.html')
 
+# アカウント履歴ビュー
 @login_required
 def account_history_view(request):
     # ログインしているユーザーの検索履歴を取得
     search_histories = SearchHistory.objects.filter(account=request.user.account)
     return render(request, 'gt/user_log.html', {'log_list': search_histories})
+
+# ログ詳細ビュー
+@login_required
+def log_detail_view(request):
+    return render(request, 'gt/user_log_detail.html')
+
