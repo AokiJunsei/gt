@@ -32,7 +32,7 @@
                             <h3 class="post-subtitle">{{ map.address|truncatechars:20 }}</h3>
                         </a>
                     </div>
-                    <div class="button-container">
+                    <div>
                         <a class="btn btn-success" href="{% url 'gt:admin_map_change' vehicle_type='car' pk=map.pk %}">変更</a>
                         <button type="button" class="btn btn--radius btn--cubic btn-cancel" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
                             削除
