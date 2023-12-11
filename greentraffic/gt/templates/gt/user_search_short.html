@@ -224,12 +224,30 @@
       let coordinates = extractCoordinates(routeData);
       displayRouteOnMap(coordinates, map);
       displayRouteInfo(routeData);
+      expandPanel();
     }
 
     /*検索結果のタブの開閉*/
+    let directionsPanelVisible = false;
+
+    // パネルを表示/非表示切り替える関数
     function toggleDirectionsPanel() {
       const directionsPanel = document.getElementById("directions-panel");
-      directionsPanel.classList.toggle("collapsed");
+      const contentTab = document.getElementById("content-tab");
+      const detailsTab = document.getElementById("details-tab");
+  
+      if (!directionsPanelVisible) {
+        // パネルを表示
+        directionsPanel.style.display = "block";
+        contentTab.classList.add("active");
+        detailsTab.classList.remove("active");
+      } else {
+        // パネルを非表示
+        directionsPanel.style.display = "none";
+      }
+  
+      // 表示状態を反転させる
+      directionsPanelVisible = !directionsPanelVisible;
     }
 
     function toggleTab(tabName) {
@@ -470,6 +488,7 @@
         //取得したルート情報を地図上に表示する
         //displayRouteOnMap(data);
         //displayRouteInfo(data)
+        //expandPanel();
         alert(JSON.stringify(data,null,2));
       })
       .catch(error => {
