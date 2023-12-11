@@ -6,13 +6,18 @@
 {% endblock %}
 
 {% block content %}
-<h1>新規登録</h1>
+
 <!-- 登録フォームの内容 -->
 {% if AccountCreate %}
-  <h1>登録完了!</h1>
+  <h1>メールを確認してください</h1>
   <a href="{% url 'gt:top' %}" class="btn btn-cancel">topに戻る</a>
 {% else %}
+
+<h1>新規登録</h1>
   <div class="reg">
+    {% if error_message %}
+<div class="error">{{ error_message }}</div>
+{% endif %}
     <!-- 登録フォームの構造 -->
     <form enctype="multipart/form-data" method="post">
       {% csrf_token %}
@@ -69,10 +74,11 @@
         
       </table>
       <div class="button-container">
-        <a href="{% url 'gt:top' %}" class="btn btn--radius btn--cubic btn-cancel">戻る</a>
+        <a class="btn btn-secondary" href="{% url 'gt:top' %}">戻る</a>
         <input type="submit" value="登録" class="btn btn--radius btn--cubic btn-submit" />
       </div>
     </form>
   </div>
+  
 {% endif %}
 {% endblock %}

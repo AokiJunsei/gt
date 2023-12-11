@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    
 
     <title> {% block title%} Green Traffic {% endblock %}</title>
 
@@ -38,7 +39,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+            <h5 class="modal-title" id="logoutModalLabel">Logout</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -47,8 +48,8 @@
             ログアウトしますか?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <a href="{% url 'gt:logout' %}" class="btn btn-primary">Logout</a>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+            <a href="{% url 'gt:logout' %}" class="btn btn-primary">ログアウト</a>
           </div>
         </div>
       </div>
@@ -218,7 +219,7 @@
                   {% endif %}
                   <li class="nav-item d-flex align-items-center">
                     <a class="nav-link" href="#"><div id="text"></div></a>
-                    <button type="button" class="btn btn-link nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                    <button type="button" class="btn-link btn nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
                       ログアウト
                     </button>
                   </li>

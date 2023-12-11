@@ -22,7 +22,23 @@ import requests
 import json
 import logging
 from django.contrib import messages
-
+from django.core.mail import send_mail
+import random
+import string
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.conf import settings
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
+from django.shortcuts import get_object_or_404, redirect, render
+from .forms import AccountForm, AddAccountForm  # 必要に応じてインポート
+from .models import User  # 必要に応じてモデルをインポート
+from django.views.generic import TemplateView
+from django.contrib.auth.tokens import default_token_generator
+from django.shortcuts import get_object_or_404, redirect
+from .models import User  # 必要に応じてモデルをインポート
 # ロガーの設定
 logger = logging.getLogger(__name__)
 
@@ -268,27 +284,89 @@ class AccountRegistration(TemplateView):
     def post(self, request):
         account_form = AccountForm(data=request.POST)
         add_account_form = AddAccountForm(data=request.POST)
-
+        username = request.POST.get('username')  # ユーザーネームフィールドの名前に応じて変更
+        
         if account_form.is_valid() and add_account_form.is_valid():
-            account = account_form.save()
-            account.set_password(account.password)
-            account.save()
+        # ユーザーネームの重複チェック
+            if User.objects.filter(username=username).exists():
+                return render(request, self.template_name, {
+                    "account_form": account_form,
+                    "add_account_form": add_account_form,
+                    "error_message": "同じ名前で登録されています。"
+                })
+        
+            request.session['account_data'] = account_form.cleaned_data
+            request.session['add_account_data'] = add_account_form.cleaned_data
 
-            add_account = add_account_form.save(commit=False)
-            add_account.user = account
-            add_account.save()
+            # 一意の認証トークンを生成し、メール送信
+            token = default_token_generator.make_token(User())
+            self.send_activation_email(request, account_form.cleaned_data['email'], account_form.cleaned_data['username'], token)
 
+            # メール確認ページへのリダイレクト
             context = {"AccountCreate": True}
         else:
-            logger.error(account_form.errors)
             context = {
                 "AccountCreate": False,
                 "account_form": account_form,
-                "add_account_form": add_account_form
+                "add_account_form": add_account_form,
             }
         return render(request, self.template_name, context=context)
+    def send_activation_email(self, request, email, username, token):
+        verification_url = reverse('gt:activate', kwargs={'username': username, 'token': token})
+        link = request.build_absolute_uri(verification_url)
+        message = (
+            f'拝啓 {username} 様、\n\n'
+            'Green Trafficへようこそ。\n'
+            'ご登録いただいたメールアドレスの認証をお願いいたします。\n'
+            '下記のリンクをクリックして、メール認証を完了してください。\n\n'
+            f'メール認証リンク: {link}\n\n'
+            'メール認証を完了すると、すぐにGreen Trafficの全機能をご利用いただけます。\n'
+            'もし、このメールに覚えがない場合は、このメールを無視していただくか、当社のサポートチームまでご連絡をお願いいたします。\n\n'
+            '敬具,\n'
+            'Green Traffic サポートチーム'
+        )
+        send_mail('【Green Traffic】メールアドレスの認証について', message, settings.EMAIL_HOST_USER, [email])
 
 
+def activate_account(request, username, token):
+    if User.objects.filter(username=username).exists():
+        user = User.objects.get(username=username)
+        if user.is_active:
+            # 既にアクティブな場合、top.htmlにエラーメッセージを表示
+            context = {'registered': 'このアカウントは既に登録されています。'}
+            return render(request, 'user_login.html', context)
+    if 'account_data' in request.session and 'add_account_data' in request.session:
+        account_data = request.session['account_data']
+        add_account_data = request.session['add_account_data']
+        if default_token_generator.check_token(User(), token):
+            user = User.objects.create_user(
+                username=account_data['username'],
+                email=account_data['email'],
+                password=account_data['password']
+            )
+            user.is_active = True
+            user.save()
+            account = Account(
+                user=user,
+                last_name=add_account_data['last_name'],
+                first_name=add_account_data['first_name'],
+                zipcode=add_account_data.get('zipcode', ''),
+                state=add_account_data.get('state', ''),
+                city=add_account_data.get('city', ''),
+                address=add_account_data.get('address', ''),
+                address_1=add_account_data.get('address_1', ''),
+                address_2=add_account_data.get('address_2', ''),
+                gender=add_account_data.get('gender', '未選択'),
+                # 他の必要なフィールドを追加...
+            )
+            account.save()
+            del request.session['account_data']
+            del request.session['add_account_data']
+            return redirect('gt:registration_complete')
+        else:
+           return render(request, 'gt:top', {'エラーメッセージ': '無効なトークンです。'})
+def registration_complete(request):
+    return render(request, 'registration_complete.html')
 # ログインビュー
 def Login(request):
     if request.method == 'POST':
@@ -305,7 +383,11 @@ def Login(request):
             else:
                 return HttpResponse("アカウントが有効ではありません")
         else:
-            return HttpResponse("ログインIDまたはパスワードが間違っています")
+        # ログイン試行時に、is_activeがFalseの場合はメール確認を促す
+            if user is not None and not user.is_active:
+                return HttpResponse("メールアドレスを確認し、アカウントを有効化してください。")
+            else:
+                return HttpResponse("ログインIDまたはパスワードが間違っています")
 
     else:
         return render(request, 'gt/user_login.html')

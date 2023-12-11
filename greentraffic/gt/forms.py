@@ -160,10 +160,10 @@ class AccountUpdateForm(forms.ModelForm):
         return password
 
 class LocationForm(forms.Form):
-    name = forms.CharField(label='登録名', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    address = forms.CharField(label='住所', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    vehicle_type = forms.ChoiceField(label='種類',choices=[('car', '自動車'), ('bike', '自転車')])
+    name = forms.CharField(label='登録名', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': '例：東京都'})    )
+    address = forms.CharField(label='住所', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': '例：東京駅 '}))
+    vehicle_type = forms.ChoiceField(label='種類',choices=[('car', '自動車'), ('bike', '自転車',)])
 
 class SpotForm(forms.Form):
-    name = forms.CharField(label='登録名', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    address = forms.CharField(label='住所', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    name = forms.CharField(label='登録名', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': '例：東京都 '}))
+    address = forms.CharField(label='住所', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': '例：東京駅 '}))

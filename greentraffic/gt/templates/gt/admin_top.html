@@ -10,14 +10,17 @@
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
             {% comment %} 検索のインプットフォーム {% endcomment %}
-            <input type="text" id="searchInput" placeholder="検索...">
 
             {% comment %} 自転車と車のリストの切り替え {% endcomment %}
-            <select id="modelSelector">
-                <option value="model1">自動車</option>
-                <option value="model2">自転車</option>
-            </select>
-
+            <div class="cp_ipselect">
+                <select id="modelSelector" class="cp_sl06" required>
+                    <option value="model1">車</option>
+                    <option value="model2">自転車</option>
+                </select>
+                <span class="cp_sl06_highlight"></span>
+                <span class="cp_sl06_selectbar"></span>
+                <label class="cp_sl06_selectlabel">Choose</label>
+            </div>
             <hr>
 
             <div id="model1List" class="model-list" style="display: block;">
@@ -31,7 +34,7 @@
                     </div>
                     <div>
                         <a class="btn btn-success" href="{% url 'gt:admin_map_change' vehicle_type='car' pk=map.pk %}">変更</a>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
+                        <button type="button" class="btn btn--radius btn--cubic btn-cancel" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
                             削除
                         </button>
                     </div>
@@ -53,7 +56,7 @@
                             <form method="post" action="{% url 'gt:admin_map_delete' vehicle_type='car' pk=map.pk %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="map_id" value="{{ map.pk }}">
-                                <button type="submit" class="btn btn-danger">削除</button>
+                                <button type="submit" class="btn btn--radius btn--cubic btn-cancel">削除</button>
                             </form>
                             </div>
                         </div>
@@ -76,7 +79,7 @@
                     </div>
                     <div>
                         <a class="btn btn-success" href="{% url 'gt:admin_map_change' vehicle_type='bike' pk=map.pk %}">変更</a>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
+                        <button type="button" class="btn btn--radius btn--cubic btn-cancel" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
                             削除
                         </button>
                     </div>
@@ -145,15 +148,13 @@
             {% endif %}
         </div>
     </div>
-
+     
     <!-- '追加する'ボタンをフッター直前に配置 -->
-    <div class="d-flex justify-content-end mb-4">
+    <div class="button-container mb-4 justify-content-end">
         <a class="btn btn-primary" href="{% url 'gt:admin_map_register' %}">追加する</a>
-    </div>
-    <div class="d-flex justify-content-end mb-4">
         <a class="btn btn-primary" href="{% url 'gt:admin_user_info' %}">利用者情報を閲覧する</a>
     </div>
-
+</div>
     {% comment %} 表示するリストを切り替える関数 {% endcomment %}
     <script>
         // ドロップダウンの変更を監視

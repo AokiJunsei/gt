@@ -1,0 +1,14 @@
+<!-- registration_complete.html -->
+
+{% extends "gt/base.html" %}
+
+{% block title %}
+登録完了 - Green Traffic
+{% endblock %}
+
+{% block content %}
+<h1>登録完了!</h1>
+<h4>登録情報変更やスポットの追加は歯車マークをタップしてください</h4>
+<a href="{% url 'gt:top' %}" class="btn btn-cancel">トップページに戻る</a>
+<a href="{% url 'gt:user_login' %}" class="btn btn-submit">ログインページ</a>
+{% endblock %}

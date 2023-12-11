@@ -5,6 +5,10 @@
 <h1>ログイン画面</h1>
 
 <div class="reg">
+  {% if registered %}
+<div class="error">{{ registered }}</div>
+
+{% endif %}
   <form method="post" action="{% url 'gt:user_login' %}">
     {% csrf_token %}
 
@@ -18,8 +22,8 @@
     </table>
 
     <div class="button-container">
-        <input type="submit" class="btn btn-submit" value="ログイン">
         <a href="{% url 'gt:top' %}" class="btn btn-cancel">キャンセル</a>
+        <input type="submit" class="btn btn-submit" value="ログイン">
     </div>
 
 </form>
