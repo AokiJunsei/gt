@@ -169,13 +169,23 @@ class SpotForm(forms.Form):
     address = forms.CharField(label='住所', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': '例：東京駅 '}))
 
 class RouteSearchForm(forms.Form):
-    start = forms.CharField(max_length=255, required=False)
-    end = forms.CharField(max_length=255, required=False)
+    start = forms.CharField(label='出発地', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '例：東京駅 '}), required=False)
+    end = forms.CharField(label='目的地', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '例：大宮駅 '}), required=False)
     travel_mode = forms.ChoiceField(
         choices=[
-            ('driving', '自動車'),
-            ('walking', '徒歩'),
-            ('bicycling', '自転車'),
-        ],
-        required=False
+            ('DRIVING', '自動車'),
+            ('WALKING', '徒歩'),
+            ('BICYCLING', '自転車'),
+        ]
     )
+    start_spot = forms.ChoiceField(choices=[('', '---')], required=False, label='出発地スポット')
+    end_spot = forms.ChoiceField(choices=[('', '---')], required=False, label='目的地スポット')
+
+    def __init__(self, *args, **kwargs):
+        user_spots = kwargs.pop('user_spots', [])
+        super(RouteSearchForm, self).__init__(*args, **kwargs)
+        # 初期選択肢を含むスポットの選択肢を作成
+        spot_choices = [('', '---')]  # 初期値として空の選択肢を追加
+        spot_choices += [(spot['json_data'], spot['spot_name']) for spot in user_spots]
+        self.fields['start_spot'].choices = spot_choices
+        self.fields['end_spot'].choices = spot_choices

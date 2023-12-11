@@ -21,6 +21,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.utils import timezone
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models.functions import Cast
+from django.db.models import JSONField
 
 # ロガーの設定
 logger = logging.getLogger(__name__)
@@ -574,38 +577,46 @@ def get_map_bikes(request):
         return JsonResponse({'error': 'Invalid request method'}, status=405 ,safe=False)
 
 # 履歴を残すタイプの検索
-
 @login_required
 def user_my_map(request):
-    user_spots = Spot.objects.filter(account=request.user.account).values('spot_name', 'json_data')
+    account = Account.objects.get(user = request.user)
 
+    user_spots = Spot.objects.filter(account=account).values('spot_name', 'address', 'json_data')
+    for spot in user_spots:
+        if isinstance(spot['json_data'], str):
+            spot['json_data'] = json.loads(spot['json_data'])
+    spots_json = json.dumps(list(user_spots), cls=DjangoJSONEncoder)
     if request.method == 'POST':
-        form = RouteSearchForm(request.POST)
+        form = RouteSearchForm(request.POST, user_spots=list(user_spots))
         if form.is_valid():
-            # フォームからデータを取得
-            start = form.cleaned_data['start']
-            end = form.cleaned_data['end']
-            travel_mode = form.cleaned_data.get('travel_mode', '未指定')
+            start_spot = form.cleaned_data.get('start_spot')
+            end_spot = form.cleaned_data.get('end_spot')
 
-            # 検索結果の保存（検索結果の取得方法はプロジェクトに応じて異なる）
-            search_result = "検索結果の内容"  # 仮の値
+            # スポット選択に基づいて出発地と目的地を設定
+            start = form.cleaned_data.get('start') or start_spot
+            end = form.cleaned_data.get('end') or end_spot
+            travel_mode = form.cleaned_data.get('travel_mode', '未指定')
 
             # 検索履歴をデータベースに保存
             SearchHistory.objects.create(
-                account=request.user.account,
+                account=account,
                 search_query=f"{start} から {end}",
-                search_result=search_result,
-                search_type="MyMap",
                 start_location=start,
                 end_location=end,
                 travel_mode=travel_mode,
                 search_datetime=timezone.now()
             )
-            return redirect('適切なリダイレクト先')  # 適切なリダイレクト先に変更
+            return render(request, 'gt/user_my_map.html', {
+                'form': form,
+                'start': start,
+                'end': end,
+                'travel_mode': travel_mode,
+                'submitted': True,  # フォームが送信されたフラグ
+                'spots_json': spots_json, # スポットリストをJSON形式で渡す
+            })
     else:
-        form = RouteSearchForm()
-
-    return render(request, 'gt/user_my_map.html', {'form': form, 'user_spots': user_spots})
+        form = RouteSearchForm(user_spots=list(user_spots))
+    return render(request, 'gt/user_my_map.html', {'form': form, 'spots_json': spots_json})
 
 # 履歴を残す検索(電車)のビュー
 def user_my_map_train(request):

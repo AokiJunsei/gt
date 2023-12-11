@@ -22,16 +22,14 @@ class Account(models.Model):
 class SearchHistory(models.Model):
     history_id = models.AutoField(primary_key=True, verbose_name="履歴ID")
     account = models.ForeignKey(Account, on_delete=models.CASCADE, verbose_name="アカウントID")
-    search_result = models.CharField(max_length=100, verbose_name="検索結果")
     search_datetime = models.DateTimeField(auto_now_add=True, verbose_name="検索日時")
     search_query = models.CharField(max_length=100, verbose_name="検索クエリ")
-    search_type = models.CharField(max_length=100, verbose_name="検索の種類")
     start_location = models.CharField(max_length=255, blank=True, null=True, verbose_name="出発地")
     end_location = models.CharField(max_length=255, blank=True, null=True, verbose_name="目的地")
     travel_mode = models.CharField(max_length=100, blank=True, null=True, verbose_name="トラベルモード")
 
     def __str__(self):
-        return f"{self.history_id} - {self.account.name} - {self.search_result}"
+        return f"{self.history_id} - {self.account.last_name} - {self.search_query}"
 
 # スポットテーブル
 class Spot(models.Model):

@@ -4,13 +4,6 @@
 
 {% block content %}
 <body onload="initMap()">
-  <!--フォームの表示非表示-->
-  <div>
-    <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
-  </div>
-  <div>
-    <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
-  </div>
   <div id="map-container">
     <div>
       <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
@@ -19,61 +12,41 @@
       <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
     </div>
     <div id="floating-panel">
-      <!-- <h1>最短検索</h1> -->
-      <h3>mymap検索</h3>
-      <label>スポット選択: </label>
-      <select id="spot-select">
-        <option value="">選択してください</option>
-        {% for spot in user_spots %}
-        <option value="{{ spot.json_data }}">{{ spot.spot_name }}</option>
-        {% endfor %}
-        </select>
-      <div class="input-group">
-      <label>出: </label>
-      <input type="text" id="start" placeholder="出発地を入力してください" />
-      <i id="current-location-icon" class="fas fa-compass" onclick="getCurrentLocation()"></i>
-    </div>
-      {% comment %} <i id="toggle-form-icon" class="fas fa-eye"></i><br> {% endcomment %}
-      <div id="waypoint1-group" class="form-group">
-        <label id="waypoint1-label" for="waypoint1">中継地点１:</label>
-        <input type="text" id="waypoint1" placeholder="中継地点を入力してください">
-      </div>
-      <div id="waypoint2-group" class="form-group">
-        <label id="waypoint2-label" for="waypoint2">中継地点２:</label>
-        <input type="text" id="waypoint2" placeholder="中継地点を入力してください">
-      </div>
-      <div class="mode-Relay">
-        <label>中継地点 </label>
-      <i id="swap-icon" class="fas fa-exchange-alt" onclick="toggleWaypoints()"></i>
-      </div>
-      <label>スポット選択: </label>
-      <select id="end-spot-select">
-        <option value="">選択してください</option>
-        {% for spot in user_spots %}
-          <option value="{{ spot.json_data }}">{{ spot.spot_name }}</option>
-        {% endfor %}
-      </select>
-      <div class="input-group">
-      <label>着: </label>
+      <form method="post">
+        {% csrf_token %}
+        <!-- 出発地フィールド -->
+        <div class="form-group">
+          {{ form.start.label_tag }} {{ form.start }}
+        </div>
 
-      <input type="text" id="end" placeholder="目的地を入力してください" />
-    </div>
-      <!--入れ替えボタン　未対応-->
-      <i id="swap-icon" class="fas fa-arrow-right-arrow-left" onclick="swapStartEnd()"></i>
+        <!-- 出発地スポット選択 -->
+        <div class="form-group " id="spot-start-input-group" style="display:none;">
+          {{ form.start_spot.label_tag }}
+          {{ form.start_spot }}
+        </div>
 
-      <div class="mode-selector">
-        <input type="checkbox" id="mode-driving" checked />
-        <label for="mode-driving">自動車</label>
+        <!-- 目的地フィールド -->
+        <div class="form-group">
+          {{ form.end.label_tag }} {{ form.end }}
+        </div>
+        <!-- 目的地スポット選択 -->
+        <div class="input-group" id="spot-end-input-group" style="display:none;">
+          {{ form.end_spot.label_tag }}
+          {{ form.end_spot }}
+        </div>
+        <!-- 移動モード選択 -->
+        <div class="input-group">
+          {{ form.travel_mode.label_tag }}
+          {{ form.travel_mode }}
+        </div>
 
-        <input type="checkbox" id="mode-walking"  />
-        <label for="mode-walking">徒歩</label>
+        <div class="mode-selector">
+          <!-- アイコンボタン -->
+          <i id="toggle-spot-input" class="fas fa-map-marker-alt fa-lg"></i>
+          <button type="submit" class="button-class">検索</button>
+        </div>
 
-        <input type="checkbox" id="mode-bicycling"  />
-        <label for="mode-bicycling">自転車</label>
-
-        <button class="button-class"onclick="trainTF()">検索</button>
-
-      </div>
+      </form>
     </div>
     <div id="map"></div>
     <div id="directions-panel">
@@ -83,28 +56,49 @@
       <div id="details-tab" class="tab-content"></div>
     </div>
   </div>
-  <form id="route-search-form" method="post" style="display: none;">
-    {% csrf_token %}
-    {{ form.as_p }}
-</form>
-<script>
-    // JavaScriptコード
-    // 検索ボタンがクリックされたときの処理
-    document.querySelector('.button-class').addEventListener('click', function() {
-        document.getElementById('start').value = /* 出発地の値 */;
-        document.getElementById('end').value = /* 目的地の値 */;
-        document.getElementById('route-search-form').submit(); // フォームを送信
-    });
-</script>
+
   <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
     defer
   ></script>
 
   <script>
+    // formsのJS
+    // スポット選択時の動作を定義　　後日入力の形をデバック！
+    document.getElementById('id_start_spot').addEventListener('change', function() {
+      document.getElementById('id_start').value = this.value;
+    });
+    document.getElementById('id_end_spot').addEventListener('change', function() {
+      document.getElementById('id_end').value = this.value;
+    });
+
+    function toggleSpotInput() {
+      var spotstartInputGroup = document.getElementById('spot-start-input-group');
+      var spotendInputGroup = document.getElementById('spot-end-input-group');
+      if (spotstartInputGroup.style.display === 'none') {
+        spotstartInputGroup.style.display = 'block';
+      } else {
+        spotstartInputGroup.style.display = 'none';
+      }
+      if (spotendInputGroup.style.display === 'none') {
+        spotendInputGroup.style.display = 'block';
+      } else {
+        spotendInputGroup.style.display = 'none';
+      }
+    }
+
+    // アイコンボタンにクリックイベントリスナーを追加
+    document.getElementById('toggle-spot-input').addEventListener('click', toggleSpotInput);
+  </script>
+  <script type="text/javascript">
+
     var map;
     let directionsService, directionsRenderer;
     let currentLocationMarker;
+
+    const startQuery = "{{ start|escapejs }}";
+    const endQuery = "{{ end|escapejs }}";
+    const travelModeQuery = "{{ travel_mode|escapejs }}";
 
     function toggleInputForm() {
       var x = document.getElementById('floating-panel');
@@ -125,7 +119,7 @@
       const initial_location = { lat: 35.689, lng: 139.692 };
 
       /*現在地更新を5000秒ごとに繰り返す*/
-      /*setInterval(updateCurrentLocation, 5000);*/
+      setInterval(updateCurrentLocation, 5000);
 
       map = new google.maps.Map(document.getElementById("map"), {
         zoom: 17,
@@ -158,9 +152,42 @@
         }
         });
       }
+      addSpotsMarkers();
     }
 
     /*上記までがinitMap()*/
+
+    // スポットのマーカーを追加する新しい関数
+    function addSpotsMarkers() {
+      const spotsData = JSON.parse('{{ spots_json|safe }}');
+      var markerIcon = {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 10, // アイコンのサイズ
+        fillColor: "#0000FF", // 青色に設定
+        fillOpacity: 1,
+        strokeWeight: 2,
+        strokeColor: "#FFFFFF" // 白色の境界線
+      };
+      spotsData.forEach(function(spot) {
+        const latLng = spot.json_data;
+        const marker = new google.maps.Marker({
+          position: latLng,
+          map: map,
+          title: spot.spot_name,
+          icon: markerIcon
+        });
+        // アドレス情報を含む情報ウィンドウをマーカーに追加
+        var infoWindow = new google.maps.InfoWindow({
+          content: '<div><strong>' + spot.spot_name + '</strong><br>' +
+                  'Address: ' + spot.address + '</div>'
+        });
+
+        // マーカークリック時に情報ウィンドウを表示
+        marker.addListener('click', function() {
+          infoWindow.open(map, marker);
+        });
+      });
+    }
 
     /*現在地を出発地に指定*/
     function getCurrentLocation() {
@@ -237,86 +264,12 @@
       map.setCenter(location);
     }
 
-    /*電車かそれ否かを分ける関数*/
-    function trainTF(){
-      if (!map) {
-        console.error("Map object is not initialized yet.");
-        return;
-      }
-        calculateAndDisplayRoute()
-    }
-
-    /*経路検索メソッド*/
-    function calculateAndDisplayRoute() {
-      const start = document.getElementById("start").value;
-      const waypoint1 = document.getElementById("waypoint1").value;
-      const waypoint2 = document.getElementById("waypoint2").value;
-      const end = document.getElementById("end").value;
-
-      const drivingMode = document.getElementById("mode-driving").checked;
-      const walkingMode = document.getElementById("mode-walking").checked;
-      const bicyclingMode = document.getElementById("mode-bicycling").checked;
-
-      const travelModes = [];
-      if (drivingMode) travelModes.push(google.maps.TravelMode.DRIVING);
-      if (walkingMode) travelModes.push(google.maps.TravelMode.WALKING);
-      if (bicyclingMode) travelModes.push(google.maps.TravelMode.BICYCLING);
-
-      const request = {
-        origin: start,
-        destination: end,
-        travelMode: google.maps.TravelMode.DRIVING, // Default mode
-      };
-
-      if (waypoint1) {
-        request.waypoints = [{ location: waypoint1 }];
-      }
-      if (waypoint2) {
-        if (!request.waypoints) request.waypoints = [];
-        request.waypoints.push({ location: waypoint2 });
-      }
-
-      directionsService.route(request, (response, status) => {
-        if (status === "OK") {
-          directionsRenderer.setDirections(response);
-          showRouteInformation(response);
-          expandPanel();
-        } else {
-          window.alert("Directions request failed due to " + status);
-        }
-      });
-    }
-
-    /*検索結果をinnerHTMLで記載*/
-    function showRouteInformation(response) {
-      const directionsPanel = document.getElementById("details-tab");
-      directionsPanel.innerHTML = "";
-
-      for (let i = 0; i < response.routes.length; i++) {
-        const route = response.routes[i];
-
-        const summary = document.createElement("div");
-        summary.innerHTML = `<b>${route.summary}</b>`;
-        directionsPanel.appendChild(summary);
-
-        const steps = route.legs[0].steps;
-        for (let j = 0; j < steps.length; j++) {
-          const stepInfo = document.createElement("div");
-          stepInfo.innerHTML = steps[j].instructions;
-          directionsPanel.appendChild(stepInfo);
-        }
-      }
-    }
-
-    /*検索結果のタブの開閉*/
-    let directionsPanelVisible = false;
-
     // パネルを表示/非表示切り替える関数
     function toggleDirectionsPanel() {
       const directionsPanel = document.getElementById("directions-panel");
       const contentTab = document.getElementById("content-tab");
       const detailsTab = document.getElementById("details-tab");
-  
+
       if (!directionsPanelVisible) {
         // パネルを表示
         directionsPanel.style.display = "block";
@@ -326,7 +279,6 @@
         // パネルを非表示
         directionsPanel.style.display = "none";
       }
-  
       // 表示状態を反転させる
       directionsPanelVisible = !directionsPanelVisible;
     }
@@ -376,54 +328,7 @@
         console.error("Geolocation is not supported by this browser");
       }
     }
-  </script>
 
-  <script>
-    // 出発地のスポット選択用のイベントリスナー
-    document.getElementById('spot-select').addEventListener('change', function() {
-      setSpotDataInInput(this.value, 'start');
-    });
-
-    // 目的地のスポット選択用のイベントリスナー
-    document.getElementById('end-spot-select').addEventListener('change', function() {
-      setSpotDataInInput(this.value, 'end');
-    });
-
-    // スポットデータをinputフィールドに設定する関数
-    function setSpotDataInInput(jsonData, inputId) {
-      if (jsonData) {
-        var spotData = JSON.parse(jsonData);
-        var lat = spotData.lat; // 緯度
-        var lng = spotData.lng; // 経度
-
-        // 指定されたinputフィールドに緯度と経度をセット
-        var inputField = document.getElementById(inputId);
-        inputField.value = lat + ", " + lng;
-
-        // マップ上にマーカーを配置（既存のマーカーがあれば削除）
-        var markerKey = inputId + 'Marker';
-        if (window[markerKey]) {
-          window[markerKey].setMap(null);
-        }
-        var markerIcon = {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 10, // アイコンのサイズ
-          fillColor: "#0000FF", // 青色に設定
-          fillOpacity: 1,
-          strokeWeight: 2,
-          strokeColor: "#FFFFFF" // 白色の境界線
-        };
-        window[markerKey] = new google.maps.Marker({
-          position: {lat: lat, lng: lng},
-          map: map,
-          title: inputId === 'start' ? "出発地" : "目的地",
-          icon: markerIcon
-        });
-
-        // マップのビューを選択されたスポットに移動
-        map.setCenter({lat: lat, lng: lng});
-      }
-    }
     var initialLeft = 20; // 左端からの距離
     var initialTop = 20;  // 上端からの距離
     document.addEventListener('DOMContentLoaded', function() {
@@ -489,27 +394,72 @@
 
 
     window.onload = function() {
-    // Hide the waypoint fields and label on load
-    document.getElementById('waypoint1-group').style.display = 'none';
-    document.getElementById('waypoint2-group').style.display = 'none';
-    document.getElementById('waypoint-label').style.display = 'none'; // Assuming you have a label with this ID
+      initMap();
+      checkAndExecuteTrainTF();
     };
 
-    function toggleWaypoints() {
-    var waypoint1 = document.getElementById('waypoint1-group');
-    var waypoint2 = document.getElementById('waypoint2-group');
-    var waypointLabel = document.getElementById('waypointLabel'); // ラベルの正しいIDを確認してください
-
-    // 中継地点が現在表示されているかどうかを判定
-    var isDisplayed = waypoint1.style.display !== 'none';
-
-    // 中継地点の表示・非表示を切り替え
-    waypoint1.style.display = isDisplayed ? 'none' : 'block';
-    waypoint2.style.display = isDisplayed ? 'none' : 'block';
-
-    // ラベルの表示・非表示も切り替える（条件が逆になる）
-    waypointLabel.style.display = isDisplayed ? 'block' : 'none';
+    // フォームがPOSTで送信されたかどうかを判定し、trainTF()を実行する関数
+    function checkAndExecuteTrainTF() {
+      {% if submitted %}
+        trainTF();
+      {% endif %}
     }
+
+    /*電車かそれ否かを分ける関数*/
+    function trainTF(){
+      if (!map) {
+        console.error("Map object is not initialized yet.");
+        return;
+      }
+        calculateAndDisplayRoute()
+    }
+
+    /*経路検索メソッド*/
+    function calculateAndDisplayRoute() {
+      const start = startQuery;
+      const end = endQuery;
+      const travelMode = travelModeQuery || 'DRIVING';
+
+      const request = {
+        origin: start,
+        destination: end,
+        travelMode: google.maps.TravelMode[travelMode],
+      };
+
+      directionsService.route(request, (response, status) => {
+        if (status === "OK") {
+          directionsRenderer.setDirections(response);
+          showRouteInformation(response);
+          expandPanel();
+        } else {
+          window.alert("Directions request failed due to " + status);
+        }
+      });
+    }
+
+    /*検索結果をinnerHTMLで記載*/
+    function showRouteInformation(response) {
+      const directionsPanel = document.getElementById("details-tab");
+      directionsPanel.innerHTML = "";
+
+      for (let i = 0; i < response.routes.length; i++) {
+        const route = response.routes[i];
+
+        const summary = document.createElement("div");
+        summary.innerHTML = `<b>${route.summary}</b>`;
+        directionsPanel.appendChild(summary);
+
+        const steps = route.legs[0].steps;
+        for (let j = 0; j < steps.length; j++) {
+          const stepInfo = document.createElement("div");
+          stepInfo.innerHTML = steps[j].instructions;
+          directionsPanel.appendChild(stepInfo);
+        }
+      }
+    }
+
+    /*検索結果のタブの開閉*/
+    let directionsPanelVisible = false;
   </script>
 </body>
 {% endblock content %}

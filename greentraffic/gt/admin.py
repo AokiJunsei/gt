@@ -10,8 +10,8 @@ class AccountAdmin(admin.ModelAdmin):
 #検索履歴テーブル
 @admin.register(SearchHistory)
 class SearchHistoryAdmin(admin.ModelAdmin):
-    list_display = ('history_id', 'account', 'search_result', 'search_datetime', 'search_query', 'search_type')
-    search_fields = ('account__name', 'search_result', 'search_query')
+    list_display = ('history_id', 'account', 'search_datetime', 'search_query', 'start_location','end_location','travel_mode')
+    search_fields = ('account.last_name', 'search_query')
 
 #スポットテーブル
 @admin.register(Spot)
