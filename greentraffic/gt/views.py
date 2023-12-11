@@ -82,9 +82,13 @@ def user_search_share_bike_bike(request):
 def user_search_share_bike_walk(request):
     return render(request, 'gt/user_search_share_bike_walk.html')
 
-# 履歴を残す検索のビュー
+# 履歴を残す検索(車・自転車・歩き)ビュー
 def user_my_map(request):
     return render(request, 'gt/user_my_map.html')
+
+# 履歴を残す検索(電車)のビュー
+def user_my_map_train(request):
+    return render(request, 'gt/user_my_map_train.html')
 
 # 管理者用ユーザー情報閲覧ページのビュー
 def admin_user_info(request):
