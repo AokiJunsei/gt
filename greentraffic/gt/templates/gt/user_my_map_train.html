@@ -35,24 +35,13 @@
       <input type="time" id="departure-time" />
   
       <div class="mode-selector">
-        <input type="checkbox" id="mode-driving" checked />
-        <label for="mode-driving">自動車</label>
-  
+
         <input type="checkbox" id="mode-transit"  />
         <label for="mode-transit">電車</label>
-  
-        <input type="checkbox" id="mode-walking"  />
-        <label for="mode-walking">徒歩</label>
-  
-        <input type="checkbox" id="mode-bicycling"  />
-        <label for="mode-bicycling">自転車</label>
-  
+
         <button class="button-class"onclick="trainTF()">検索</button>
   
       </div>
-      <span hidden><div id="id_ido">緯度</div></span>
-      <span hidden><div id="id_keido">経度</div></span>
-      <span hidden><div id="id_address">住所</div></span>
     </div>
     <div id="map"></div>
     <div id="directions-panel">
@@ -60,7 +49,7 @@
       <div class="tab" onclick="toggleTab('details')">Details</div>
       <div id="content-tab" class="tab-content active"></div>
       <div id="details-tab" class="tab-content"></div>
-      
+
     </div>
   </div>
 
@@ -128,33 +117,6 @@
         panel: document.getElementById("content-tab"),
       });
 
-      //地図クリックイベントの登録
-      google.maps.event.addListener(map, 'click',
-        function(event) {
-          if (Marker){Marker.setMap(null)};
-          Marker = new google.maps.Marker({
-          position: event.latLng,
-          draggable: true,
-          map: map
-        });
-        infotable(Marker.getPosition().lat(),
-        Marker.getPosition().lng(),map.getZoom());
-        geocode();
-        //マーカードラッグイベントの登録
-        google.maps.event.addListener(Marker,'dragend',
-        function(event) {
-        infotable(Marker.getPosition().lat(),
-        Marker.getPosition().lng(),map.getZoom());
-        geocode();
-        })
-        //地図ズームチェンジイベントの登録
-        google.maps.event.addListener(map, 'zoom_changed',
-        function(event) {
-        infotable(Marker.getPosition().lat(),
-        Marker.getPosition().lng(),map.getZoom());
-        })
-      })
-
       //ジオコーディング
       function geocode(){  var geocoder = new google.maps.Geocoder();
         geocoder.geocode({ 'location': Marker.getPosition()},
@@ -169,14 +131,6 @@
                 + status);
         }
         });
-      }
-
-     //HTMLTagを更新
-      function infotable(ido,keido,level){
-        document.getElementById('id_ido').innerHTML = ido;
-        document.getElementById('id_keido').innerHTML = keido;
-        document.getElementById('id_address').innerHTML = level;
-        document.getElementById("waypoint1").value =   ido + ","+ keido;
       }
     }
 
@@ -264,86 +218,11 @@
         console.error("Map object is not initialized yet.");
         return;
       }
+      /*fetchRouteAndDisplayOnMap();*/
+      let coordinates = extractCoordinates(routeData);
+      displayRouteOnMap(coordinates, map);
+      displayRouteInfo(routeData);
 
-      var checkbox = document.getElementById('mode-transit');
-      if (checkbox.checked) {
-          /*デバックの為一次コメントアウト*/
-          /*fetchRouteAndDisplayOnMap();*/
-          let coordinates = extractCoordinates(routeData);
-          displayRouteOnMap(coordinates, map);
-          displayRouteInfo(routeData);
-      }else{
-        calculateAndDisplayRoute()
-      }
-    }
-
-    /*経路検索メソッド*/
-    function calculateAndDisplayRoute() {
-      const start = document.getElementById("start").value;
-      const waypoint1 = document.getElementById("waypoint1").value;
-      const waypoint2 = document.getElementById("waypoint2").value;
-      const end = document.getElementById("end").value;
-      const departureTime = document.getElementById("departure-date").value;
-
-      const drivingMode = document.getElementById("mode-driving").checked;
-      const walkingMode = document.getElementById("mode-walking").checked;
-      const bicyclingMode = document.getElementById("mode-bicycling").checked;
-
-      const travelModes = [];
-      if (drivingMode) travelModes.push(google.maps.TravelMode.DRIVING);
-      if (walkingMode) travelModes.push(google.maps.TravelMode.WALKING);
-      if (bicyclingMode) travelModes.push(google.maps.TravelMode.BICYCLING);
-
-      const request = {
-        origin: start,
-        destination: end,
-        travelMode: google.maps.TravelMode.DRIVING, // Default mode
-      };
-
-      if (waypoint1) {
-        request.waypoints = [{ location: waypoint1 }];
-      }
-      if (waypoint2) {
-        if (!request.waypoints) request.waypoints = [];
-        request.waypoints.push({ location: waypoint2 });
-      }
-      if (travelModes.length > 0) {
-        request.travelMode = travelModes[0];
-        request.transitOptions = {
-          modes: travelModes.slice(1),
-          departureTime: new Date(departureTime),
-        };
-      }
-
-      directionsService.route(request, (response, status) => {
-        if (status === "OK") {
-          directionsRenderer.setDirections(response);
-          showRouteInformation(response);
-        } else {
-          window.alert("Directions request failed due to " + status);
-        }
-      });
-    }
-
-    /*検索結果をinnerHTMLで記載*/
-    function showRouteInformation(response) {
-      const directionsPanel = document.getElementById("details-tab");
-      directionsPanel.innerHTML = "";
-
-      for (let i = 0; i < response.routes.length; i++) {
-        const route = response.routes[i];
-
-        const summary = document.createElement("div");
-        summary.innerHTML = `<b>${route.summary}</b>`;
-        directionsPanel.appendChild(summary);
-
-        const steps = route.legs[0].steps;
-        for (let j = 0; j < steps.length; j++) {
-          const stepInfo = document.createElement("div");
-          stepInfo.innerHTML = steps[j].instructions;
-          directionsPanel.appendChild(stepInfo);
-        }
-      }
     }
 
     /*検索結果のタブの開閉*/
