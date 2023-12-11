@@ -12,11 +12,27 @@
     <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
   </div>
   <div id="map-container">
+    <div>
+      <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
+    </div>
+    <div>
+      <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
+    </div>
     <div id="floating-panel">
       <!-- <h1>最短検索</h1> -->
-      <label>出発地: </label>
+      <h3>mymap検索</h3>
+      <label>スポット選択: </label>
+      <select id="spot-select">
+        <option value="">選択してください</option>
+        {% for spot in user_spots %}
+        <option value="{{ spot.json_data }}">{{ spot.spot_name }}</option>
+        {% endfor %}
+        </select>
+      <div class="input-group">
+      <label>出: </label>
       <input type="text" id="start" placeholder="出発地を入力してください" />
       <i id="current-location-icon" class="fas fa-compass" onclick="getCurrentLocation()"></i>
+    </div>
       {% comment %} <i id="toggle-form-icon" class="fas fa-eye"></i><br> {% endcomment %}
       <div id="waypoint1-group" class="form-group">
         <label id="waypoint1-label" for="waypoint1">中継地点１:</label>
@@ -26,8 +42,22 @@
         <label id="waypoint2-label" for="waypoint2">中継地点２:</label>
         <input type="text" id="waypoint2" placeholder="中継地点を入力してください">
       </div>
-      <label>目的地: </label>
-      <input type="text" id="end" placeholder="目的地を入力してください" /><br>
+      <div class="mode-Relay">
+        <label>中継地点 </label>
+      <i id="swap-icon" class="fas fa-exchange-alt" onclick="toggleWaypoints()"></i>
+      </div>
+      <label>スポット選択: </label>
+      <select id="end-spot-select">
+        <option value="">選択してください</option>
+        {% for spot in user_spots %}
+          <option value="{{ spot.json_data }}">{{ spot.spot_name }}</option>
+        {% endfor %}
+      </select>
+      <div class="input-group">
+      <label>着: </label>
+
+      <input type="text" id="end" placeholder="目的地を入力してください" />
+    </div>
       <!--入れ替えボタン　未対応-->
       {% comment %} <i id="swap-icon" class="fas fa-arrow-right-arrow-left" onclick="swapStartEnd()"></i> {% endcomment %}
       <label>出発時刻: </label>
@@ -319,6 +349,7 @@
         if (status === "OK") {
           directionsRenderer.setDirections(response);
           showRouteInformation(response);
+          expandPanel();
         } else {
           window.alert("Directions request failed due to " + status);
         }
@@ -347,9 +378,26 @@
     }
 
     /*検索結果のタブの開閉*/
+    let directionsPanelVisible = false;
+
+    // パネルを表示/非表示切り替える関数
     function toggleDirectionsPanel() {
       const directionsPanel = document.getElementById("directions-panel");
-      directionsPanel.classList.toggle("collapsed");
+      const contentTab = document.getElementById("content-tab");
+      const detailsTab = document.getElementById("details-tab");
+  
+      if (!directionsPanelVisible) {
+        // パネルを表示
+        directionsPanel.style.display = "block";
+        contentTab.classList.add("active");
+        detailsTab.classList.remove("active");
+      } else {
+        // パネルを非表示
+        directionsPanel.style.display = "none";
+      }
+  
+      // 表示状態を反転させる
+      directionsPanelVisible = !directionsPanelVisible;
     }
 
     function toggleTab(tabName) {
@@ -779,7 +827,137 @@
         });
         polylines = [];
     }
+// 出発地のスポット選択用のイベントリスナー
+document.getElementById('spot-select').addEventListener('change', function() {
+  setSpotDataInInput(this.value, 'start');
+});
 
+// 目的地のスポット選択用のイベントリスナー
+document.getElementById('end-spot-select').addEventListener('change', function() {
+  setSpotDataInInput(this.value, 'end');
+});
+
+// スポットデータをinputフィールドに設定する関数
+function setSpotDataInInput(jsonData, inputId) {
+  if (jsonData) {
+    var spotData = JSON.parse(jsonData);
+    var lat = spotData.lat; // 緯度
+    var lng = spotData.lng; // 経度
+
+    // 指定されたinputフィールドに緯度と経度をセット
+    var inputField = document.getElementById(inputId);
+    inputField.value = lat + ", " + lng;
+
+    // マップ上にマーカーを配置（既存のマーカーがあれば削除）
+    var markerKey = inputId + 'Marker';
+    if (window[markerKey]) {
+      window[markerKey].setMap(null);
+    }
+    var markerIcon = {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 10, // アイコンのサイズ
+      fillColor: "#0000FF", // 青色に設定
+      fillOpacity: 1,
+      strokeWeight: 2,
+      strokeColor: "#FFFFFF" // 白色の境界線
+    };
+    window[markerKey] = new google.maps.Marker({
+      position: {lat: lat, lng: lng},
+      map: map,
+      title: inputId === 'start' ? "出発地" : "目的地",
+      icon: markerIcon
+    });
+
+    // マップのビューを選択されたスポットに移動
+    map.setCenter({lat: lat, lng: lng});
+  }
+}
+var initialLeft = 20; // 左端からの距離
+var initialTop = 20;  // 上端からの距離
+document.addEventListener('DOMContentLoaded', function() {
+var floatingPanel = document.getElementById('floating-panel');
+var isDragging = false;
+var offsetX, offsetY;
+
+floatingPanel.addEventListener('mousedown', function(e) {
+isDragging = true;
+offsetX = e.clientX - floatingPanel.getBoundingClientRect().left;
+offsetY = e.clientY - floatingPanel.getBoundingClientRect().top;
+window.getSelection().removeAllRanges();
+});
+
+document.addEventListener('mouseup', function() {
+isDragging = false;
+});
+
+document.addEventListener('mousemove', function(e) {
+if (isDragging) {
+  var mouseX = e.clientX;
+  var mouseY = e.clientY;
+  var newLeft = mouseX - offsetX;
+  // 画面の下部を超えないようにするために、newTop の値を制限します。
+  var newTop = Math.min(mouseY - offsetY, window.innerHeight - floatingPanel.offsetHeight - 10); // 下部の余白を10pxに設定
+
+  newLeft = Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth);
+  newLeft = Math.max(newLeft, 0);
+
+  floatingPanel.style.left = newLeft + 'px';
+  floatingPanel.style.top = Math.max(0, newTop) + 'px';
+}
+});
+document.addEventListener('mousemove', function(e) {
+if (isDragging) {
+var mouseX = e.clientX;
+var mouseY = e.clientY;
+var newLeft = mouseX - offsetX;
+// 画面の下部を超えないようにするために、newTop の値を制限します。
+var newTop = Math.min(mouseY - offsetY, window.innerHeight - floatingPanel.offsetHeight - 65); // 下部の余白を10pxに設定
+
+newLeft = Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth);
+newLeft = Math.max(newLeft, 0);
+
+floatingPanel.style.left = newLeft + 'px';
+floatingPanel.style.top = Math.max(0, newTop) + 'px';
+}
+});
+window.addEventListener('resize', function() {
+// ウィンドウのリサイズ時に、右端を超えないように位置を調整する
+var rightEdge = window.innerWidth - floatingPanel.offsetWidth;
+var currentLeft = parseInt(floatingPanel.style.left, 10);
+if (currentLeft > rightEdge) {
+  floatingPanel.style.left = rightEdge + 'px';
+}
+});
+});
+
+function expandPanel() {
+var panel = document.getElementById('directions-panel');
+panel.classList.add('expanded'); // expanded クラスを追加して拡大します
+}
+
+
+window.onload = function() {
+// Hide the waypoint fields and label on load
+document.getElementById('waypoint1-group').style.display = 'none';
+document.getElementById('waypoint2-group').style.display = 'none';
+document.getElementById('waypoint-label').style.display = 'none'; // Assuming you have a label with this ID
+};
+
+function toggleWaypoints() {
+var waypoint1 = document.getElementById('waypoint1-group');
+var waypoint2 = document.getElementById('waypoint2-group');
+var waypointLabel = document.getElementById('waypointLabel'); // ラベルの正しいIDを確認してください
+
+// 中継地点が現在表示されているかどうかを判定
+var isDisplayed = waypoint1.style.display !== 'none';
+
+// 中継地点の表示・非表示を切り替え
+waypoint1.style.display = isDisplayed ? 'none' : 'block';
+waypoint2.style.display = isDisplayed ? 'none' : 'block';
+
+// ラベルの表示・非表示も切り替える（条件が逆になる）
+waypointLabel.style.display = isDisplayed ? 'block' : 'none';
+}
   </script>
 </body>
 {% endblock content %}

@@ -615,3 +615,10 @@ def get_map_bikes(request):
         return JsonResponse(list(map_bikes), safe=False)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405 ,safe=False)
+
+# views.py で user_my_map ビューを修正
+# views.py
+@login_required
+def user_my_map(request):
+    user_spots = Spot.objects.filter(account=request.user.account).values('spot_name', 'json_data')
+    return render(request, 'gt/user_my_map.html', {'user_spots': user_spots})
