@@ -15,7 +15,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Account, MapCar ,MapBike ,Spot
 from .forms import AccountForm, AddAccountForm, AccountDeleteForm, AccountUpdateForm, LocationForm ,SpotForm
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 import requests
@@ -39,6 +38,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404, redirect
 from .models import User  # 必要に応じてモデルをインポート
+from django.utils import timezone
 # ロガーの設定
 logger = logging.getLogger(__name__)
 
@@ -622,7 +622,36 @@ def get_map_bikes(request):
 
 # views.py で user_my_map ビューを修正
 # views.py
+from django.shortcuts import render
+from .forms import RouteSearchForm
+from .models import SearchHistory
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+
 @login_required
 def user_my_map(request):
+    form = RouteSearchForm(request.POST or None)
+
+    if request.method == 'POST' and form.is_valid():
+        start = form.cleaned_data['start']
+        end = form.cleaned_data['end']
+
+        # 検索履歴を保存
+        SearchHistory.objects.create(
+            account=request.user.account,
+            search_query=f"出発地: {start}, 目的地: {end}",
+            search_result="検索結果の内容",  # 実際の検索結果をここに設定
+            search_type="MyMap",
+            search_datetime=timezone.now()
+        )
+
     user_spots = Spot.objects.filter(account=request.user.account).values('spot_name', 'json_data')
-    return render(request, 'gt/user_my_map.html', {'user_spots': user_spots})
+    return render(request, 'gt/user_my_map.html', {'form': form, 'user_spots': user_spots})
+
+# views.py 内の account_history_view ビューを修正
+
+@login_required
+def account_history_view(request):
+    # ログインしているユーザーの検索履歴を取得
+    search_histories = SearchHistory.objects.filter(account=request.user.account)
+    return render(request, 'gt/user_log.html', {'log_list': search_histories})

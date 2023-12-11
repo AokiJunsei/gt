@@ -93,7 +93,19 @@
       
     </div>
   </div>
-
+  <form id="route-search-form" method="post" style="display: none;">
+    {% csrf_token %}
+    {{ form.as_p }}
+</form>
+<script>
+    // JavaScriptコード
+    // 検索ボタンがクリックされたときの処理
+    document.querySelector('.button-class').addEventListener('click', function() {
+        document.getElementById('start').value = /* 出発地の値 */;
+        document.getElementById('end').value = /* 目的地の値 */;
+        document.getElementById('route-search-form').submit(); // フォームを送信
+    });
+</script>
   <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
     defer

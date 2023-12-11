@@ -167,3 +167,6 @@ class LocationForm(forms.Form):
 class SpotForm(forms.Form):
     name = forms.CharField(label='登録名', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': '例：東京都 '}))
     address = forms.CharField(label='住所', max_length=200, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': '例：東京駅 '}))
+class RouteSearchForm(forms.Form):
+    start = forms.CharField(max_length=255, required=False)
+    end = forms.CharField(max_length=255, required=False)

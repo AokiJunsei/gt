@@ -26,6 +26,8 @@ class SearchHistory(models.Model):
     search_datetime = models.DateTimeField(auto_now_add=True, verbose_name="検索日時")
     search_query = models.CharField(max_length=100, verbose_name="検索クエリ")
     search_type = models.CharField(max_length=100, verbose_name="検索の種類")
+    start_location = models.CharField(max_length=255, blank=True, null=True, verbose_name="出発地")
+    end_location = models.CharField(max_length=255, blank=True, null=True, verbose_name="目的地")
 
     def __str__(self):
         return f"{self.history_id} - {self.account.name} - {self.search_result}"
@@ -60,8 +62,4 @@ class MapBike(models.Model):
 
     def __str__(self):
         return self.name
-
-
-
-
-
+    
