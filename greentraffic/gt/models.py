@@ -28,6 +28,7 @@ class SearchHistory(models.Model):
     search_type = models.CharField(max_length=100, verbose_name="検索の種類")
     start_location = models.CharField(max_length=255, blank=True, null=True, verbose_name="出発地")
     end_location = models.CharField(max_length=255, blank=True, null=True, verbose_name="目的地")
+    travel_mode = models.CharField(max_length=100, blank=True, null=True, verbose_name="トラベルモード")
 
     def __str__(self):
         return f"{self.history_id} - {self.account.name} - {self.search_result}"

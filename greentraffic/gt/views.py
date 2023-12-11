@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Account, MapCar ,MapBike ,Spot
-from .forms import AccountForm, AddAccountForm, AccountDeleteForm, AccountUpdateForm, LocationForm ,SpotForm
+from .forms import AccountForm, AddAccountForm, AccountDeleteForm, AccountUpdateForm, LocationForm ,SpotForm,RouteSearchForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 import requests
@@ -622,30 +622,42 @@ def get_map_bikes(request):
 
 # views.py で user_my_map ビューを修正
 # views.py
-from django.shortcuts import render
-from .forms import RouteSearchForm
-from .models import SearchHistory
-from django.utils import timezone
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from .models import Spot, SearchHistory
+from .forms import RouteSearchForm
+from django.utils import timezone
 
 @login_required
 def user_my_map(request):
-    form = RouteSearchForm(request.POST or None)
-
-    if request.method == 'POST' and form.is_valid():
-        start = form.cleaned_data['start']
-        end = form.cleaned_data['end']
-
-        # 検索履歴を保存
-        SearchHistory.objects.create(
-            account=request.user.account,
-            search_query=f"出発地: {start}, 目的地: {end}",
-            search_result="検索結果の内容",  # 実際の検索結果をここに設定
-            search_type="MyMap",
-            search_datetime=timezone.now()
-        )
-
     user_spots = Spot.objects.filter(account=request.user.account).values('spot_name', 'json_data')
+
+    if request.method == 'POST':
+        form = RouteSearchForm(request.POST)
+        if form.is_valid():
+            # フォームからデータを取得
+            start = form.cleaned_data['start']
+            end = form.cleaned_data['end']
+            travel_mode = form.cleaned_data.get('travel_mode', '未指定')
+
+            # 検索結果の保存（検索結果の取得方法はプロジェクトに応じて異なる）
+            search_result = "検索結果の内容"  # 仮の値
+
+            # 検索履歴をデータベースに保存
+            SearchHistory.objects.create(
+                account=request.user.account,
+                search_query=f"{start} から {end}",
+                search_result=search_result,
+                search_type="MyMap",
+                start_location=start,
+                end_location=end,
+                travel_mode=travel_mode,
+                search_datetime=timezone.now()
+            )
+            return redirect('適切なリダイレクト先')  # 適切なリダイレクト先に変更
+    else:
+        form = RouteSearchForm()
+
     return render(request, 'gt/user_my_map.html', {'form': form, 'user_spots': user_spots})
 
 # views.py 内の account_history_view ビューを修正

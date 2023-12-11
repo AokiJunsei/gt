@@ -1,16 +1,25 @@
-{% extends "gt/base.html" %}
-{% block content %}
-  <h2>My Map</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">検索</button>
-  </form>
+<!-- log.html 内で検索履歴を表示 -->
 
-  <h3>保存されたスポット</h3>
-  <ul>
-    {% for spot in user_spots %}
-      <li>{{ spot.spot_name }} - {{ spot.json_data }}</li>
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- 検索履歴の表示 -->
+<div>
+    <h3>検索履歴</h3>
+    {% for history in log_list %}
+    <div>
+        <p>検索結果: {{ history.search_result }}</p>
+        <p>検索クエリ: {{ history.search_query }}</p>
+        <p>検索日時: {{ history.search_datetime }}</p>
+    </div
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">検索</button>
+    </form>>
+    {% empty %}
+    <p>検索履歴が見つかりません。</p>
     {% endfor %}
-  </ul>
+</div>
 {% endblock %}
