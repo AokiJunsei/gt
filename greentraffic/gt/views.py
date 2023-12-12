@@ -653,6 +653,13 @@ def account_history_view(request):
 
 # ログ詳細ビュー
 @login_required
-def log_detail_view(request):
-    return render(request, 'gt/user_log_detail.html')
+def log_detail_view(request, pk):
+    log_detail = get_object_or_404(SearchHistory, pk=pk)
+    return render(request, 'gt/user_log_detail.html', {'log_detail': log_detail})
 
+# ログ削除ビュー
+@login_required
+def log_delete_view(request, pk):
+    log_delete = get_object_or_404(SearchHistory, pk=pk)
+    log_delete.delete()
+    return redirect(reverse('gt:account_history'))
