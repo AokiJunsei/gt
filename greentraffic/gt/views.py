@@ -599,12 +599,24 @@ def user_my_map(request):
     if request.method == 'POST':
         form = RouteSearchForm(request.POST, user_spots=list(user_spots))
         if form.is_valid():
-            start_spot = form.cleaned_data.get('start_spot')
-            end_spot = form.cleaned_data.get('end_spot')
+            # JSON形式の文字列からPythonの辞書に変換
+            start_spot_json = form.cleaned_data.get('start_spot')
+            end_spot_json = form.cleaned_data.get('end_spot')
 
-            # スポット選択に基づいて出発地と目的地を設定
-            start = form.cleaned_data.get('start') or start_spot
-            end = form.cleaned_data.get('end') or end_spot
+            try:
+                # 二重引用符に修正されたJSON文字列を解析
+                start_spot = json.loads(start_spot_json.replace("'", '"'))
+                end_spot = json.loads(end_spot_json.replace("'", '"'))
+
+                # latとlngの値を取得してフォーマットする
+                start = form.cleaned_data.get('start') or f"{start_spot['lat']}, {start_spot['lng']}"
+                end = form.cleaned_data.get('end') or f"{end_spot['lat']}, {end_spot['lng']}"
+
+                # ...[残りの処理]...
+            except json.JSONDecodeError as e:
+                # JSON解析エラーが発生した場合の処理をここに記述
+                print("JSON解析エラー:", e)
+
             travel_mode = form.cleaned_data.get('travel_mode', '未指定')
 
             # 検索履歴をデータベースに保存

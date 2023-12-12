@@ -15,7 +15,7 @@
       <form method="post">
         {% csrf_token %}
         <!-- 出発地フィールド -->
-        <div class="form-group">
+        <div class="form-group" id = "id_start">
           {{ form.start.label_tag }} {{ form.start }}
         </div>
 
@@ -26,7 +26,7 @@
         </div>
 
         <!-- 目的地フィールド -->
-        <div class="form-group">
+        <div class="form-group " id = "id_end">
           {{ form.end.label_tag }} {{ form.end }}
         </div>
         <!-- 目的地スポット選択 -->
@@ -63,14 +63,40 @@
   ></script>
 
   <script>
-    // formsのJS
-    // スポット選択時の動作を定義　　後日入力の形をデバック！
-    document.getElementById('id_start_spot').addEventListener('change', function() {
-      document.getElementById('id_start').value = this.value;
+    var inputElements = document.querySelectorAll('#spot-start-input-group input');
+
+    inputElements.forEach(function(inputElement) {
+        inputElement.addEventListener('change', function() {
+            var jsonSafeValue = this.value.replace(/'/g, '"');
+            console.log('JSON-safe value:', jsonSafeValue);
+
+            try {
+                var parsedValue = JSON.parse(jsonSafeValue);
+                var newValue = `${parsedValue.lat}, ${parsedValue.lng}`;
+                document.getElementById('id_start').value = newValue;
+            } catch (e) {
+                console.error('Error parsing JSON:', e);
+            }
+        });
     });
-    document.getElementById('id_end_spot').addEventListener('change', function() {
-      document.getElementById('id_end').value = this.value;
+
+    var inputElementsEnd = document.querySelectorAll('#spot-end-input-group input');
+
+    inputElementsEnd.forEach(function(inputElement) {
+        inputElementsEnd.addEventListener('change', function() {
+            var jsonSafeValue = this.value.replace(/'/g, '"');
+            console.log('JSON-safe value:', jsonSafeValue);
+
+            try {
+                var parsedValue = JSON.parse(jsonSafeValue);
+                var newValue = `${parsedValue.lat}, ${parsedValue.lng}`;
+                document.getElementById('id_start').value = newValue;
+            } catch (e) {
+                console.error('Error parsing JSON:', e);
+            }
+        });
     });
+
 
     function toggleSpotInput() {
       var spotstartInputGroup = document.getElementById('spot-start-input-group');
