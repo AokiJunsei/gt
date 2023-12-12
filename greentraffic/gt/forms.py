@@ -25,7 +25,7 @@ class AccountForm(forms.ModelForm):
         })
     )
     password = forms.CharField(widget=forms.PasswordInput(attrs={
-            'placeholder': '8文字以上数字を含む'
+            'placeholder': '8文字以上数字を含む',
         }), 
         label="パスワード" )
     
