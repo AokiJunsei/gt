@@ -7,54 +7,53 @@
         {% csrf_token %}
         <table class="reg_form">
             <tr>
-              <th>{{ form.username.label_tag }}</th>
-              <td>{{ form.username }}</td>
-              <th>{{ form.email.label_tag }}</th>
-              <td>{{ form.email }}</td>
+              <th>{{ user_form.username.label_tag }}</th>
+              <td>{{ user_form.username }}</td>
             </tr>
             <tr>
-              <th>{{ form.password.label_tag }}</th>
+              <th>{{ user_form.email.label_tag }}</th>
+              <td>{{ user_form.email }}</td>
+            </tr>
+            <tr>
+              <th>{{ user_form.password.label_tag }}</th>
               <td>
-                {{ form.password }}
-                {% if form.password.errors %}
-                <div class="error">{{ form.password.errors }}</div>
+                {{ user_form.password }}
+                {% if user_form.password.errors %}
+                <div class="error">{{ user_form.password.errors }}</div>
                 {% endif %}
               </td>
             </tr>
             <tr>
-              <th>{{ form.last_name.label_tag }}</th>
-              <td>{{ form.last_name }}</td>
-              <th>{{ form.first_name.label_tag }}</th>
-              <td>{{ form.first_name }}</td>
-            </tr>
-
-            <tr>
-              <th>{{ form.gender.label_tag }}</th>
-              <td>{{ form.gender }}</td>
-            </tr>
-
-            <tr>
-              <th>{{ form.zipcode.label_tag }}</th>
-              <td>{{ form.zipcode }}</td>
-              <th>{{ form.state.label_tag }}</th>
-              <td>{{ form.state }}</td>
-            </tr>
-
-            <tr>
-              <th>{{ form.city.label_tag }}</th>
-              <td>{{ form.city }}</td>
-              <th>{{ form.address_1.label_tag }}</th>
-              <td>{{ form.address_1 }}</td>
+              <th>{{ account_form.last_name.label_tag }}</th>
+              <td>{{ account_form.last_name }}</td>
+              <th>{{ account_form.first_name.label_tag }}</th>
+              <td>{{ account_form.first_name }}</td>
             </tr>
             <tr>
-              <th>{{ form.address_2.label_tag }}</th>
-              <td>{{ form.address_2 }}</td>
+              <th>{{ account_form.gender.label_tag }}</th>
+              <td>{{ account_form.gender }}</td>
+            </tr>
+            <tr>
+              <th>{{ account_form.zipcode.label_tag }}</th>
+              <td>{{ account_form.zipcode }}</td>
+              <th>{{ account_form.state.label_tag }}</th>
+              <td>{{ account_form.state }}</td>
+            </tr>
+            <tr>
+              <th>{{ account_form.city.label_tag }}</th>
+              <td>{{ account_form.city }}</td>
+              <th>{{ account_form.address_1.label_tag }}</th>
+              <td>{{ account_form.address_1 }}</td>
+            </tr>
+            <tr>
+              <th>{{ account_form.address_2.label_tag }}</th>
+              <td>{{ account_form.address_2 }}</td>
             </tr>
 
           </table>
         <div class="button-container">
             <a href="{% url 'gt:user_info' %}" class="btn btn--radius btn--cubic btn-cancel">戻る</a>
-            <button class="btn btn--radius btn--cubic btn-submit" type="submit">変更</button>
+            <button class="btn btn-success" type="submit">変更</button>
         </div>
     </form>
 </div>

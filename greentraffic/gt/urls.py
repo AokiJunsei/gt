@@ -54,7 +54,3 @@ urlpatterns = [
     path('api/map_bikes', views.get_map_bikes, name='get_map_bikes'),
 
     ]
-
-
-
-

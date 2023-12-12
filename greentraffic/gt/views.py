@@ -21,7 +21,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.utils import timezone
-
+from django.contrib.auth import update_session_auth_hash
 # ロガーの設定
 logger = logging.getLogger(__name__)
 
@@ -369,27 +369,36 @@ def user_info(request):
     return render(request, 'user_info.html', {'account': account})
 
 # ユーザー情報更新ビュー
+
 @login_required
 def user_update_view(request):
     user = request.user
     account = user.account
 
     if request.method == 'POST':
-        form = AccountUpdateForm(request.POST, instance=account)
-        if form.is_valid():
+        user_form = AccountForm(request.POST, instance=user)
+        account_form = AddAccountForm(request.POST, instance=account)
+        if user_form.is_valid() and account_form.is_valid():
             # User モデルの更新
-            user.username = form.cleaned_data['username']
-            user.email = form.cleaned_data['email']
-            user.password = form.cleaned_data['password']
+            user = user_form.save(commit=False)
+            user.set_password(user_form.cleaned_data['password'])  # パスワードをハッシュ化して保存
             user.save()
 
             # Account モデルの更新
-            form.save()
+            # セッションを更新してログイン状態を維持
+            update_session_auth_hash(request, user)
+
+            # Account モデルの更新
+            account_form.save()
+
             return redirect('gt:user_info')
     else:
-        form = AccountUpdateForm(instance=account, initial={'username': user.username, 'email': user.email})
+        user_form = AccountForm(instance=user, initial={'username': user.username, 'email': user.email})
+        account_form = AddAccountForm(instance=account)
 
-    return render(request, 'user_update.html', {'form': form})
+    return render(request, 'user_update.html', {'user_form': user_form, 'account_form': account_form})
+
+
 
 
 # ユーザー退会ビュー

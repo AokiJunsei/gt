@@ -163,8 +163,8 @@ SECURE_SSL_REDIRECT=False
 SESSION_COOKIE_SECURE=False
 CSRF_COOKIE_SECURE=False
 
-LOGIN_URL = 'user_login'
-LOGIN_REDIRECT_URL = 'top'
+LOGIN_URL = 'gt:user_login'
+LOGIN_REDIRECT_URL = 'gt:top'
 
 # 特定のオリジンだけを許可
 CORS_ALLOWED_ORIGINS = [
