@@ -1,54 +1,67 @@
-{% extends 'base.html' %}
+{% extends 'gt/base.html' %}
 {% load static %}
 
-{% block title %}検索履歴詳細 | Green Traffic{% endblock %}
+{% block title %}履歴詳細 | Green Traffic{% endblock %}
 
-{% block active_log_list %}active{% endblock %}
+{% block log_detail %}active{% endblock %}
 
-
-{% block contents %}
-{% comment %} 以下の内容はDBに依存する {% endcomment %}
-<div class="container my-div-style">
-    <div class="row">
-        <div class="col-3">
-            <strong>検索の種類</strong>
+{% block content %}
+<main onload="initMap()">
+    <h1>履歴詳細</h1>
+    <div class="container my-div-style">
+        <div class="row">
+            <div class="col-3">
+                <strong>検索詳細</strong>
+            </div>
+            <div class="col-9">
+                {{ log_detail.search_query }}
+            </div>
         </div>
-        <div class="col-9">
-            {{ object.kinds }}
+
+        <hr>
+
+        <div class="row">
+            <div class="col-3">
+                <strong>TravelMode</strong>
+            </div>
+            <div class="col-9">
+                {{ spot_detail.travel_mode }}
+            </div>
         </div>
+
+        <hr>
+
+        <div id="map" style="width: 100%; height: 400px;"></div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a class="btn btn-secondary" href="{% url 'gt:user_spot_list' %}">戻る</a>
+                </div>
+            </div>
+        </div>
+
+        <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
+        ></script>
+
+        <script>
+            function initMap() {
+                var jsonData = JSON.parse('{{ spot_detail.json_data|safe }}');
+
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 12,
+                    center: jsonData
+                });
+
+                var marker = new google.maps.Marker({
+                    position: jsonData,
+                    map: map
+                });
+            }
+        </script>
     </div>
-
-    <hr>
-
-    <div class="row">
-        <div class="col-3">
-            <strong>検索結果</strong>
-        </div>
-        <div class="col-9">
-            {{ object.content|linebreaksbr }}
-        </div>
-    </div>
-
-    <hr>
-
-    <div class="row">
-        <div class="col-3">
-            <strong>JSON</strong>
-        </div>
-        <div class="col-9">
-            {{ object.json }}
-        </div>
-    </div>
-
-    <hr>
-
-    <div class="row">
-        <div class="col-3">
-            <strong>検索日時</strong>
-        </div>
-        <div class="col-9">
-            {{ object.created_at }}
-        </div>
-    </div>
-</div>
+</main>
 {% endblock %}

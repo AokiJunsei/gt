@@ -31,8 +31,8 @@ urlpatterns = [
     path('user_delete/', views.user_delete_view, name='user_delete'),
 
     path('account_history/', views.account_history_view, name='account_history'),
-    path('log_detail/', views.log_detail_view, name='log_detail'),
-    path('accounts/login/', views.Login, name='user_login'),
+    path('log_detail/<int:pk>/', views.log_detail_view, name='log_detail'),
+    path('log_delete/<int:pk>/', views.log_delete_view, name='log_delete'),
 
     path('accounts/login/', views.Login, name='user_login'),
     path('logout/', views.Logout, name='logout'),

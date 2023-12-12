@@ -1,25 +1,98 @@
-<!-- log.html 内で検索履歴を表示 -->
-
 {% extends "base.html" %}
+
 {% load static %}
+{% block title %}履歴リスト{% endblock %}
+
+{% block log_list %} active {% endblock %}
 
 {% block content %}
-<!-- 検索履歴の表示 -->
-<div>
-    <h3>検索履歴</h3>
-    {% for history in log_list %}
-    <div>
-        <p>検索結果: {{ history.search_result }}</p>
-        <p>検索クエリ: {{ history.search_query }}</p>
-        <p>検索日時: {{ history.search_datetime }}</p>
-    </div
-    <form method="post" action="">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">検索</button>
-    </form>>
-    {% empty %}
-    <p>検索履歴が見つかりません。</p>
-    {% endfor %}
+<h3>検索履歴</h3>
+<div class="container px-4 px-lg-5 my-div-style">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            {% if log_list %}
+                {% for history in log_list %}
+                <div class="post-preview d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'gt:log_detail' history.pk %}">
+                            <h2 class="post-title">検索クエリ: {{ history.search_query }}</h2>
+                            <h3 class="post-subtitle">TravelMode : {{ history.travel_mode }}</h3>
+                            <h3 class="post-subtitle">検索日時: {{ history.search_datetime }}</h3>
+                        </a>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ history.pk }}">
+                            削除
+                        </button>
+                    </div>
+                </div>
+                <hr class="my-4" />
+                <!--削除するためのモーダルウィンドウ -->
+                <div class="modal fade" id="deleteModal-{{ history.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ history.pk }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel-{{ history.pk }}">削除確認</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                            </div>
+                            <div class="modal-body">
+                            本当に削除しますか？
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                            <form method="post" action="{% url 'gt:log_delete' history.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="history_id" value="{{ history.pk }}">
+                                <button type="submit" class="btn btn-danger">削除</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% empty %}
+                <p>検索履歴が見つかりません。</p>
+                {% endfor %}
+
+            {% else %}
+                <p>検索履歴が見つかりません。</p>
+            {% endif %}
+
+            <!-- ページネーション処理 -->
+            {% if is_paginated %}
+            <ul class="pagination">
+            <!-- 前ページへのリンク -->
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- ページ数表示 -->
+            {% for page_num in page_obj.paginator.page_range %}
+            {% if page_obj.number == page_num %}
+            <li class="page-item active">
+                <a class="page-link" href="#">{{ page_num }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+            </li>
+            {% endif %} {% endfor %}
+
+            <!-- 次ページへのリンク -->
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
 </div>
-{% endblock %}
+{% endblock content %}
