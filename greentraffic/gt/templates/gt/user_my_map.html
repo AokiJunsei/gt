@@ -14,9 +14,11 @@
     <div id="floating-panel">
       <form method="post">
         {% csrf_token %}
+        <h3>経路検索</h3>
         <!-- 出発地フィールド -->
         <div class="form-group" id = "id_start">
-          {{ form.start.label_tag }} {{ form.start }}
+          {{ form.start.label_tag }}
+          {{ form.start }}
         </div>
 
         <!-- 出発地スポット選択 -->
@@ -35,15 +37,14 @@
           {{ form.end_spot }}
         </div>
         <!-- 移動モード選択 -->
-        <div class="input-group">
+        <div class="input-group ">
           {{ form.travel_mode.label_tag }}
           {{ form.travel_mode }}
         </div>
 
-        <div class="mode-selector">
-          <!-- アイコンボタン -->
-          <i id="toggle-spot-input" class="fas fa-map-marker-alt fa-lg"></i>
+        <div class="mode-selector center-container">
           <button type="submit" class="button-class">検索</button>
+          <i id="toggle-spot-input" class="fas fa-history" style="font-size: 32px;"></i>
         </div>
 
       </form>

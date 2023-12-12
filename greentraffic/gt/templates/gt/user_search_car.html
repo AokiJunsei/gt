@@ -345,60 +345,60 @@
     var initialLeft = 20; // 左端からの距離
     var initialTop = 20;  // 上端からの距離
     document.addEventListener('DOMContentLoaded', function() {
-  var floatingPanel = document.getElementById('floating-panel');
-  var isDragging = false;
-  var offsetX, offsetY;
-
-  floatingPanel.addEventListener('mousedown', function(e) {
-    isDragging = true;
-    offsetX = e.clientX - floatingPanel.getBoundingClientRect().left;
-    offsetY = e.clientY - floatingPanel.getBoundingClientRect().top;
-    window.getSelection().removeAllRanges();
-  });
-
-  document.addEventListener('mouseup', function() {
-    isDragging = false;
-  });
-
-  document.addEventListener('mousemove', function(e) {
-    if (isDragging) {
-      var mouseX = e.clientX;
-      var mouseY = e.clientY;
-      var newLeft = mouseX - offsetX;
-      // 画面の下部を超えないようにするために、newTop の値を制限します。
-      var newTop = Math.min(mouseY - offsetY, window.innerHeight - floatingPanel.offsetHeight - 10); // 下部の余白を10pxに設定
-  
-      newLeft = Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth);
-      newLeft = Math.max(newLeft, 0);
-  
-      floatingPanel.style.left = newLeft + 'px';
-      floatingPanel.style.top = Math.max(0, newTop) + 'px';
-    }
-  });
-document.addEventListener('mousemove', function(e) {
-  if (isDragging) {
-    var mouseX = e.clientX;
-    var mouseY = e.clientY;
-    var newLeft = mouseX - offsetX;
-    // 画面の下部を超えないようにするために、newTop の値を制限します。
-    var newTop = Math.min(mouseY - offsetY, window.innerHeight - floatingPanel.offsetHeight - 65); // 下部の余白を10pxに設定
-
-    newLeft = Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth);
-    newLeft = Math.max(newLeft, 0);
-
-    floatingPanel.style.left = newLeft + 'px';
-    floatingPanel.style.top = Math.max(0, newTop) + 'px';
-  }
-});
-  window.addEventListener('resize', function() {
-    // ウィンドウのリサイズ時に、右端を超えないように位置を調整する
-    var rightEdge = window.innerWidth - floatingPanel.offsetWidth;
-    var currentLeft = parseInt(floatingPanel.style.left, 10);
-    if (currentLeft > rightEdge) {
-      floatingPanel.style.left = rightEdge + 'px';
-    }
-  });
-});
+      var floatingPanel = document.getElementById('floating-panel');
+      var isDragging = false;
+      var offsetX, offsetY;
+    
+      // ドラッグ開始処理の関数
+      function startDrag(e) {
+        isDragging = true;
+        var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        offsetX = clientX - floatingPanel.getBoundingClientRect().left;
+        offsetY = clientY - floatingPanel.getBoundingClientRect().top;
+        window.getSelection().removeAllRanges();
+      }
+    
+      // ドラッグ終了処理の関数
+      function endDrag() {
+        isDragging = false;
+      }
+    
+      // ドラッグ中の移動処理の関数
+      function drag(e) {
+        if (!isDragging) return;
+    
+        var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        var newLeft = clientX - offsetX;
+        var newTop = Math.min(clientY - offsetY, window.innerHeight - floatingPanel.offsetHeight - 10);
+    
+        newLeft = Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth);
+        newLeft = Math.max(newLeft, 0);
+    
+        floatingPanel.style.left = newLeft + 'px';
+        floatingPanel.style.top = Math.max(0, newTop) + 'px';
+      }
+    
+      // マウスイベントリスナー
+      floatingPanel.addEventListener('mousedown', startDrag);
+      document.addEventListener('mouseup', endDrag);
+      document.addEventListener('mousemove', drag);
+    
+      // タッチイベントリスナー
+      floatingPanel.addEventListener('touchstart', startDrag);
+      document.addEventListener('touchend', endDrag);
+      document.addEventListener('touchmove', drag);
+    
+      // ウィンドウリサイズ時の処理
+      window.addEventListener('resize', function() {
+        var rightEdge = window.innerWidth - floatingPanel.offsetWidth;
+        var currentLeft = parseInt(floatingPanel.style.left, 10);
+        if (currentLeft > rightEdge) {
+          floatingPanel.style.left = rightEdge + 'px';
+        }
+      });
+    });
 
 function expandPanel() {
   var panel = document.getElementById('directions-panel');
