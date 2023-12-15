@@ -63,41 +63,33 @@
   ></script>
 
   <script>
-    var inputElements = document.querySelectorAll('#spot-start-input-group input');
-
-    inputElements.forEach(function(inputElement) {
-        inputElement.addEventListener('change', function() {
-            var jsonSafeValue = this.value.replace(/'/g, '"');
-            console.log('JSON-safe value:', jsonSafeValue);
-
-            try {
-                var parsedValue = JSON.parse(jsonSafeValue);
-                var newValue = `${parsedValue.lat}, ${parsedValue.lng}`;
-                document.getElementById('id_start').value = newValue;
-            } catch (e) {
-                console.error('Error parsing JSON:', e);
-            }
-        });
+    document.addEventListener('DOMContentLoaded', function() {
+      var startSpotSelect = document.getElementById('spot-start-input-group');
+      var endSpotSelect = document.getElementById('spot-end-input-group');
+  
+      startSpotSelect.addEventListener('change', function() {
+        updateInputFieldWithSpotData(this, 'id_start');
+      });
+  
+      endSpotSelect.addEventListener('change', function() {
+        updateInputFieldWithSpotData(this, 'id_end');
+      });
+  
+      function updateInputFieldWithSpotData(selectElement, inputFieldId) {
+        var inputField = document.getElementById(inputFieldId);
+        var spotData = selectElement.value ? JSON.parse(selectElement.value) : null;
+  
+        if (spotData) {
+          inputField.value = `${spotData.lat}, ${spotData.lng}`;
+        } else {
+          inputField.value = '';
+        }
+      }
     });
-
-    var inputElementsEnd = document.querySelectorAll('#spot-end-input-group input');
-
-    inputElementsEnd.forEach(function(inputElement) {
-        inputElementsEnd.addEventListener('change', function() {
-            var jsonSafeValue = this.value.replace(/'/g, '"');
-            console.log('JSON-safe value:', jsonSafeValue);
-
-            try {
-                var parsedValue = JSON.parse(jsonSafeValue);
-                var newValue = `${parsedValue.lat}, ${parsedValue.lng}`;
-                document.getElementById('id_start').value = newValue;
-            } catch (e) {
-                console.error('Error parsing JSON:', e);
-            }
-        });
-    });
-
-
+  </script>
+  
+  
+  <script>
     function toggleSpotInput() {
       var spotstartInputGroup = document.getElementById('spot-start-input-group');
       var spotendInputGroup = document.getElementById('spot-end-input-group');
