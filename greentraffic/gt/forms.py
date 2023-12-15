@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Account
-from django import forms
 from django.core.exceptions import ValidationError
 import re
+import json
 
 # フォームクラス作成
 class AccountForm(forms.ModelForm):
@@ -184,8 +184,15 @@ class RouteSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         user_spots = kwargs.pop('user_spots', [])
         super(RouteSearchForm, self).__init__(*args, **kwargs)
+
         # 初期選択肢を含むスポットの選択肢を作成
         spot_choices = [('', '---')]  # 初期値として空の選択肢を追加
-        spot_choices += [(spot['json_data'], spot['spot_name']) for spot in user_spots]
+        for spot in user_spots:
+            # JSON文字列をオプションの値としてセット
+            spot_value = json.dumps({
+                'lat': spot['json_data']['lat'],
+                'lng': spot['json_data']['lng']
+            })
+            spot_choices.append((spot_value, spot['spot_name']))
         self.fields['start_spot'].choices = spot_choices
         self.fields['end_spot'].choices = spot_choices
