@@ -589,56 +589,81 @@ def get_map_bikes(request):
 # 履歴を残すタイプの検索
 @login_required
 def user_my_map(request):
-    account = Account.objects.get(user = request.user)
+    account = Account.objects.get(user=request.user)
 
     user_spots = Spot.objects.filter(account=account).values('spot_name', 'address', 'json_data')
     for spot in user_spots:
         if isinstance(spot['json_data'], str):
             spot['json_data'] = json.loads(spot['json_data'])
     spots_json = json.dumps(list(user_spots), cls=DjangoJSONEncoder)
+
+    # 初期値の設定
+    initial = {}
+    log_id = request.GET.get('log_id')
+    if log_id:
+        log_detail = get_object_or_404(SearchHistory, pk=log_id, account=account)
+        initial = {
+            'start': log_detail.start_location,
+            'end': log_detail.end_location,
+            'travel_mode': log_detail.travel_mode,
+        }
+
+    # POSTリクエストの処理
     if request.method == 'POST':
         form = RouteSearchForm(request.POST, user_spots=list(user_spots))
         if form.is_valid():
-            # JSON形式の文字列からPythonの辞書に変換
             start_spot_json = form.cleaned_data.get('start_spot')
             end_spot_json = form.cleaned_data.get('end_spot')
+            start = end = travel_mode = None
 
             try:
-                # 二重引用符に修正されたJSON文字列を解析
-                start_spot = json.loads(start_spot_json.replace("'", '"'))
-                end_spot = json.loads(end_spot_json.replace("'", '"'))
+                # スポット情報があれば、それをデコードして使用
+                if start_spot_json:
+                    start_spot = json.loads(start_spot_json.replace("'", '"'))
+                    start = f"{start_spot['lat']}, {start_spot['lng']}"
+                else:
+                    start = form.cleaned_data.get('start')
 
-                # latとlngの値を取得してフォーマットする
-                start = form.cleaned_data.get('start') or f"{start_spot['lat']}, {start_spot['lng']}"
-                end = form.cleaned_data.get('end') or f"{end_spot['lat']}, {end_spot['lng']}"
+                if end_spot_json:
+                    end_spot = json.loads(end_spot_json.replace("'", '"'))
+                    end = f"{end_spot['lat']}, {end_spot['lng']}"
+                else:
+                    end = form.cleaned_data.get('end')
 
-                # ...[残りの処理]...
+                travel_mode = form.cleaned_data.get('travel_mode')
+
+                # 検索履歴をデータベースに保存
+                SearchHistory.objects.create(
+                    account=account,
+                    search_query=f"{start} から {end}",
+                    start_location=start,
+                    end_location=end,
+                    travel_mode=travel_mode,
+                    search_datetime=timezone.now()
+                )
             except json.JSONDecodeError as e:
-                # JSON解析エラーが発生した場合の処理をここに記述
+                # JSON解析エラーが発生した場合の処理
                 print("JSON解析エラー:", e)
+                form.add_error(None, "JSON形式が不正です。")
 
-            travel_mode = form.cleaned_data.get('travel_mode', '未指定')
-
-            # 検索履歴をデータベースに保存
-            SearchHistory.objects.create(
-                account=account,
-                search_query=f"{start} から {end}",
-                start_location=start,
-                end_location=end,
-                travel_mode=travel_mode,
-                search_datetime=timezone.now()
-            )
-            return render(request, 'gt/user_my_map.html', {
+            context = {
                 'form': form,
                 'start': start,
                 'end': end,
                 'travel_mode': travel_mode,
-                'submitted': True,  # フォームが送信されたフラグ
-                'spots_json': spots_json, # スポットリストをJSON形式で渡す
-            })
+                'submitted': True,
+                'spots_json': spots_json,
+            }
+        else:
+            # フォームが有効でない場合の処理
+            context = {'form': form, 'spots_json': spots_json}
     else:
-        form = RouteSearchForm(user_spots=list(user_spots))
-    return render(request, 'gt/user_my_map.html', {'form': form, 'spots_json': spots_json})
+        # GETリクエストの処理
+        form = RouteSearchForm(initial=initial, user_spots=list(user_spots))
+        context = {'form': form, 'spots_json': spots_json}
+
+    return render(request, 'gt/user_my_map.html', context)
+
 
 # 履歴を残す検索(電車)のビュー
 def user_my_map_train(request):
