@@ -31,7 +31,7 @@
 
         <hr>
 
-        <div id="map-container">
+        <div id="map-log">
             <div>
                 <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
             </div>
@@ -48,9 +48,9 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    <a class="btn btn-success" href="{% url 'gt:my_map' %}?log_id={{ log_detail.pk }}">再検索</a>
+                <div class="button-log" role="group" aria-label="Basic example">
                     <a class="btn btn-secondary" href="{% url 'gt:account_history' %}">戻る</a>
+                    <a class="btn btn-success" href="{% url 'gt:my_map' %}?log_id={{ log_detail.pk }}">再検索</a>
                 </div>
             </div>
         </div>

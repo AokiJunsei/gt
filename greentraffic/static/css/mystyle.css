@@ -60,6 +60,13 @@ table.reg_form input::placeholder {
   padding-top: 20px;
   margin: auto; /* 中央揃え */
 }
+.button-log {
+  justify-content: center;
+  align-items: center;
+  margin: auto; /* 中央揃え */
+  margin-top: 20px; /* 上の空白 */
+  margin-bottom: 20px; /* 下の空白 */
+}
 input::placeholder {
   padding-left: 2px;
 }
@@ -148,6 +155,7 @@ input::placeholder {
 
 footer.footer {
   position: fixed;
+  padding-top: 10px;
   left: 0;
   bottom: 0;
   width: 100%;
@@ -159,10 +167,7 @@ footer.footer {
 }
 
 /* メインコンテンツの下部にフッターの高さ分のスペースを確保 */
-body,
-html {
-  margin: 0;
-}
+
 @media (max-width: 768px) {
   table.reg_form {
     display: block;
@@ -210,6 +215,11 @@ html {
   height: calc(100vh - 40px);
 }
 
+#map-log {
+  padding-top: 0; /* 上のパディングを取り除く */
+  position: relative;
+  height: calc(100vh - 40px);
+}
 #map {
   height: 100%;
 }
@@ -220,7 +230,7 @@ html {
   left: 0;
   width: 30%;
   bottom: 20px;
-  max-height: 100px; /* 初期の最大高さ */
+  max-height: 65px; /* 初期の最大高さ */
   overflow-y: auto;
   background-color: rgba(255, 255, 255, 0.9);
   padding: 10px;
@@ -231,7 +241,16 @@ html {
 #directions-panel.expanded {
   max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
 }
-
+@media (max-width: 800px) {
+  #directions-panel {
+  width: 50%;
+  }
+  #directions-panel.expanded {
+    top:70%;
+    width: 100%;
+    max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
+  }
+}
 #floating-panel {
   /* 既存のスタイル */
   position: fixed;
