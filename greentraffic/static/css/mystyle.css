@@ -470,7 +470,7 @@ footer.footer {
 
 /* タブコンテンツ内の段落のスタイル */
 .tab-content p {
-  margin-bottom: 15px; /* 段落間の余白 */
+  margin-top: 15px; /* 段落間の余白 */
   line-height: 1.6; /* 行の高さ */
   font-size: 1rem; /* 文字サイズ */
 }
@@ -488,23 +488,41 @@ footer.footer {
 
 .segment-info {
   border: 1px solid #cccccc; /* より柔らかいグレーに変更 */
-  margin-bottom: 15px; /* 余白を少し広げる */
-  padding: 15px; /* パディングを増やす */
-  border-radius: 8px; /* 角をより丸く */
+  margin-bottom: 20px; /* 余白を少し広げる */
+  padding: 10px; /* パディングを増やす */
+  border-radius: 10px; /* 角をより丸く */
   background-color: #ffffff; /* 明るい白に変更 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* より深みのあるシャドウに */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1); /* より深みのあるシャドウに */
+  position: relative; /* 矢印の位置の基準とするため */
+  overflow: hidden; /* 矢印などのはみ出しを防ぐ */
 }
 
 .segment-title {
   font-weight: bold;
   color: #007bff; /* より鮮やかなブルーに変更 */
-  margin-bottom: 10px; /* タイトルの下のマージンを増やす */
-  font-size: 1.1em; /* タイトルのフォントサイズを大きく */
+  margin-bottom: 15px; /* タイトルの下のマージンを増やす */
+  font-size: 1.2em; /* タイトルのフォントサイズを大きく */
 }
 
 .segment-info p {
   margin: 10px 0; /* パラグラフ間のマージンを広げる */
-  line-height: 1.6; /* 行間を広げる */
+  margin-bottom: 15px;
+  line-height: 1.5; /* 行間を広げる */
+  position: relative; /* 矢印の位置の基準とするため */
+}
+
+.segment-info i.fas.fa-arrow-down {
+  display: block; /* アイコンをブロック要素として扱い、下のマージンを有効にします */
+  margin-bottom: 15px; /* 下の余白を追加 */
+  text-align: center; /* アイコンを中央揃えにします */
+}
+
+/* モバイルビューなどの小さい画面で矢印が見切れないようにするために、
+   セグメント情報の左側に余白を追加します。 */
+@media (max-width: 768px) {
+  .segment-info {
+    padding-left: 50px; /* 左側のパディングを増やす */
+  }
 }
 
 #toggle-icon {

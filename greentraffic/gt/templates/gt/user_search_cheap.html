@@ -493,14 +493,15 @@
       routeData.NorikaeBizApiResult.body.route[0].path.forEach(segment => {
         const segmentInfo = document.createElement("div");
 
-        segmentInfo.innerHTML += `<p class="segment-title">出発駅: ${segment.from}</p>`;
-        segmentInfo.innerHTML += `<p class="segment-title">到着駅: ${segment.to}</p>`;
-        segmentInfo.innerHTML += `<p>${segment.rosen} ${segment.lineType}(${segment.lineIndex}) 線</p>`;
-        segmentInfo.innerHTML += `<p>所要時間: ${segment.jikan}分</p>`;
-        segmentInfo.innerHTML += `<p>距離: ${segment.kyori}km</p>`;
-        segmentInfo.innerHTML += `<p>乗車区分: ${segment.seatKubun.num}車両</p>`;
-        segmentInfo.innerHTML += `<p>運賃きっぷ: ${segment.untin}円</p>`;
-        segmentInfo.innerHTML += `<p>交通系IC: ${segment.icUntin}円</p>`;
+        segmentInfo.innerHTML += `<p class="segment-title segment-info">出発駅: ${segment.from}</p>`;
+        segmentInfo.innerHTML += `<i class="fas fa-arrow-down"></i>`;
+        segmentInfo.innerHTML += `<p class="segment-title segment-info">到着駅: ${segment.to}</p>`;
+        segmentInfo.innerHTML += `<p class="segment-info">${segment.rosen} ${segment.lineType}(${segment.lineIndex}) 線</p>`;
+        segmentInfo.innerHTML += `<p class="segment-info">所要時間: ${segment.jikan}分</p>`;
+        segmentInfo.innerHTML += `<p class="segment-info">距離: ${segment.kyori}km</p>`;
+        segmentInfo.innerHTML += `<p class="segment-info">乗車区分: ${segment.seatKubun.num}車両</p>`;
+        segmentInfo.innerHTML += `<p class="segment-info">運賃きっぷ: ${segment.untin}円</p>`;
+        segmentInfo.innerHTML += `<p class="segment-info">交通系IC: ${segment.icUntin}円</p>`;
     
         contentTab.appendChild(segmentInfo);
       });
