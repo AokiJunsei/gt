@@ -289,7 +289,11 @@ footer.footer {
   justify-content: center; /* 中央揃え */
 }
 
-.input-group label,
+.input-group label{
+  font-size: 18px;
+  margin-top: 10px;
+  margin-right: 5px; /* 右のマージン */
+}
 .input-group input,
 .input-group i {
   margin-top: 10px;
