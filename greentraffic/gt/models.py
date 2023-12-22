@@ -14,6 +14,8 @@ class Account(models.Model):
     address_2 = models.CharField(max_length=100, blank=True)
     gender = models.CharField(max_length=1, choices=[('M', '男'), ('F', '女'), ('O', 'その他')], blank=True)  # 性別
     email_verified = models.CharField(max_length=100, blank=True, default='')
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.user.username
@@ -61,4 +63,3 @@ class MapBike(models.Model):
 
     def __str__(self):
         return self.name
-    
