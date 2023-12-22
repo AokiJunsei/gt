@@ -332,7 +332,7 @@ def activate_account(request, username, token):
             del request.session['add_account_data']
             return redirect('gt:registration_complete')
         else:
-           return render(request, 'gt:top', {'エラーメッセージ': '無効なトークンです。'})
+            return render(request, 'gt:top', {'エラーメッセージ': '無効なトークンです。'})
 def registration_complete(request):
     return render(request, 'registration_complete.html')
 # ログインビュー

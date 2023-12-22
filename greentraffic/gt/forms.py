@@ -188,11 +188,12 @@ class RouteSearchForm(forms.Form):
         # 初期選択肢を含むスポットの選択肢を作成
         spot_choices = [('', '---')]  # 初期値として空の選択肢を追加
         for spot in user_spots:
+            spot_label = f"{spot['spot_name']} - {spot['address']}"  # スポット名と住所を組み合わせたラベル
             # JSON文字列をオプションの値としてセット
             spot_value = json.dumps({
                 'lat': spot['json_data']['lat'],
                 'lng': spot['json_data']['lng']
             })
-            spot_choices.append((spot_value, spot['spot_name']))
+            spot_choices.append((spot_value, spot_label))
         self.fields['start_spot'].choices = spot_choices
         self.fields['end_spot'].choices = spot_choices
