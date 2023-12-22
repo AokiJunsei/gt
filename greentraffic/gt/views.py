@@ -237,10 +237,22 @@ def admin_map_detail(request, pk, vehicle_type):
         map_detail = get_object_or_404(MapBike, pk=pk)
     return render(request, 'gt/admin_map_detail.html', {'map_detail': map_detail})
 
+# ジオコードAPIの関数
+def get_geocode(address):
+    api_key = "AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4"  # 適切なAPIキーに置き換えてください
+    params = {'address': address, 'key': api_key}
+    response = requests.get('https://maps.googleapis.com/maps/api/geocode/json', params=params)
+
+    if response.status_code == 200:
+        data = response.json()
+        if data['results']:
+            location = data['results'][0]['geometry']['location']
+            return location['lat'], location['lng']
+    return None, None
+
 # 新規登録ビュー
 class AccountRegistration(TemplateView):
     template_name = "gt/user_register.html"
-
     def get(self, request):
         context = {
             "AccountCreate": False,
@@ -253,7 +265,7 @@ class AccountRegistration(TemplateView):
         account_form = AccountForm(data=request.POST)
         add_account_form = AddAccountForm(data=request.POST)
         username = request.POST.get('username')  # ユーザーネームフィールドの名前に応じて変更
-        
+
         if account_form.is_valid() and add_account_form.is_valid():
         # ユーザーネームの重複チェック
             if User.objects.filter(username=username).exists():
@@ -262,9 +274,21 @@ class AccountRegistration(TemplateView):
                     "add_account_form": add_account_form,
                     "error_message": "同じ名前で登録されています。"
                 })
-        
+
             request.session['account_data'] = account_form.cleaned_data
             request.session['add_account_data'] = add_account_form.cleaned_data
+
+
+            # アドレスから緯度経度を取得
+            full_address = f"{add_account_form.cleaned_data['state']} {add_account_form.cleaned_data['city']} {add_account_form.cleaned_data['address']}"
+            latitude, longitude = get_geocode(full_address)
+
+            # 緯度経度をセッションのデータに追加
+            add_account_data = add_account_form.cleaned_data
+            add_account_data['latitude'] = latitude
+            add_account_data['longitude'] = longitude
+            request.session['account_data'] = account_form.cleaned_data
+            request.session['add_account_data'] = add_account_data
 
             # 一意の認証トークンを生成し、メール送信
             token = default_token_generator.make_token(User())
@@ -279,6 +303,7 @@ class AccountRegistration(TemplateView):
                 "add_account_form": add_account_form,
             }
         return render(request, self.template_name, context=context)
+
     def send_activation_email(self, request, email, username, token):
         verification_url = reverse('gt:activate', kwargs={'username': username, 'token': token})
         link = request.build_absolute_uri(verification_url)
@@ -325,7 +350,8 @@ def activate_account(request, username, token):
                 address_1=add_account_data.get('address_1', ''),
                 address_2=add_account_data.get('address_2', ''),
                 gender=add_account_data.get('gender', '未選択'),
-                # 他の必要なフィールドを追加...
+                latitude=add_account_data.get('latitude'),
+                longitude=add_account_data.get('longitude'),
             )
             account.save()
             del request.session['account_data']
@@ -333,6 +359,7 @@ def activate_account(request, username, token):
             return redirect('gt:registration_complete')
         else:
             return render(request, 'gt:top', {'エラーメッセージ': '無効なトークンです。'})
+
 def registration_complete(request):
     return render(request, 'registration_complete.html')
 # ログインビュー
