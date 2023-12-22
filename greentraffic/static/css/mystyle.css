@@ -434,12 +434,77 @@ footer.footer {
   cursor: pointer;
 }
 
-.tab-content {
-  display: none;
-}
 
+/* タブコンテンツのスタイル */
+.tab-content {
+  display: none; /* 初期状態で非表示 */
+  background-color: var(--bs-btn-bg);
+  border-radius: 4px; /* 角丸 */
+ 
+}
 .active {
   display: block;
+}
+/* タブのホバー効果 */
+.tab:hover {
+  background-color: #e9ecef; /* ホバー時の背景色 */
+}
+
+/* アクティブなタブのスタイル */
+.active-tab {
+  background-color: #007bff;
+  color: white;
+}
+
+/* タブの基本スタイル */
+.tab {
+  display: inline-block;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-right: 2px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+
+/* タブコンテンツ内の段落のスタイル */
+.tab-content p {
+  margin-bottom: 15px; /* 段落間の余白 */
+  line-height: 1.6; /* 行の高さ */
+  font-size: 1rem; /* 文字サイズ */
+}
+
+/* 最後のパラグラフのスタイル調整 */
+.tab-content p:last-child {
+  margin-bottom: 0; /* 最後の段落の下余白を削除 */
+}
+
+/* 強調テキストのスタイル */
+.tab-content p span {
+  font-weight: 600; /* より太いフォントウェイト */
+  color: #000; /* 強調色 */
+}
+
+.segment-info {
+  border: 1px solid #cccccc; /* より柔らかいグレーに変更 */
+  margin-bottom: 15px; /* 余白を少し広げる */
+  padding: 15px; /* パディングを増やす */
+  border-radius: 8px; /* 角をより丸く */
+  background-color: #ffffff; /* 明るい白に変更 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* より深みのあるシャドウに */
+}
+
+.segment-title {
+  font-weight: bold;
+  color: #007bff; /* より鮮やかなブルーに変更 */
+  margin-bottom: 10px; /* タイトルの下のマージンを増やす */
+  font-size: 1.1em; /* タイトルのフォントサイズを大きく */
+}
+
+.segment-info p {
+  margin: 10px 0; /* パラグラフ間のマージンを広げる */
+  line-height: 1.6; /* 行間を広げる */
 }
 
 #toggle-icon {

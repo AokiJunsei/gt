@@ -36,7 +36,7 @@
       <div class="input-group">
       <label>目的地: </label>
       <input type="text" id="end" placeholder="目的地を入力してください" />
-      <i id="swap-icon" class="fas fa-exchange-alt" onclick="swapStartEnd()"></i><br>
+      <i id="swap-icon-updown" class="fas fa-exchange-alt" onclick="swapStartEnd()"></i><br>
       </div>
       <label>出発時刻: </label>
       <input type="date" id="departure-date" />
@@ -508,18 +508,18 @@
       routeData.NorikaeBizApiResult.body.route[0].path.forEach(segment => {
         const segmentInfo = document.createElement("div");
 
-        segmentInfo.innerHTML += `<p>出発駅: ${routeData.NorikaeBizApiResult.body.route[0].path[0].from}</p>`;
-        segmentInfo.innerHTML += `<p>到着駅: ${routeData.NorikaeBizApiResult.body.route[0].path[0].to}</p>`;
+        segmentInfo.innerHTML += `<p class="segment-title">出発駅: ${segment.from}</p>`;
+        segmentInfo.innerHTML += `<p class="segment-title">到着駅: ${segment.to}</p>`;
         segmentInfo.innerHTML += `<p>${segment.rosen} ${segment.lineType}(${segment.lineIndex}) 線</p>`;
         segmentInfo.innerHTML += `<p>所要時間: ${segment.jikan}分</p>`;
         segmentInfo.innerHTML += `<p>距離: ${segment.kyori}km</p>`;
         segmentInfo.innerHTML += `<p>乗車区分: ${segment.seatKubun.num}車両</p>`;
-        //segmentInfo.innerHTML += `<p>発着時刻: ${segment.fromTime} ～ ${segment.toTime}</p>`;
         segmentInfo.innerHTML += `<p>運賃きっぷ: ${segment.untin}円</p>`;
-        segmentInfo.innerHTML += `<p>交通系IC:${segment.icUntin}円</p>`;
+        segmentInfo.innerHTML += `<p>交通系IC: ${segment.icUntin}円</p>`;
+    
         contentTab.appendChild(segmentInfo);
-    });
-  }
+      });
+    }
 
 
       /*座標データの抽出*/

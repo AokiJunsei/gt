@@ -618,8 +618,17 @@ def get_map_bikes(request):
 @login_required
 def user_my_map(request):
     account = Account.objects.get(user=request.user)
+    home_address = f"{account.zipcode} {account.state} {account.city} {account.address_1} {account.address_2}"
+    # 自宅情報を含むスポットリストを作成
+    user_spots = list(Spot.objects.filter(account=account).values('spot_name', 'address', 'json_data'))
+    # 自宅をスポットリストに追加
+    home_spot = {
+        'spot_name': '自宅',
+        'address': home_address,
+        'json_data': json.dumps({'lat': home_lat, 'lng': home_lng}) # 自宅の緯度経度情報が必要です
+    }
+    user_spots.append(home_spot)
 
-    user_spots = Spot.objects.filter(account=account).values('spot_name', 'address', 'json_data')
     for spot in user_spots:
         if isinstance(spot['json_data'], str):
             spot['json_data'] = json.loads(spot['json_data'])
