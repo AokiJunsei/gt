@@ -362,6 +362,7 @@ def activate_account(request, username, token):
 
 def registration_complete(request):
     return render(request, 'registration_complete.html')
+
 # ログインビュー
 def Login(request):
     if request.method == 'POST':
@@ -622,6 +623,15 @@ def user_my_map(request):
     for spot in user_spots:
         if isinstance(spot['json_data'], str):
             spot['json_data'] = json.loads(spot['json_data'])
+    # Accountの緯度経度をスポットの一覧に追加
+    user_spots = list(user_spots)
+    user_spot = {
+        'spot_name' : '自宅',
+        'address' : f"{account.state} {account.city} {account.address_1} {account.address_2}",
+        'json_data' : {'lat' : account.latitude,'lng' : account.longitude}
+    }
+    user_spots.append(user_spot)
+
     spots_json = json.dumps(list(user_spots), cls=DjangoJSONEncoder)
 
     # 初期値の設定
