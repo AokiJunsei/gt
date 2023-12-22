@@ -619,20 +619,20 @@ def get_map_bikes(request):
 def user_my_map(request):
     account = Account.objects.get(user=request.user)
 
-    user_spots = Spot.objects.filter(account=account).values('spot_name', 'address', 'json_data')
-    for spot in user_spots:
-        if isinstance(spot['json_data'], str):
-            spot['json_data'] = json.loads(spot['json_data'])
-    # Accountの緯度経度をスポットの一覧に追加
-    user_spots = list(user_spots)
-    user_spot = {
-        'spot_name' : '自宅',
-        'address' : f"{account.state} {account.city} {account.address_1} {account.address_2}",
-        'json_data' : {'lat' : account.latitude,'lng' : account.longitude}
-    }
-    user_spots.append(user_spot)
+    # スポット情報を取得し、json_dataを適切にデコード
+    user_spots = []
+    for spot in Spot.objects.filter(account=account).values('spot_name', 'address', 'json_data'):
+        spot['json_data'] = json.loads(spot['json_data']) if isinstance(spot['json_data'], str) else spot['json_data']
+        user_spots.append(spot)
 
-    spots_json = json.dumps(list(user_spots), cls=DjangoJSONEncoder)
+    # Accountの緯度経度をスポットの一覧に追加
+    user_spots.append({
+        'spot_name': '自宅',
+        'address': f"{account.state} {account.city} {account.address_1} {account.address_2}",
+        'json_data': {'lat': account.latitude, 'lng': account.longitude}
+    })
+
+    spots_json = json.dumps(user_spots, cls=DjangoJSONEncoder)
 
     # 初期値の設定
     initial = {}
