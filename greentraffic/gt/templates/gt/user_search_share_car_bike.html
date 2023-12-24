@@ -7,16 +7,15 @@
   <div id="floating-panel">
     <h3>シェア検索</h3>
     <div class="input-group">
-    <label>出発地: </label>
-    <input type="text" id="start" placeholder="出発地を入力してください" />
-    <i id="current-location-icon" class="fas fa-compass" onclick="getCurrentLocation()"></i>
+      <label>出発地: </label>
+      <input type="text" id="start" placeholder="出発地を入力してください" />
+      <i id="current-location-icon" class="fas fa-compass" onclick="getCurrentLocation()"></i>
     </div>
-    <!-- <i id="toggle-form-icon" class="fas fa-eye"></i><br> -->
     <div class="input-group">
-    <label>目的地: </label>
-    <input type="text" id="end" placeholder="目的地を入力してください" />
-    <i id="swap-icon" class="fas fa-exchange-alt" onclick="swapStartEnd()"></i>
-  </div>
+      <label>目的地: </label>
+      <input type="text" id="end" placeholder="目的地を入力してください" />
+      <i id="swap-icon" class="fas fa-exchange-alt" onclick="swapStartEnd()"></i>
+    </div>
 
     <div class="mode-selector">
       <button class="button-class"onclick="trainTF()">検索</button>
@@ -62,21 +61,6 @@
         icon.className = 'fas fa-eye'; // アイコンを表示アイコンに変更
       }
     }
-
-    /*document.getElementById('toggle-form-icon').addEventListener('click', function() {
-      // 各要素の参照を取得
-      var wp1Group = document.getElementById('waypoint1-group');
-      var wp2Group = document.getElementById('waypoint2-group');
-      var icon = this;
-
-      // waypointグループの表示状態をトグルする
-      var isWp1Visible = wp1Group.style.display === 'flex';
-      wp1Group.style.display = isWp1Visible ? 'none' : 'flex';
-      wp2Group.style.display = isWp1Visible ? 'none' : 'flex';
-
-      // アイコンのクラスをトグルする
-      icon.className = isWp1Visible ? 'fas fa-eye-slash' : 'fas fa-eye';
-    });*/
 
     //マップ情報
     function initMap() {
@@ -181,7 +165,6 @@
                 infoWindow.open(map, marker);
             });
         });
-        //console.log(waypoints)
       }
   }
 
@@ -285,7 +268,6 @@
     function findNearestWaypoint(location, waypoints) {
       let nearestWaypoint = null;
       let minDist = Infinity;
-      console.log(waypoints)
 
       waypoints.forEach(waypoint => {
         const dist = google.maps.geometry.spherical.computeDistanceBetween(
@@ -374,6 +356,7 @@
               } else {
                 directionsRendererStartToShare.setDirections(response);
                 expandPanel();
+                showRouteInformation(response);
                 resolve();
               }
             });
@@ -386,6 +369,7 @@
                 reject(new Error(status));
               } else {
                 directionsRendererShareToShare.setDirections(response);
+                showRouteInformation(response);
                 resolve();
               }
             });
@@ -398,6 +382,7 @@
                 reject(new Error(status));
               } else {
                 directionsRendererShareToEnd.setDirections(response);
+                showRouteInformation(response);
                 resolve();
               }
             });
@@ -428,6 +413,14 @@
           directionsPanel.appendChild(stepInfo);
         }
       }
+      // ボタンを追加
+      const button = document.createElement("button");
+      button.innerHTML = "Anyca にアクセス";
+      button.className = "hello-cycling-button";
+      button.onclick = function() {
+        window.open('https://anyca.net/', '_blank');
+      };
+      directionsPanel.appendChild(button);
     }
 
     let directionsPanelVisible = false;
@@ -437,7 +430,7 @@
       const directionsPanel = document.getElementById("directions-panel");
       const contentTab = document.getElementById("content-tab");
       const detailsTab = document.getElementById("details-tab");
-  
+
       if (!directionsPanelVisible) {
         // パネルを表示
         directionsPanel.style.display = "block";
@@ -447,7 +440,7 @@
         // パネルを非表示
         directionsPanel.style.display = "none";
       }
-  
+
       // 表示状態を反転させる
       directionsPanelVisible = !directionsPanelVisible;
     }
@@ -500,94 +493,96 @@
     window.onload = function() {
       initMap();
   };
+
   var initialLeft = 20; // 左端からの距離
   var initialTop = 20;  // 上端からの距離
+
   document.addEventListener('DOMContentLoaded', function() {
-var floatingPanel = document.getElementById('floating-panel');
-var isDragging = false;
-var offsetX, offsetY;
+    var floatingPanel = document.getElementById('floating-panel');
+    var isDragging = false;
+    var offsetX, offsetY;
 
-floatingPanel.addEventListener('mousedown', function(e) {
-  isDragging = true;
-  offsetX = e.clientX - floatingPanel.getBoundingClientRect().left;
-  offsetY = e.clientY - floatingPanel.getBoundingClientRect().top;
-  window.getSelection().removeAllRanges();
-});
+    floatingPanel.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      offsetX = e.clientX - floatingPanel.getBoundingClientRect().left;
+      offsetY = e.clientY - floatingPanel.getBoundingClientRect().top;
+      window.getSelection().removeAllRanges();
+    });
 
-document.addEventListener('mouseup', function() {
-  isDragging = false;
-});
+    document.addEventListener('mouseup', function() {
+      isDragging = false;
+    });
 
-document.addEventListener('mousemove', function(e) {
-  if (isDragging) {
-    var mouseX = e.clientX;
-    var mouseY = e.clientY;
-    var newLeft = mouseX - offsetX;
-    // 画面の下部を超えないようにするために、newTop の値を制限します。
-    var newTop = Math.min(mouseY - offsetY, window.innerHeight - floatingPanel.offsetHeight - 10); // 下部の余白を10pxに設定
+    document.addEventListener('mousemove', function(e) {
+      if (isDragging) {
+        var mouseX = e.clientX;
+        var mouseY = e.clientY;
+        var newLeft = mouseX - offsetX;
+        // 画面の下部を超えないようにするために、newTop の値を制限します。
+        var newTop = Math.min(mouseY - offsetY, window.innerHeight - floatingPanel.offsetHeight - 10); // 下部の余白を10pxに設定
 
-    newLeft = Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth);
-    newLeft = Math.max(newLeft, 0);
+        newLeft = Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth);
+        newLeft = Math.max(newLeft, 0);
 
-    floatingPanel.style.left = newLeft + 'px';
-    floatingPanel.style.top = Math.max(0, newTop) + 'px';
+        floatingPanel.style.left = newLeft + 'px';
+        floatingPanel.style.top = Math.max(0, newTop) + 'px';
+      }
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (isDragging) {
+        var mouseX = e.clientX;
+        var mouseY = e.clientY;
+        var newLeft = mouseX - offsetX;
+        // 画面の下部を超えないようにするために、newTop の値を制限します。
+        var newTop = Math.min(mouseY - offsetY, window.innerHeight - floatingPanel.offsetHeight - 65); // 下部の余白を10pxに設定
+
+        newLeft = Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth);
+        newLeft = Math.max(newLeft, 0);
+
+        floatingPanel.style.left = newLeft + 'px';
+        floatingPanel.style.top = Math.max(0, newTop) + 'px';
+      }
+    });
+    window.addEventListener('resize', function() {
+      // ウィンドウのリサイズ時に、右端を超えないように位置を調整する
+      var rightEdge = window.innerWidth - floatingPanel.offsetWidth;
+      var currentLeft = parseInt(floatingPanel.style.left, 10);
+      if (currentLeft > rightEdge) {
+        floatingPanel.style.left = rightEdge + 'px';
+      }
+    });
+  });
+
+  function expandPanel() {
+    var panel = document.getElementById('directions-panel');
+    panel.classList.add('expanded'); // expanded クラスを追加して拡大します
   }
-});
-document.addEventListener('mousemove', function(e) {
-if (isDragging) {
-  var mouseX = e.clientX;
-  var mouseY = e.clientY;
-  var newLeft = mouseX - offsetX;
-  // 画面の下部を超えないようにするために、newTop の値を制限します。
-  var newTop = Math.min(mouseY - offsetY, window.innerHeight - floatingPanel.offsetHeight - 65); // 下部の余白を10pxに設定
 
-  newLeft = Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth);
-  newLeft = Math.max(newLeft, 0);
 
-  floatingPanel.style.left = newLeft + 'px';
-  floatingPanel.style.top = Math.max(0, newTop) + 'px';
-}
-});
-window.addEventListener('resize', function() {
-  // ウィンドウのリサイズ時に、右端を超えないように位置を調整する
-  var rightEdge = window.innerWidth - floatingPanel.offsetWidth;
-  var currentLeft = parseInt(floatingPanel.style.left, 10);
-  if (currentLeft > rightEdge) {
-    floatingPanel.style.left = rightEdge + 'px';
+  window.onload = function() {
+    // Hide the waypoint fields and label on load
+    document.getElementById('waypoint1-group').style.display = 'none';
+    document.getElementById('waypoint2-group').style.display = 'none';
+    document.getElementById('waypoint-label').style.display = 'none'; // Assuming you have a label with this ID
+  };
+
+  function toggleWaypoints() {
+    var waypoint1 = document.getElementById('waypoint1-group');
+    var waypoint2 = document.getElementById('waypoint2-group');
+    var waypointLabel = document.getElementById('waypointLabel'); // ラベルの正しいIDを確認してください
+
+    // 中継地点が現在表示されているかどうかを判定
+    var isDisplayed = waypoint1.style.display !== 'none';
+
+    // 中継地点の表示・非表示を切り替え
+    waypoint1.style.display = isDisplayed ? 'none' : 'block';
+    waypoint2.style.display = isDisplayed ? 'none' : 'block';
+
+    // ラベルの表示・非表示も切り替える（条件が逆になる）
+    waypointLabel.style.display = isDisplayed ? 'block' : 'none';
   }
-});
-});
-
-function expandPanel() {
-var panel = document.getElementById('directions-panel');
-panel.classList.add('expanded'); // expanded クラスを追加して拡大します
-}
-
-
-window.onload = function() {
-// Hide the waypoint fields and label on load
-document.getElementById('waypoint1-group').style.display = 'none';
-document.getElementById('waypoint2-group').style.display = 'none';
-document.getElementById('waypoint-label').style.display = 'none'; // Assuming you have a label with this ID
-};
-
-function toggleWaypoints() {
-var waypoint1 = document.getElementById('waypoint1-group');
-var waypoint2 = document.getElementById('waypoint2-group');
-var waypointLabel = document.getElementById('waypointLabel'); // ラベルの正しいIDを確認してください
-
-// 中継地点が現在表示されているかどうかを判定
-var isDisplayed = waypoint1.style.display !== 'none';
-
-// 中継地点の表示・非表示を切り替え
-waypoint1.style.display = isDisplayed ? 'none' : 'block';
-waypoint2.style.display = isDisplayed ? 'none' : 'block';
-
-// ラベルの表示・非表示も切り替える（条件が逆になる）
-waypointLabel.style.display = isDisplayed ? 'block' : 'none';
-}
-    </script>
-    <script
+  </script>
+  <script
     async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&libraries=geometry&callback=initMap&v=weekly"
   ></script>
