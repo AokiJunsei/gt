@@ -622,14 +622,20 @@ def user_my_map(request):
     # スポット情報を取得し、json_dataを適切にデコード
     user_spots = []
     for spot in Spot.objects.filter(account=account).values('spot_name', 'address', 'json_data'):
-        spot['json_data'] = json.loads(spot['json_data']) if isinstance(spot['json_data'], str) else spot['json_data']
-        user_spots.append(spot)
+        try:
+            spot['json_data'] = json.loads(spot['json_data']) if isinstance(spot['json_data'], str) else spot['json_data']
+            user_spots.append(spot)
+        except json.JSONDecodeError as e:
+            print("JSONデコードエラー:", e)  # デバッグ情報を出力
 
     # Accountの緯度経度をスポットの一覧に追加
     user_spots.append({
         'spot_name': '自宅',
         'address': f"{account.state} {account.city} {account.address_1} {account.address_2}",
-        'json_data': {'lat': account.latitude, 'lng': account.longitude}
+        'json_data': {
+            'lat': float(account.latitude) if account.latitude is not None else None,
+            'lng': float(account.longitude) if account.longitude is not None else None
+        }
     })
 
     spots_json = json.dumps(user_spots, cls=DjangoJSONEncoder)
