@@ -251,6 +251,20 @@ footer.footer {
     max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
   }
 }
+
+/* 2023/12/24 外部サイト遷移のためのボタンのcssを追記 */
+.hello-cycling-button {
+  background-color: #4CAF50; /* 緑色の背景 */
+  color: white; /* テキストの色 */
+  padding: 10px 20px; /* パディング */
+  border: none; /* ボーダーを非表示に */
+  border-radius: 5px; /* 角丸の設定 */
+  cursor: pointer; /* カーソルをポインターに */
+  font-size: 16px; /* フォントサイズ */
+  margin-top: 10px; /* 上部のマージン */
+}
+
+
 #floating-panel {
   /* 既存のスタイル */
   position: fixed;
