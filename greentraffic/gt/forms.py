@@ -8,8 +8,8 @@ import json
 # フォームクラス作成
 class AccountForm(forms.ModelForm):
     username = forms.CharField(
-        max_length=100, 
-        required=False, 
+        max_length=100,
+        required=False,
         label='ユーザーID',
         widget=forms.TextInput(attrs={
             'placeholder': '例：test'
@@ -17,8 +17,8 @@ class AccountForm(forms.ModelForm):
     )
     # パスワード入力：非表示対応
     email = forms.CharField(
-        max_length=100, 
-        required=False, 
+        max_length=100,
+        required=False,
         label='メール',
         widget=forms.TextInput(attrs={
             'placeholder': '例：xxx@xxx.com'
@@ -26,9 +26,9 @@ class AccountForm(forms.ModelForm):
     )
     password = forms.CharField(widget=forms.PasswordInput(attrs={
             'placeholder': '8文字以上数字を含む',
-        }), 
+        }),
         label="パスワード" )
-    
+
     class Meta:
         # ユーザー認証
         model = User
@@ -47,24 +47,24 @@ class AccountForm(forms.ModelForm):
 # 追加のアカウント情報用のフォーム
 class AddAccountForm(forms.ModelForm):
     last_name = forms.CharField(
-        max_length=100, 
-        required=False, 
+        max_length=100,
+        required=False,
         label='苗字',
         widget=forms.TextInput(attrs={
             'placeholder': '例：大原'
         })
     )
     first_name = forms.CharField(
-        max_length=100, 
-        required=False, 
+        max_length=100,
+        required=False,
         label='名前',
         widget=forms.TextInput(attrs={
             'placeholder': '例：太郎'
         })
     )
     zipcode = forms.CharField(
-        max_length=7, 
-        required=False, 
+        max_length=7,
+        required=False,
         widget=forms.TextInput(attrs={
             'placeholder': '例：1018351'
         }),
@@ -85,7 +85,7 @@ class AddAccountForm(forms.ModelForm):
     class Meta:
         # モデルクラスを指定
         model = Account
-        
+
         # フィールド指定
         fields = ('last_name', 'first_name', 'address', 'zipcode', 'state', 'city', 'address_1', 'address_2', 'gender',)
         # フィールド名指定
@@ -112,16 +112,16 @@ class AccountDeleteForm(forms.Form):
 
 class AccountUpdateForm(forms.ModelForm):
     username = forms.CharField(
-        max_length=150, 
-        required=False, 
+        max_length=150,
+        required=False,
         label='ユーザーID'  # ラベルを追加
     )
     email = forms.EmailField(
-        required=False, 
+        required=False,
         label='メールアドレス'  # ラベルを追加
     )
     password = forms.CharField(
-        max_length=8, 
+        max_length=8,
         widget=forms.PasswordInput(),  # PasswordInputウィジェットを使用
         label="新しいパスワード",
         required=False
@@ -150,7 +150,7 @@ class AccountUpdateForm(forms.ModelForm):
         if email and User.objects.filter(email=email).exclude(pk=self.instance.user.pk).exists():
             raise ValidationError('このメールアドレスは既に使用されています。')
         return email
-    
+
     def clean_password(self):
         password = self.cleaned_data.get('password')
         if len(password) < 8:

@@ -47,19 +47,16 @@
           <th>{{ add_account_form.first_name.label_tag }}</th>
           <td>{{ add_account_form.first_name }}</td>
         </tr>
-        
         <tr>
           <th>{{ add_account_form.gender.label_tag }}</th>
           <td>{{ add_account_form.gender }}</td>
         </tr>
-        
         <tr>
           <th>{{ add_account_form.zipcode.label_tag }}</th>
           <td>{{ add_account_form.zipcode }}</td>
           <th>{{ add_account_form.state.label_tag }}</th>
           <td>{{ add_account_form.state }}</td>
         </tr>
-        
         <tr>
           <th>{{ add_account_form.city.label_tag }}</th>
           <td>{{ add_account_form.city }}</td>
@@ -70,8 +67,6 @@
           <th>{{ add_account_form.address_2.label_tag }}</th>
           <td>{{ add_account_form.address_2 }}</td>
         </tr>
-        
-        
       </table>
       <div class="button-container">
         <a class="btn btn-secondary" href="{% url 'gt:top' %}">戻る</a>
@@ -79,6 +74,5 @@
       </div>
     </form>
   </div>
-  
 {% endif %}
 {% endblock %}
