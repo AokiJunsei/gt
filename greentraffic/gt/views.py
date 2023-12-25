@@ -539,7 +539,7 @@ def user_spot_change(request, pk):
             # データベースに保存
             spot_change.save()
 
-            return render(request, 'gt/user_spot_change.html', {
+            return render(request, 'gt/user_spot_register.html', {
                 'form': form,
                 'message': message_success,
                 'json_data': spot_change.json_data,
