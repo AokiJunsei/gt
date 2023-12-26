@@ -12,6 +12,7 @@
       <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
     </div>
     <div id="floating-panel">
+      <h3>my map</h3>
       <form method="post">
         {% csrf_token %}
         <!-- 出発地フィールド -->
@@ -20,17 +21,18 @@
         </div>
 
         <!-- 出発地スポット選択 -->
-        <div class="form-group " id="spot-start-input-group" style="display:none;">
+        <div class="input-group " id="spot-start-input-group">
           {{ form.start_spot.label_tag }}
           {{ form.start_spot }}
         </div>
 
         <!-- 目的地フィールド -->
+        
         <div class="form-group " id = "id_end">
           {{ form.end.label_tag }} {{ form.end }}
         </div>
         <!-- 目的地スポット選択 -->
-        <div class="input-group" id="spot-end-input-group" style="display:none;">
+        <div class="input-group" id="spot-end-input-group">
           {{ form.end_spot.label_tag }}
           {{ form.end_spot }}
         </div>
@@ -41,9 +43,7 @@
         </div>
 
         <div class="mode-selector">
-          <!-- アイコンボタン -->
-          <i id="toggle-spot-input" class="fas fa-map-marker-alt fa-lg"></i>
-          <button type="submit" class="button-class">検索</button>
+          <button type="submit" class="btn-border">検索</button>
         </div>
 
       </form>

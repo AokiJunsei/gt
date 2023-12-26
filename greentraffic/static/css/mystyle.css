@@ -100,18 +100,22 @@ input::placeholder {
 }
 .post-title,
 .post-subtitle {
-  max-width: 250px; /* 最大幅を250pxに設定 */
+  max-width: 230px; /* 最大幅を250pxに設定 */
   overflow: hidden; /* はみ出したテキストを隠す */
   text-overflow: ellipsis; /* はみ出したテキストを三点リーダーで表示 */
   white-space: nowrap; /* テキストの折り返しを防止 */
 }
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .post-title,
   .post-subtitle {
-  max-width: 150px; /* 最大幅を250pxに設定 */
+  max-width: 130px; /* 最大幅を250pxに設定 */
   overflow: hidden; /* はみ出したテキストを隠す */
   text-overflow: ellipsis; /* はみ出したテキストを三点リーダーで表示 */
   white-space: nowrap; /* テキストの折り返しを防止 */
+}
+.btn {
+  padding: 8px 20px;
+  font-size: 16px;
 }
 }
 /* キャンセルボタンのスタイル */
@@ -168,21 +172,21 @@ footer.footer {
 
 /* メインコンテンツの下部にフッターの高さ分のスペースを確保 */
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   table.reg_form {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
   }
 }
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   table.reg_form {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
   }
 }
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   table.reg_form {
     display: block;
     overflow-x: auto;
@@ -241,7 +245,7 @@ footer.footer {
 #directions-panel.expanded {
   max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
 }
-@media (max-width: 800px) {
+@media screen and (max-width: 800px) {
   #directions-panel {
   width: 50%;
   }
@@ -438,7 +442,7 @@ footer.footer {
   white-space: normal; /* Allow text to wrap within the panel */
 }
 @media only screen and (max-width: 600px) {
-  .jjj .btn, .jjj a.btn {
+  .jjj .btn, .jjj .btn {
     display: block;
     width: 100%;
     margin-bottom: 10px;
@@ -450,6 +454,7 @@ footer.footer {
   display: inline-block;
   padding: 10px;
   cursor: pointer;
+  background-color:#fff;
 }
 
 
@@ -537,7 +542,7 @@ footer.footer {
 
 /* モバイルビューなどの小さい画面で矢印が見切れないようにするために、
    セグメント情報の左側に余白を追加します。 */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .segment-info {
     padding-left: 50px; /* 左側のパディングを増やす */
   }
@@ -556,7 +561,7 @@ footer.footer {
   right: -20px; /* 右端から10pxの位置に設定 */
   z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
 }
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
   #toggle-icon {
     position: absolute; /* ボタンを固定位置にする */
     top: 60px; /* ヘッダーや他の要素との重なりを避けるために調整 */
@@ -641,4 +646,112 @@ label {
 .pagination .page-item.active .page-link {
   background-color: #007bff; /* アクティブなページの背景色 */
   color: white; /* アクティブなページの文字色 */
+}
+
+/*topへ戻るbtn*/
+#page-top {
+  position: fixed;
+  right: 20px;
+  bottom: 70px;
+  height: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  transform: rotate(90deg);
+  font-size: 90%;
+  line-height: 1.5rem;
+  color: #737373;
+  padding: 0 0 0 35px;
+  border-top: solid 1px;
+}
+#page-top::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -1px;
+  left: 0px;
+  width: 15px;
+  border-top: solid 1px;
+  transform: rotate(35deg);
+  transform-origin: left top;
+}
+#page-top:hover {
+  color: #000000; /* ここで色を変更 */
+  cursor: pointer; /* カーソルをポインタに変更 */
+}
+.initially-hidden {
+  display: none;
+}
+/*その他と主な共通部分は省略*/
+
+/*主な共通部分は省略*/
+
+.btn-border {
+  border: 2px solid #000;
+  border-radius: 0;
+  background: #fff;
+
+  -webkit-transform-style: preserve-3d;
+
+  transform-style: preserve-3d;
+
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
+  position: relative;
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  color: #212529;
+  border-radius: 0.5rem;
+}
+
+
+.btn-border:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 15px;
+  height: 100%;
+
+  content: '';
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  -webkit-transform: translateX(0) translateY(0);
+  transform: translateX(0) translateY(0);
+
+  border-radius: 0 50% 50% 0;
+  background: #000;
+}
+
+.btn-border:hover:before {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: bold;
+  line-height: 30px;
+
+  width: 30px;
+  height: 30px;
+
+  content: '\f061';
+  -webkit-transform: translateX(220%) translateY(.1rem);
+  transform: translateX(220%) translateY(.1rem);
+
+  color: #fff;
+  border-radius: 50%;
+}
+.kid{
+  margin-top: 0;
+}
+.no-margin-top {
+  margin-top: 0;
 }

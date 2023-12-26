@@ -134,3 +134,45 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 });
+document.addEventListener('DOMContentLoaded', function() {
+    var floatingPanel = document.getElementById('floating-panel');
+    var isDragging = false;
+    var offsetX, offsetY;
+	
+    // タッチイベントとマウスイベントの両方をサポート
+    function startDrag(e) {
+        isDragging = true;
+        var event = e.type === 'touchstart' ? e.touches[0] : e;
+        offsetX = event.clientX - floatingPanel.getBoundingClientRect().left;
+        offsetY = event.clientY - floatingPanel.getBoundingClientRect().top;
+        window.getSelection().removeAllRanges();
+    }
+
+    function endDrag() {
+        isDragging = false;
+    }
+
+    function doDrag(e) {
+        if (isDragging) {
+            var event = e.type === 'touchmove' ? e.touches[0] : e;
+            var mouseX = event.clientX;
+            var mouseY = event.clientY;
+            var newLeft = mouseX - offsetX;
+            var newTop = mouseY - offsetY;
+
+            newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth));
+            newTop = Math.max(0, Math.min(newTop, window.innerHeight - floatingPanel.offsetHeight));
+
+            floatingPanel.style.left = newLeft + 'px';
+            floatingPanel.style.top = newTop + 'px';
+        }
+    }
+
+    // タッチイベントリスナーを追加
+    floatingPanel.addEventListener('touchstart', startDrag);
+    floatingPanel.addEventListener('mousedown', startDrag);
+    document.addEventListener('touchend', endDrag);
+    document.addEventListener('mouseup', endDrag);
+    document.addEventListener('touchmove', doDrag);
+    document.addEventListener('mousemove', doDrag);
+});

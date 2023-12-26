@@ -6,6 +6,7 @@
 {% block log_list %} active {% endblock %}
 
 {% block content %}
+
 <h3>検索履歴</h3>
 <div class="container px-4 px-lg-5 my-div-style">
     <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -15,15 +16,19 @@
                 <div class="post-preview d-flex justify-content-between align-items-center">
                     <div>
                         <a href="{% url 'gt:log_detail' history.pk %}">
-                            <h2 class="post-title">検索クエリ: {{ history.search_query }}</h2>
+                            <h2 class="post-title">{{ history.search_query }}</h2>
                             <h3 class="post-subtitle">TravelMode : {{ history.travel_mode }}</h3>
                             <h3 class="post-subtitle">検索日時: {{ history.search_datetime }}</h3>
                         </a>
                     </div>
                     <div>
+                        <a href="{% url 'gt:my_map' %}?log_id={{ history.pk }}" class="btn btn-success">
+                            再検索
+                        </a>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ history.pk }}">
                             削除
                         </button>
+                        
                     </div>
                 </div>
                 <hr class="my-4" />
@@ -94,5 +99,7 @@
             {% endif %}
         </div>
     </div>
+    <!--topへ戻る-->
+    <a href="#" id="page-top">TOP</a>
 </div>
 {% endblock content %}
