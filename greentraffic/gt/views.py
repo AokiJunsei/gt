@@ -99,8 +99,8 @@ def admin_map_register(request):
             vehicle_type = form.cleaned_data['vehicle_type']
 
             # ここで外部APIを呼び出し、JSONデータを取得
-            api_url = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
-            response = requests.get(api_url, params={'address': address})
+            api_url = 'https://maps.googleapis.com/maps/api/geocode/json'
+            response = requests.get(api_url, params={'address': address,'key':'AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'})
 
             if response.status_code == 200:
                 data = response.json()
@@ -168,8 +168,8 @@ def admin_map_change(request,vehicle_type, pk):
 
             map_change.address = form.cleaned_data['address']
             # ここで外部APIを呼び出し、JSONデータを取得
-            api_url = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
-            response = requests.get(api_url, params={'address': map_change.address})
+            api_url = 'https://maps.googleapis.com/maps/api/geocode/json'
+            response = requests.get(api_url, params={'address': map_change.address,'key':'AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'})
 
             if response.status_code == 200:
                 with transaction.atomic():
@@ -521,8 +521,8 @@ def user_spot_change(request, pk):
         show_alert = True
 
         # ここで外部APIを呼び出し、JSONデータを取得
-        api_url = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
-        response = requests.get(api_url, params={'address': spot_change.address})
+        api_url = 'https://maps.googleapis.com/maps/api/geocode/json'
+        response = requests.get(api_url, params={'address': spot_change.address,'key':'AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'})
 
         if response.status_code == 200:
             data = response.json()
