@@ -363,12 +363,15 @@ def activate_account(request, username, token):
 def registration_complete(request):
     return render(request, 'registration_complete.html')
 
-# ログインビュー
+
 def Login(request):
+    error_message = None  # エラーメッセージの初期化
+
     if request.method == 'POST':
         username = request.POST.get('userid')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
+
         if user:
             if user.is_active:
                 login(request, user)  # ユーザーをログインさせる
@@ -377,16 +380,16 @@ def Login(request):
                 else:
                     return HttpResponseRedirect(reverse('gt:top'))
             else:
-                return HttpResponse("アカウントが有効ではありません")
+                error_message = "アカウントが有効ではありません"
         else:
-        # ログイン試行時に、is_activeがFalseの場合はメール確認を促す
+            # ログイン試行時に、is_activeがFalseの場合はメール確認を促す
             if user is not None and not user.is_active:
-                return HttpResponse("メールアドレスを確認し、アカウントを有効化してください。")
+                error_message = "メールアドレスを確認し、アカウントを有効化してください。"
             else:
-                return HttpResponse("ログインIDまたはパスワードが間違っています")
+                error_message = "ログインIDまたはパスワードが間違っています"
 
-    else:
-        return render(request, 'gt/user_login.html')
+    return render(request, 'gt/user_login.html', {'error_message': error_message})
+
 
 # ログアウトビュー
 @login_required

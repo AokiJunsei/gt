@@ -9,7 +9,7 @@ import json
 class AccountForm(forms.ModelForm):
     username = forms.CharField(
         max_length=100,
-        required=False,
+        required=True,
         label='ユーザーID',
         widget=forms.TextInput(attrs={
             'placeholder': '例：test'
@@ -18,7 +18,7 @@ class AccountForm(forms.ModelForm):
     # パスワード入力：非表示対応
     email = forms.CharField(
         max_length=100,
-        required=False,
+        required=True,
         label='メール',
         widget=forms.TextInput(attrs={
             'placeholder': '例：xxx@xxx.com'
@@ -48,7 +48,7 @@ class AccountForm(forms.ModelForm):
 class AddAccountForm(forms.ModelForm):
     last_name = forms.CharField(
         max_length=100,
-        required=False,
+        required=True,
         label='苗字',
         widget=forms.TextInput(attrs={
             'placeholder': '例：大原'
@@ -56,7 +56,7 @@ class AddAccountForm(forms.ModelForm):
     )
     first_name = forms.CharField(
         max_length=100,
-        required=False,
+        required=True,
         label='名前',
         widget=forms.TextInput(attrs={
             'placeholder': '例：太郎'
@@ -64,22 +64,22 @@ class AddAccountForm(forms.ModelForm):
     )
     zipcode = forms.CharField(
         max_length=7,
-        required=False,
+        required=True,
         widget=forms.TextInput(attrs={
             'placeholder': '例：1018351'
         }),
         label='郵便番号',
     )
-    state = forms.CharField(max_length=100, required=False, label='都道府県',widget=forms.TextInput(attrs={
+    state = forms.CharField(max_length=100, required=True, label='都道府県',widget=forms.TextInput(attrs={
             'placeholder': '例：東京都 '
         }),)
-    city = forms.CharField(max_length=100, required=False, label='市区町村',widget=forms.TextInput(attrs={
+    city = forms.CharField(max_length=100, required=True, label='市区町村',widget=forms.TextInput(attrs={
             'placeholder': '例：千代田区西神田 '
         }),)
-    address_1 = forms.CharField(max_length=100, required=False, label='番地',widget=forms.TextInput(attrs={
+    address_1 = forms.CharField(max_length=100, required=True, label='番地',widget=forms.TextInput(attrs={
             'placeholder': '例：2-4-11 '
         }),)
-    address_2 = forms.CharField(max_length=100, required=False, label='建物名・部屋番号',widget=forms.TextInput(attrs={
+    address_2 = forms.CharField(max_length=100, required=True, label='建物名・部屋番号',widget=forms.TextInput(attrs={
             'placeholder': '例：TICビル '
         }),)
     class Meta:
@@ -113,18 +113,18 @@ class AccountDeleteForm(forms.Form):
 class AccountUpdateForm(forms.ModelForm):
     username = forms.CharField(
         max_length=150,
-        required=False,
+        required=True,
         label='ユーザーID'  # ラベルを追加
     )
     email = forms.EmailField(
-        required=False,
+        required=True,
         label='メールアドレス'  # ラベルを追加
     )
     password = forms.CharField(
         max_length=8,
         widget=forms.PasswordInput(),  # PasswordInputウィジェットを使用
         label="新しいパスワード",
-        required=False
+        required=True
     )
     class Meta:
         model = Account

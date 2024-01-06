@@ -4,29 +4,29 @@
 {% block content %}
 <h1>ログイン画面</h1>
 
-<div class="reg">
-  {% if registered %}
-<div class="error">{{ registered }}</div>
-
+{% if error_message %}
+<div class="error">{{ error_message }}</div>
 {% endif %}
+{% if registered %}
+<div class="error">{{ registered }}</div>
+{% endif %}
+<div class="reg">
+
   <form method="post" action="{% url 'gt:user_login' %}">
     {% csrf_token %}
-
     <table class="reg_form">
-    <tr>
-    <th><label for="userid">ユーザーID:</label></th>
-    <td><input type="text" name="userid"></td>
-    <th><label for="password">パスワード：</label></th>
-    <td><input type="password" name="password"></td>
-    </tr>
-    </table>
+      <th><label for="userid">ユーザーID:</label></th>
+      <td><input type="text" name="userid"></td>
+      <th><label for="password">パスワード：</label></th>
+      <td><input type="password" name="password"></td>
+      </tr>
+      </table>
 
     <div class="button-container">
         <a href="{% url 'gt:top' %}" class="btn btn-cancel">キャンセル</a>
         <input type="submit" class="btn btn-submit" value="ログイン">
     </div>
-
-</form>
+  </form>
 </div>
 <p class="message">アカウントをお持ちですか？：
   <a href="{% url 'gt:register' %}">アカウントを作成</a>
