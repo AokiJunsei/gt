@@ -1,12 +1,27 @@
-{% extends "base.html" %}
-
+{% extends 'base.html' %}
 {% load static %}
-{% block title %}管理サイト{% endblock %}
 
+{% block title %}管理サイト/統計情報{% endblock %}
 
-{% block head %}
-{% endblock %}
+{% block head %}{% endblock %}
 
 {% block content %}
-{% endblock content %}
+	<div id="statistics-charts">
+		<div id="state_chart" style="width: 700px; height: 500px;"></div>
+		<div id="creation_chart" style="width: 700px; height: 500px;"></div>
+		<div id="coordinates_chart" style="width: 700px; height: 500px;"></div>
+	</div>
 
+	<div id="map" style="height: 500px;"></div>
+
+	<script>
+		window.stateData = JSON.parse('{{ state_counts|safe }}');
+		window.creationData = JSON.parse('{{ creation_dates|safe }}');
+		window.coordinatesData = JSON.parse('{{ coordinates_data|safe }}');
+	</script>
+
+	<script src="{% static 'js/statistics.js' %}"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap" async defer></script>
+	{% comment %} settingsからAPIKeyを取得 {% endcomment %}
+
+{% endblock %}

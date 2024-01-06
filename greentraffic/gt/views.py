@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from .models import Account, MapCar ,MapBike ,Spot ,SearchHistory ,User
-from .forms import AccountForm, AddAccountForm, AccountUpdateForm, LocationForm ,SpotForm,RouteSearchForm
+from .forms import AccountForm, AddAccountForm, LocationForm ,SpotForm,RouteSearchForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 import requests
@@ -23,8 +23,14 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils import timezone
 from django.contrib.auth import update_session_auth_hash
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models.functions import Cast
-from django.db.models import JSONField
+
+from django.db.models import Count
+from django.utils.timezone import now
+from datetime import timedelta
+from django.db.models.functions import TruncDay
+from django.db.models.functions import TruncMonth
+
+from django.conf import settings
 
 # ロガーの設定
 logger = logging.getLogger(__name__)
@@ -68,10 +74,6 @@ def user_search_share_bike_bike(request):
 # シェアリング検索（徒歩１）のビュー
 def user_search_share_bike_walk(request):
     return render(request, 'gt/user_search_share_bike_walk.html')
-
-# 管理者用ユーザー情報閲覧ページのビュー
-def admin_user_info(request):
-    return render(request, 'gt/admin_user_info.html')
 
 # 管理者用トップページのビュー
 @login_required
@@ -734,3 +736,28 @@ def log_delete_view(request, pk):
     log_delete = get_object_or_404(SearchHistory, pk=pk)
     log_delete.delete()
     return redirect(reverse('gt:account_history'))
+
+# 管理者用ユーザー情報閲覧ページのビュー
+
+def admin_user_info(request):
+    # 地理的分布の統計
+    state_counts = Account.objects.values('state').exclude(state='').annotate(count=Count('state')).order_by('-count')
+
+    # アカウント作成日の統計（月別）
+    creation_dates = User.objects \
+                        .annotate(month=TruncMonth('date_joined')) \
+                        .values('month') \
+                        .annotate(count=Count('id')) \
+                        .order_by('month')
+
+    # 地理的座標の分析
+    coordinates_data = Account.objects.exclude(latitude=None).exclude(longitude=None).annotate(count=Count('id')).values('latitude', 'longitude', 'count')
+
+    # データをJSON形式でコンテキストに渡す
+    context = {
+        'state_counts': json.dumps(list(state_counts), cls=DjangoJSONEncoder),
+        'creation_dates': json.dumps(list(creation_dates), cls=DjangoJSONEncoder),
+        'coordinates_data': json.dumps(list(coordinates_data), cls=DjangoJSONEncoder),
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+    }
+    return render(request, 'admin_user_info.html', context)
