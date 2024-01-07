@@ -6,13 +6,13 @@
 {% block head %}{% endblock %}
 
 {% block content %}
-	<div id="statistics-charts">
-		<div id="state_chart" style="width: 700px; height: 500px;"></div>
-		<div id="creation_chart" style="width: 700px; height: 500px;"></div>
-		<div id="coordinates_chart" style="width: 700px; height: 500px;"></div>
-	</div>
+<div class="container d-flex justify-content-center align-items-center">
+    <div id="state_chart" class="chart"></div>
+    <div id="creation_chart" class="chart"></div>
+    <div id="coordinates_chart" class="chart"></div>
+</div>
 
-	<div id="map" style="height: 500px;"></div>
+	<div id="map" style="height: 500px;margin-bottom: 20px;"></div>
 
 	<script>
 		window.stateData = JSON.parse('{{ state_counts|safe }}');
