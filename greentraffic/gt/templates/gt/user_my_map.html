@@ -63,32 +63,6 @@
   ></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var startSpotSelect = document.getElementById('spot-start-input-group');
-      var endSpotSelect = document.getElementById('spot-end-input-group');
-
-      startSpotSelect.addEventListener('change', function() {
-        updateInputFieldWithSpotData(this, 'id_start');
-      });
-
-      endSpotSelect.addEventListener('change', function() {
-        updateInputFieldWithSpotData(this, 'id_end');
-      });
-
-      function updateInputFieldWithSpotData(selectElement, inputFieldId) {
-        var inputField = document.getElementById(inputFieldId);
-        var spotData = selectElement.value ? JSON.parse(selectElement.value) : null;
-
-        if (spotData) {
-          inputField.value = `${spotData.lat}, ${spotData.lng}`;
-        } else {
-          inputField.value = '';
-        }
-      }
-    });
-  </script>
-
-  <script>
     function toggleSpotInput() {
       var spotstartInputGroup = document.getElementById('spot-start-input-group');
       var spotendInputGroup = document.getElementById('spot-end-input-group');
