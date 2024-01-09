@@ -61,25 +61,6 @@
     defer
   ></script>
 
-  <script>
-    function toggleSpotInput() {
-      var spotstartInputGroup = document.getElementById('spot-start-input-group');
-      var spotendInputGroup = document.getElementById('spot-end-input-group');
-      if (spotstartInputGroup.style.display === 'none') {
-        spotstartInputGroup.style.display = 'block';
-      } else {
-        spotstartInputGroup.style.display = 'none';
-      }
-      if (spotendInputGroup.style.display === 'none') {
-        spotendInputGroup.style.display = 'block';
-      } else {
-        spotendInputGroup.style.display = 'none';
-      }
-    }
-
-    // アイコンボタンにクリックイベントリスナーを追加
-    document.getElementById('toggle-spot-input').addEventListener('click', toggleSpotInput);
-  </script>
   <script type="text/javascript">
 
     var map;
