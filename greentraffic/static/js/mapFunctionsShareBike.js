@@ -77,7 +77,8 @@ function initMap() {
     .then(data => {
         waypoints = data.map(waypoint => ({
             ...JSON.parse(waypoint.json_data),
-            name: waypoint.name
+            name: waypoint.name,
+						address : waypoint.address
         }));
         addMarkers(map, waypoints);
     })
@@ -102,9 +103,10 @@ function initMap() {
                 strokeWeight: 2
             }
         });
-
-        var infoWindow = new google.maps.InfoWindow({
-            content: '<h3>' + waypoint.name + '</h3>'
+				// アドレス情報を含む情報ウィンドウをマーカーに追加
+				var infoWindow = new google.maps.InfoWindow({
+          content: '<div><strong>' + waypoint.name + '</strong><br>' +
+                  'Address: ' + waypoint.address + '</div>'
         });
 
         marker.addListener('click', function() {
