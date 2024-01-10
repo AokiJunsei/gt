@@ -366,19 +366,7 @@ footer.footer {
 .cp_ipselect select::-ms-expand {
 	display: none;
 }
-.cp_ipselect:after {
-	position: absolute;
-	top: 18px;
-	right: 10px;
-	width: 0;
-	height: 0;
-	padding: 0;
-	content: '';
-	border-left: 6px solid transparent;
-	border-right: 6px solid transparent;
-	border-top: 6px solid rgba(0, 0, 0, 0.3);
-	pointer-events: none;
-}
+
 .cp_sl06_selectlabel {
 	color: rgba(0,0,0, 0.5);
 	font-size: 18px;
@@ -450,6 +438,11 @@ footer.footer {
     box-sizing: border-box;
   }
 }
+
+table.reg_form td:nth-child(6) select {
+  margin-top: 5px;
+}
+
 
 .tab {
   display: inline-block;
@@ -757,22 +750,31 @@ label {
   margin-top: 0;
 }
 .chart {
-  flex: 0 0 auto; /* Flex項目が伸縮しないように設定 */
-  width: 500px; /* 幅を設定 */
-  height: 500px; /* 高さを設定 */
+  flex: 0 0 auto;
+  width: 400px;
+  height: 500px;
 }
 
-/* コンテナのスタイルを適用 */
 .chartcont {
   display: flex;
-  flex-wrap: nowrap; /* 要素が折り返さないように設定 */
-  align-items: center; /* アイテムを垂直方向に中央揃えにする */
-  justify-content: center; /* アイテムを水平方向に中央揃えにする */
-  height: 100vh; /* コンテナの高さをビューポートの高さに合わせる */
-  gap: 20px; /* 要素間の間隔 */
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 20px;
 }
-@media screen and (max-width: 1600px) {
+
+/* 画面幅が1600px以下の場合のスタイル */
+@media screen and (max-width: 1000px) {
   .chart {
-    width: 400px; /* 幅を設定 */
+    width: 400px;
+  }
+  .chartcont {
+    display: flex;
+    flex-direction: column; /* 要素を縦に並べる */
+    align-items: center;
+    justify-content: center;
+    height: auto; /* 高さを自動調整にする */
+    gap: 20px; /* 要素間の間隔を設定 */
   }
 }
