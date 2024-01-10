@@ -3,7 +3,7 @@ from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,redir
 from django.views.generic import TemplateView
 from .forms import AccountForm, AddAccountForm
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -25,9 +25,6 @@ from django.contrib.auth import update_session_auth_hash
 from django.core.serializers.json import DjangoJSONEncoder
 
 from django.db.models import Count
-from django.utils.timezone import now
-from datetime import timedelta
-from django.db.models.functions import TruncDay
 from django.db.models.functions import TruncMonth
 
 from django.conf import settings
@@ -58,7 +55,6 @@ def user_search_cheap(request):
 # シェアリング検索（車）のビュー
 def user_search_share_car_car(request):
     return render(request, 'gt/user_search_share_car_car.html')
-
 # シェアリング検索（自転車）のビュー
 def user_search_share_car_bike(request):
     return render(request, 'gt/user_search_share_car_bike.html')
@@ -435,9 +431,6 @@ def user_update_view(request):
 
     return render(request, 'user_update.html', {'user_form': user_form, 'account_form': account_form})
 
-
-
-
 # ユーザー退会ビュー
 @login_required
 def user_delete_view(request):
@@ -448,7 +441,6 @@ def user_delete_view(request):
         return redirect('gt:register')  # ログインページにリダイレクト
     else:
         return render(request, 'user_delete.html')
-
 
 # スポット一覧のビュー
 @login_required
@@ -462,7 +454,6 @@ def user_spot_list(request):
     else:
         user_spots = None
     return render(request,'user_spot_list.html',{'user_spots':user_spots})
-
 
 # スポット登録ビュー
 @login_required
@@ -507,7 +498,6 @@ def user_spot_register(request):
 
     else:
         return render(request, 'gt/user_spot_register.html', {'form': form})
-
 
 
 # スポット変更ビュー
@@ -712,11 +702,6 @@ def user_my_map(request):
 
     return render(request, 'gt/user_my_map.html', context)
 
-
-# 履歴を残す検索(電車)のビュー
-def user_my_map_train(request):
-    return render(request, 'gt/user_my_map_train.html')
-
 # アカウント履歴ビュー
 @login_required
 def account_history_view(request):
@@ -738,7 +723,6 @@ def log_delete_view(request, pk):
     return redirect(reverse('gt:account_history'))
 
 # 管理者用ユーザー情報閲覧ページのビュー
-
 def admin_user_info(request):
     # 地理的分布の統計
     state_counts = Account.objects.values('state').exclude(state='').annotate(count=Count('state')).order_by('-count')
