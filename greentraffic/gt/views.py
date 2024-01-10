@@ -733,10 +733,10 @@ def log_delete_view(request, pk):
     return redirect(reverse('gt:account_history'))
 
 # 管理者用ユーザー情報閲覧ページのビュー
+@login_required
 def admin_user_info(request):
     # 地理的分布の統計
     state_counts = Account.objects.values('state').exclude(state='').annotate(count=Count('state')).order_by('-count')
-
     # アカウント作成日の統計（月別）
     creation_dates = User.objects \
                         .annotate(month=TruncMonth('date_joined')) \
