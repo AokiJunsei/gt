@@ -28,6 +28,13 @@ from django.db.models import Count
 from django.db.models.functions import TruncMonth
 
 from django.conf import settings
+import boto3
+
+# APIキーを取得する関数
+def get_api_key():
+    ssm = boto3.client('ssm', region_name='us-east-1')
+    parameter = ssm.get_parameter(Name='google_maps_api_key', WithDecryption=True)
+    return parameter['Parameter']['Value']
 
 # ロガーの設定
 logger = logging.getLogger(__name__)
@@ -96,9 +103,12 @@ def admin_map_register(request):
             address = form.cleaned_data['address']
             vehicle_type = form.cleaned_data['vehicle_type']
 
+            # APIキーを取得
+            # api_key = get_api_key()
+            api_key = 'AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
             # ここで外部APIを呼び出し、JSONデータを取得
             api_url = 'https://maps.googleapis.com/maps/api/geocode/json'
-            response = requests.get(api_url, params={'address': address,'key':'AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'})
+            response = requests.get(api_url, params={'address': address,'key':api_key})
 
             if response.status_code == 200:
                 data = response.json()
