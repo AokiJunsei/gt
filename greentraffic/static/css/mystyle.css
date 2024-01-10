@@ -767,7 +767,7 @@ label {
 /* 画面幅が1600px以下の場合のスタイル */
 @media screen and (max-width: 1000px) {
   .chart {
-    width: 400px;
+    width: 700px;
   }
   .chartcont {
     display: flex;
