@@ -546,8 +546,8 @@ table.reg_form td:nth-child(6) select {
 /* 2024/01/11追記　鈴木 */
 #help-icon {
   position: absolute; /* ボタンを固定位置にする */
-  top: 50px; /* ヘッダーや他の要素との重なりを避けるために調整 */
-  right: -24px; /* 右端から10pxの位置に設定 */
+  top: 51px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+  right: -21px; /* 右端から10pxの位置に設定 */
   z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
 }
 
@@ -578,6 +578,14 @@ table.reg_form td:nth-child(6) select {
     right: 24px; /* 右端から10pxの位置に設定 */
     z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
   }
+
+  #help-icon {
+    position: absolute; /* ボタンを固定位置にする */
+    top: 101px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+    right: 23px; /* 右端から10pxの位置に設定 */
+    z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
+  }
+  
 }
 #current-location-icon {
   cursor: pointer; /* アイコンがクリック可能であることを示す */
