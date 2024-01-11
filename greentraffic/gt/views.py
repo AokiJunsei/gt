@@ -41,7 +41,13 @@ logger = logging.getLogger(__name__)
 
 # トップページのビュー(車)
 def top_page(request):
-    return render(request, 'gt/user_search_car.html')
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    context = {
+        "api_key" : api_key
+    }
+    return render(request, 'gt/user_search_car.html', context)
 
 # 徒歩の検索
 def user_search_walk(request):
@@ -49,7 +55,13 @@ def user_search_walk(request):
 
 # 自転車の検索
 def user_search_bike(request):
-    return render(request, 'gt/user_search_bike.html')
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    context = {
+        "api_key" : api_key
+    }
+    return render(request, 'gt/user_search_bike.html', context)
 
 # 電車最短検索のビュー
 def user_search_short(request):
@@ -644,6 +656,10 @@ def get_map_bikes(request):
 # 履歴を残すタイプの検索
 @login_required
 def user_my_map(request):
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+
     account = Account.objects.get(user=request.user)
 
     # スポット情報を取得し、json_dataを適切にデコード
@@ -723,14 +739,23 @@ def user_my_map(request):
                 'travel_mode': travel_mode,
                 'submitted': True,
                 'spots_json': spots_json,
+                'api_key': api_key,
             }
         else:
             # フォームが有効でない場合の処理
-            context = {'form': form, 'spots_json': spots_json}
+            context = {
+                'form': form,
+                'spots_json': spots_json ,
+                'api_key': api_key
+            }
     else:
         # GETリクエストの処理
         form = RouteSearchForm(initial=initial, user_spots=list(user_spots))
-        context = {'form': form, 'spots_json': spots_json}
+        context = {
+            'form': form,
+            'spots_json': spots_json,
+            'api_key': api_key
+        }
 
     return render(request, 'gt/user_my_map.html', context)
 
