@@ -89,12 +89,13 @@ def admin_top(request):
 # 管理者用マップ登録ビュー
 @login_required
 def admin_map_register(request):
-    message_success = "データが保存されました。"
-    alert_API = "APIからデータを取得できませんでした。"
-    alert_form = "フォームが無効です。正しく記入してください。"
-    none_data = "データを取得できませんでした。正しい住所を入力してください。"
-    show_modal = True
-    show_alert = True
+    message = None
+    show_modal = False
+    show_alert = False
+    json_data = None
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
 
     if request.method == 'POST':
         form = LocationForm(request.POST)
@@ -103,47 +104,58 @@ def admin_map_register(request):
             address = form.cleaned_data['address']
             vehicle_type = form.cleaned_data['vehicle_type']
 
-            # APIキーを取得
-            # api_key = get_api_key()
-            api_key = 'AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
-            # ここで外部APIを呼び出し、JSONデータを取得
             api_url = 'https://maps.googleapis.com/maps/api/geocode/json'
-            response = requests.get(api_url, params={'address': address,'key':api_key})
+
+            response = requests.get(api_url, params={'address': address, 'key': api_key})
 
             if response.status_code == 200:
                 data = response.json()
 
                 if data['status'] == 'ZERO_RESULTS':
-                    return render(request, 'gt/admin_map_register.html', {'form': form,'message': none_data, 'show_alert': show_alert})
+                    message = "データを取得できませんでした。正しい住所を入力してください。"
+                    show_alert = True
+                else:
+                    location_data = data['results'][0]['geometry']['location']
+                    lat = location_data['lat']
+                    lng = location_data['lng']
+                    location_only = {'lat': lat, 'lng': lng}
+                    json_data = json.dumps(location_only)
 
-                location_data = data['results'][0]['geometry']['location']
-                lat = location_data['lat']  # 緯度
-                lng = location_data['lng']  # 経度
+                    # データベースに保存
+                    if vehicle_type == 'car':
+                        MapCar.objects.create(name=name, address=address, json_data=json_data)
+                    elif vehicle_type == 'bike':
+                        MapBike.objects.create(name=name, address=address, json_data=json_data)
 
-                # 緯度と経度のみを含む辞書を作成
-                location_only = {'lat': lat, 'lng': lng}
-
-                # 辞書をJSONにシリアライズ
-                json_data = json.dumps(location_only)
-
-                # データベースに保存
-                if vehicle_type == 'car':
-                    MapCar.objects.create(name=name, address=address, json_data=json_data)
-                elif vehicle_type == 'bike':
-                    MapBike.objects.create(name=name, address=address, json_data=json_data)
-                return render(request, 'gt/admin_map_register.html', {'form': form,'message': message_success, 'json_data': json_data,'show_modal': show_modal})
+                    message = "データが保存されました。"
+                    show_modal = True
             else:
-                return render(request, 'gt/admin_map_register.html', {'form': form,'message': alert_API, 'show_alert': show_alert})
+                message = "APIからデータを取得できませんでした。"
+                show_alert = True
         else:
-            return render(request, 'gt/admin_map_register.html', {'form': form,'message': alert_form, 'show_alert': show_alert})
+            message = "フォームが無効です。正しく記入してください。"
+            show_alert = True
     else:
         form = LocationForm()
-        return render(request, 'gt/admin_map_register.html', {'form': form})
+
+    context = {
+        'form': form,
+        'message': message,
+        'show_modal': show_modal,
+        'show_alert': show_alert,
+        'json_data': json_data or "null",
+        'api_key': api_key if api_key is not None else "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    }
+    return render(request, 'gt/admin_map_register.html', context)
+
 
 
 # 管理者用マップ変更ビュー
 @login_required
 def admin_map_change(request,vehicle_type, pk):
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     # 既存のインスタンスを取得するかどうか判断
     map_change = None
     if pk:
@@ -175,9 +187,10 @@ def admin_map_change(request,vehicle_type, pk):
                 map_change = MapCar() if form.cleaned_data['vehicle_type'] == 'car' else MapBike()
 
             map_change.address = form.cleaned_data['address']
+
             # ここで外部APIを呼び出し、JSONデータを取得
             api_url = 'https://maps.googleapis.com/maps/api/geocode/json'
-            response = requests.get(api_url, params={'address': map_change.address,'key':'AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'})
+            response = requests.get(api_url, params={'address': map_change.address,'key': api_key})
 
             if response.status_code == 200:
                 with transaction.atomic():
@@ -201,7 +214,8 @@ def admin_map_change(request,vehicle_type, pk):
                     'form': form,
                     'message': message_success,
                     'json_data': map_change.json_data,
-                    'show_modal': True
+                    'show_modal': True,
+                    'api_key': api_key
                 })
             else:
                 alert_API = "APIからデータを取得できませんでした"
@@ -222,7 +236,7 @@ def admin_map_change(request,vehicle_type, pk):
     else:
         # GETリクエストの場合、フォームを既存のデータで初期化
         form = LocationForm(initial={'name': map_change.name, 'address': map_change.address})
-        return render(request, 'gt/admin_map_change.html', {'form': form})
+        return render(request, 'gt/admin_map_change.html',  {'form': form, 'api_key': api_key})
 
 # 管理者用マップ削除ビュー
 @login_required
@@ -243,7 +257,15 @@ def admin_map_detail(request, pk, vehicle_type):
         map_detail = get_object_or_404(MapCar, pk=pk)
     elif vehicle_type == 'bike':
         map_detail = get_object_or_404(MapBike, pk=pk)
-    return render(request, 'gt/admin_map_detail.html', {'map_detail': map_detail})
+
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    context = {
+        'map_detail': map_detail,
+        'api_key': api_key
+    }
+    return render(request, 'gt/admin_map_detail.html', context)
 
 # ジオコードAPIの関数
 def get_geocode(address):
@@ -735,6 +757,10 @@ def log_delete_view(request, pk):
 # 管理者用ユーザー情報閲覧ページのビュー
 @login_required
 def admin_user_info(request):
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+
     # 地理的分布の統計
     state_counts = Account.objects.values('state').exclude(state='').annotate(count=Count('state')).order_by('-count')
     # アカウント作成日の統計（月別）
@@ -752,7 +778,7 @@ def admin_user_info(request):
         'state_counts': json.dumps(list(state_counts), cls=DjangoJSONEncoder),
         'creation_dates': json.dumps(list(creation_dates), cls=DjangoJSONEncoder),
         'coordinates_data': json.dumps(list(coordinates_data), cls=DjangoJSONEncoder),
-        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+        'google_maps_api_key': api_key,
     }
     return render(request, 'admin_user_info.html', context)
 
