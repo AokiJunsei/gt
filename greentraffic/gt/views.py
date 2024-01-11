@@ -755,3 +755,7 @@ def admin_user_info(request):
         'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
     }
     return render(request, 'admin_user_info.html', context)
+
+# settingsのモーダルウィンドウを表示
+def modal_content(request):
+    return render(request, 'setting_help.html')
