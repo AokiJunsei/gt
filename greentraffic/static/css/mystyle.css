@@ -168,7 +168,7 @@ footer.footer {
   background-color: #333; /* フッターの背景色を適宜調整してください */
   color: white;
   text-align: center;
-  z-index: 1000; /* 他の要素より上に表示されるように */
+  z-index: 2; /* 他の要素より上に表示されるように */
 }
 
 /* メインコンテンツの下部にフッターの高さ分のスペースを確保 */
