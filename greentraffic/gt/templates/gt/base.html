@@ -234,8 +234,8 @@
                       </ul>
                     </li>
                   {% endif %}
+                  <a class="nav-link" href="#"></a>
                   <li class="nav-item d-flex align-items-center">
-                    <a class="nav-link" href="#"><div id="text"></div></a>
                     <button type="button" class="btn-link btn nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">
                       ログアウト
                     </button>
@@ -243,7 +243,7 @@
                 {% else %}
                   <!-- 未ログイン時のナビゲーションアイテム -->
                   <li class="nav-item">
-                    <a class="nav-link" href="#"><div id="text"></div></a>
+                    <a class="nav-link"> </a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'gt:register' %}">新規登録</a>
