@@ -33,7 +33,8 @@
 		</div>
 
 	<!-- 成功時に表示するモーダル -->
-	<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+	{% if show_modal %}
+	<div class="modal fade" id="successModal" tabindex="-1" role="dialog">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -52,24 +53,27 @@
 			</div>
 		</div>
 	</div>
+	{% endif %}
 
 	<script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
+	src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap&v=weekly"
 	></script>
 
 	<script>
 		function initMap() {
 			var jsonData = JSON.parse('{{ json_data|safe }}');
 
-			var map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 12,
-				center: jsonData
-			});
+			if (jsonData) {
+				var map = new google.maps.Map(document.getElementById('map'), {
+					zoom: 12,
+					center: jsonData
+				});
 
-			var marker = new google.maps.Marker({
-				position: jsonData,
-				map: map
-			});
+				var marker = new google.maps.Marker({
+					position: jsonData,
+					map: map
+				});
+			}
 		}
 
 		// 保存ボタンがクリックされたら確認ダイアログを表示

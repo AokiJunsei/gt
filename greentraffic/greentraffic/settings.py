@@ -170,6 +170,3 @@ LOGIN_REDIRECT_URL = 'gt:top'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
 ]
-
-GOOGLE_MAPS_API_KEY = 'AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4'
-# 現在adminの利用者情報閲覧のみ上記を使用中

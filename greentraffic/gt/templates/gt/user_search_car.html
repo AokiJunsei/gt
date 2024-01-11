@@ -7,6 +7,9 @@
   <!--フォームの表示非表示-->
   <div id="map-container">
     <div>
+      <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+    </div>
+    <div>
       <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
     </div>
     <div>
@@ -51,6 +54,24 @@
     </div>
 
   </div>
+  <!-- helpモーダル -->
+  <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabel">ヘルプ</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
