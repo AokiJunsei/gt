@@ -239,7 +239,8 @@ footer.footer {
 }
 @media screen and (max-width: 800px) {
   #directions-panel {
-  width: 50%;
+    top:70%;
+    width: 100%;
   }
   #directions-panel.expanded {
     top:70%;
