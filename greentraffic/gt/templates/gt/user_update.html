@@ -6,23 +6,44 @@
     <form action="{% url 'gt:user_update' %}" method="POST">
         {% csrf_token %}
         <table class="reg_form">
-            <tr>
-              <th>{{ user_form.username.label_tag }}</th>
-              <td>{{ user_form.username }}</td>
-            </tr>
-            <tr>
-              <th>{{ user_form.email.label_tag }}</th>
-              <td>{{ user_form.email }}</td>
-            </tr>
-            <tr>
-              <th>{{ user_form.password.label_tag }}</th>
-              <td>
-                {{ user_form.password }}
-                {% if user_form.password.errors %}
-                <div class="error">{{ user_form.password.errors }}</div>
-                {% endif %}
-              </td>
-            </tr>
+          <tr>
+            <th>{{ user_form.username.label_tag }}</th>
+            <td>
+              {{ user_form.username }}
+              {% if user_form.username.errors %}
+              <td class="error">{{ user_form.username.errors|first }}</td>
+              {% endif %}
+            </td>
+          </tr>
+          <!-- メールフィールド -->
+          <tr>
+            <th>{{ user_form.email.label_tag }}</th>
+            <td>
+              {{ user_form.email }}
+              {% if user_form.email.errors %}
+              <td class="error">{{ user_form.email.errors|first }}</td>
+              {% endif %}
+            </td>
+          </tr>
+              <tr>
+          <th>{{ user_form.password.label_tag }}</th>
+          <td>
+            {{ user_form.password }}
+            {% if user_form.password.errors %}
+            <td class="error">{{ user_form.password.errors|first }}</td>
+            {% endif %}
+          </td>
+        </tr>
+        <!-- パスワード確認フィールド -->
+        <tr>
+          <th>{{ user_form.confirm_password.label_tag }}</th>
+          <td>
+            {{ user_form.confirm_password }}
+            {% if user_form.confirm_password.errors %}
+            <td class="error">{{ user_form.confirm_password.errors|first }}</td>
+            {% endif %}
+          </td>
+        </tr>
             <tr>
               <th>{{ account_form.last_name.label_tag }}</th>
               <td>{{ account_form.last_name }}</td>

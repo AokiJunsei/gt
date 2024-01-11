@@ -26,6 +26,9 @@
           <th>{{ account_form.username.label_tag }}</th>
           <td>
             {{ account_form.username }}
+            {% if account_form.username.errors %}
+            <td class="error">{{ account_form.username.errors|first }}</td>
+          {% endif %}
           </td>
         </tr>
         <tr>
@@ -37,11 +40,20 @@
           <td>
             {{ account_form.password }}
             {% if account_form.password.errors %}
-            <div class="error">{{ account_form.password.errors }}</div>
+              <td class="error">{{ account_form.password.errors|first }}</td>
             {% endif %}
           </td>
         </tr>
+        <!-- ... 他のフィールド ... -->
         <tr>
+          <th>{{ account_form.confirm_password.label_tag }}</th>
+          <td>
+            {{ account_form.confirm_password }}
+            {% if account_form.confirm_password.errors %}
+              <td class="error">{{ account_form.confirm_password.errors|first }}</td>
+            {% endif %}
+          </td>
+        </tr>
           <th>{{ add_account_form.last_name.label_tag }}</th>
           <td>{{ add_account_form.last_name }}</td>
           <th>{{ add_account_form.first_name.label_tag }}</th>

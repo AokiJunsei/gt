@@ -28,21 +28,40 @@ class AccountForm(forms.ModelForm):
             'placeholder': '8文字以上数字を含む',
         }),
         label="パスワード" )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'パスワード確認',
+        }),
+        label="パスワード確認"
+    )
 
     class Meta:
-        # ユーザー認証
         model = User
-        # フィールド指定
-        fields = ('username', 'email', 'password')
+        fields = ('username', 'email', 'password', 'confirm_password')
         # フィールド名指定
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise ValidationError("・ユーザーIDは既に使用されています。")
+        return username
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
         if len(password) < 8:
-            raise ValidationError('パスワードは8文字以上である必要があります。')
+            raise ValidationError('・パスワードは8文字以上である必要があります。')
         if not re.search(r'\d', password):
-            raise ValidationError('パスワードには少なくとも1つの数字を含める必要があります。')
+            raise ValidationError('・パスワードには少なくとも1つの数字を含める必要があります。')
         return password
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        # パスワードが一致するか確認
+        if password and confirm_password and password != confirm_password:
+            self.add_error('confirm_password', '・パスワードが一致しません。')
+
+        return cleaned_data
 
 # 追加のアカウント情報用のフォーム
 class AddAccountForm(forms.ModelForm):
@@ -114,21 +133,29 @@ class AccountUpdateForm(forms.ModelForm):
     username = forms.CharField(
         max_length=150,
         required=True,
-        label='ユーザーID'  # ラベルを追加
+        label='ユーザーID'
     )
     email = forms.EmailField(
         required=True,
-        label='メールアドレス'  # ラベルを追加
+        label='メールアドレス'
     )
     password = forms.CharField(
-        max_length=8,
-        widget=forms.PasswordInput(),  # PasswordInputウィジェットを使用
+        widget=forms.PasswordInput(),
         label="新しいパスワード",
-        required=True
+        required= True # 更新の際にはパスワードが必須ではない場合
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(),
+        label="パスワード確認",
+        required=True  # 更新の際にはパスワードが必須ではない場合
     )
     class Meta:
         model = Account
-        fields = ['username', 'email', 'last_name', 'first_name', 'zipcode', 'state', 'city', 'address_1', 'address_2', 'gender']
+        fields = [
+            'username', 'email', 'last_name', 'first_name', 
+            'zipcode', 'state', 'city', 'address_1', 
+            'address_2', 'gender', 'password', 'confirm_password'
+        ]
         labels = {
             'last_name': "苗字",
             'first_name': "名前",
@@ -142,22 +169,29 @@ class AccountUpdateForm(forms.ModelForm):
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if username and User.objects.filter(username=username).exclude(pk=self.instance.user.pk).exists():
-            raise ValidationError('このユーザーIDは既に使用されています。')
+            raise ValidationError('・ユーザーIDは既に使用されています。')
         return username
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if email and User.objects.filter(email=email).exclude(pk=self.instance.user.pk).exists():
-            raise ValidationError('このメールアドレスは既に使用されています。')
+            raise ValidationError('・メールアドレスは既に使用されています。')
         return email
 
-    def clean_password(self):
-        password = self.cleaned_data.get('password')
-        if len(password) < 8:
-            raise ValidationError('パスワードは8文字以上である必要があります。')
-        if not re.search(r'\d', password):
-            raise ValidationError('パスワードには少なくとも1つの数字を含める必要があります。')
-        return password
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        # パスワードの更新を行う場合のみチェック
+        if password or confirm_password:
+            if len(password) < 8:
+                raise ValidationError('・パスワードは8文字以上である必要があります。')
+            if not re.search(r'\d', password):
+                raise ValidationError('・パスワードには少なくとも1つの数字を含める必要があります。')
+            if password != confirm_password:
+                self.add_error('confirm_password', '・パスワードが一致しません。')
+        return cleaned_data
 
 class LocationForm(forms.Form):
     name = forms.CharField(label='登録名', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': '例：東京都'})    )

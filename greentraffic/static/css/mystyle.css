@@ -23,7 +23,7 @@ table.reg_form {
 /* 各テーブルセルのスタイル */
 table.reg_form td {
   min-width: 100px; /* 最小幅を設定 */
-  max-width: 200px; /* 最大幅を設定 */
+  max-width: 250px; /* 最大幅を設定 */
   overflow: hidden; /* 内容がセルをはみ出さないようにする */
   text-overflow: ellipsis; /* 長い文字列を省略形で表示 */
   white-space: nowrap; /* 改行を防止 */
@@ -175,25 +175,16 @@ footer.footer {
 
 @media screen and (max-width: 768px) {
   table.reg_form {
+    width: auto;
     display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+    overflow-x: auto; /* 横スクロールを許可 */
+  }
+  table.reg_form td
+  {
+    white-space: normal; /* 折り返しを許可 */
   }
 }
-@media screen and (max-width: 768px) {
-  table.reg_form {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
-@media screen and (max-width: 768px) {
-  table.reg_form {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
+
 
 /* ヘッダーiconの隣にスペースを確保 */
 .mr-2 {
