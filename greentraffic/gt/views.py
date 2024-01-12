@@ -36,6 +36,12 @@ def get_api_key():
     parameter = ssm.get_parameter(Name='google_maps_api_key', WithDecryption=True)
     return parameter['Parameter']['Value']
 
+# ジョルダンAPIキーを取得する関数
+def get_train_api_key():
+    ssm = boto3.client('ssm', region_name='us-east-1')
+    parameter = ssm.get_parameter(Name='train_api_key', WithDecryption=True)
+    return parameter['Parameter']['Value']
+
 # ロガーの設定
 logger = logging.getLogger(__name__)
 
@@ -72,20 +78,26 @@ def user_search_bike(request):
 # 電車最短検索のビュー
 def user_search_short(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    # api_key = get_api_key()
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    # train_api_key = get_train_api_key()
+    train_api_key = "J2vqRoi1ciaJzktP"
     context = {
-        "api_key" : api_key
+        "api_key" : api_key,
+        "train_api_key" : train_api_key
     }
     return render(request, 'gt/user_search_short.html', context)
 
 # 電車最安検索のビュー
 def user_search_cheap(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    # api_key = get_api_key()
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    # train_api_key = get_train_api_key()
+    train_api_key = "J2vqRoi1ciaJzktP"
     context = {
-        "api_key" : api_key
+        "api_key" : api_key,
+        "train_api_key" : train_api_key
     }
     return render(request, 'gt/user_search_cheap.html', context)
 
@@ -638,32 +650,41 @@ def user_spot_change(request, pk):
 
         if response.status_code == 200:
             data = response.json()
-            location_data = data['results'][0]['geometry']['location']
-            spot_change.lat = location_data['lat']  # 緯度
-            spot_change.lng = location_data['lng']  # 経度
+            if data['status'] == 'OK':
+                location_data = data['results'][0]['geometry']['location']
+                spot_change.lat = location_data['lat']  # 緯度
+                spot_change.lng = location_data['lng']  # 経度
 
-            # 緯度と経度のみを含む辞書を作成
-            location_only = {'lat': spot_change.lat, 'lng': spot_change.lng}
+                # 緯度と経度のみを含む辞書を作成
+                location_only = {'lat': spot_change.lat, 'lng': spot_change.lng}
 
-            # 辞書をJSONにシリアライズ
-            spot_change.json_data = json.dumps(location_only)
+                # 辞書をJSONにシリアライズ
+                spot_change.json_data = json.dumps(location_only)
 
-            # データベースに保存
-            spot_change.save()
+                # データベースに保存
+                spot_change.save()
 
-            return render(request, 'gt/user_spot_register.html', {
-                'form': form,
-                'message': message_success,
-                'json_data': spot_change.json_data,
-                'show_modal': show_modal,
-                'api_key': api_key
-            })
+                return render(request, 'gt/user_spot_register.html', {
+                    'form': form,
+                    'message': message_success,
+                    'json_data': spot_change.json_data,
+                    'show_modal': show_modal,
+                    'api_key': api_key
+                })
+            else:
+                message_alert = "APIからデータを取得できませんでした"
+                return render(request, 'gt/user_spot_change.html', {
+                    'form': form,
+                    'message': message_alert,
+                    'show_alert': True,
+                    'api_key': api_key
+                })
         else:
             # APIからデータを取得できなかった場合の処理
             return render(request, 'gt/user_spot_change.html', {
                 'form': form,
                 'message': alert_API,
-                'show_alert': show_alert,
+                'show_alert': True,
                 'api_key': api_key
             })
     else:

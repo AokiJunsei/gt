@@ -76,11 +76,12 @@
 		}
 
 		// 保存ボタンがクリックされたら確認ダイアログを表示
-		document.getElementById("saveButton").addEventListener("click", function () {
-			if (confirm("このデータを保存しますか？")) {
-				// フォームを送信
-				document.getElementById("locationForm").submit();
-			}
+		document.addEventListener('DOMContentLoaded', (event) => {
+			document.getElementById("saveButton").addEventListener("click", function () {
+				if (confirm("このデータを保存しますか？")) {
+					document.getElementById("locationForm").submit();
+				}
+			});
 		});
 
 		//成功した場合のモーダルウィンドウ

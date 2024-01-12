@@ -6,8 +6,8 @@
 <main>
     <!-- アラートメッセージ -->
 	<h1>スポット変更</h1>
-	<div id="alert" class="container mt-3">
-		<div class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
+	<div id="alert" class="container mt-3" style="display: none;">
+		<div class="alert alert-warning alert-dismissible fade show" role="alert">
 			{{ message|safe }}
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>
@@ -75,11 +75,12 @@
 		}
 
 		// 保存ボタンがクリックされたら確認ダイアログを表示
-		document.getElementById("saveButton").addEventListener("click", function () {
-			if (confirm("このデータを保存しますか？")) {
-				// フォームを送信
-				document.getElementById("locationForm").submit();
-			}
+		document.addEventListener('DOMContentLoaded', (event) => {
+			document.getElementById("saveButton").addEventListener("click", function () {
+				if (confirm("このデータを保存しますか？")) {
+					document.getElementById("locationForm").submit();
+				}
+			});
 		});
 
 		//成功した場合のモーダルウィンドウ
