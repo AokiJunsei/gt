@@ -13,6 +13,9 @@
 </div>
 
 	<div id="map" style="height: 500px;margin-bottom: 20px;"></div>
+	<div class="button-container">
+		<a href="{% url 'gt:admin_top' %}" class="btn btn-primary">TOPページに戻る</a>
+	</div>
 
 	<script>
 		window.stateData = JSON.parse('{{ state_counts|safe }}');

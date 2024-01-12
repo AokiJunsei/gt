@@ -59,6 +59,7 @@ table.reg_form input::placeholder {
   justify-content: center;
   align-items: center;
   padding-top: 20px;
+  padding-bottom: 10px;
   margin: auto; /* 中央揃え */
 }
 .button-log {
