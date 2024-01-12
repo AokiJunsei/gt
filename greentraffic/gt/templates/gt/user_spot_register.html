@@ -33,6 +33,7 @@
     </div>
 
 	<!-- 成功時に表示するモーダル -->
+	{% if show_modal %}
 	<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -53,9 +54,10 @@
 			</div>
 		</div>
 	</div>
+	{% endif %}
 
 	<script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
+	src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap&v=weekly"
 	></script>
 
 	<script>
