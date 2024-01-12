@@ -147,20 +147,14 @@
 					alert("経路計算中にエラーが発生しました: " + error.message);
 			}
 		}
-
-    window.onload = function() {
-      // Hide the waypoint fields and label on load
-      document.getElementById('waypoint1-group').style.display = 'none';
-      document.getElementById('waypoint2-group').style.display = 'none';
-      document.getElementById('waypoint-label').style.display = 'none'; // Assuming you have a label with this ID
-  };
   </script>
   <!-- JavaScriptファイルへのリンク -->
   <script src="{% static 'js/floatingPanel.js' %}"></script>
   <script src="{% static 'js/mapFunctionsShareBike.js' %}"></script>
+  <script src="{% static 'js/pageLoadingActions.js' %}"></script>
   <script
     async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&libraries=geometry&callback=initMap&v=weekly"
+    src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=geometry&callback=initMap&v=weekly"
   ></script>
 </body>
 {% endblock content %}

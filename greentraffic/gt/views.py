@@ -30,7 +30,7 @@ from django.db.models.functions import TruncMonth
 from django.conf import settings
 import boto3
 
-# APIキーを取得する関数
+# GoogleMapAPIキーを取得する関数
 def get_api_key():
     ssm = boto3.client('ssm', region_name='us-east-1')
     parameter = ssm.get_parameter(Name='google_maps_api_key', WithDecryption=True)
@@ -51,7 +51,13 @@ def top_page(request):
 
 # 徒歩の検索
 def user_search_walk(request):
-    return render(request, 'gt/user_search_walk.html')
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    context = {
+        "api_key" : api_key
+    }
+    return render(request, 'gt/user_search_walk.html', context)
 
 # 自転車の検索
 def user_search_bike(request):
@@ -73,22 +79,58 @@ def user_search_cheap(request):
 
 # シェアリング検索（車）のビュー
 def user_search_share_car_car(request):
-    return render(request, 'gt/user_search_share_car_car.html')
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    context = {
+        "api_key" : api_key
+    }
+    return render(request, 'gt/user_search_share_car_car.html', context)
 # シェアリング検索（自転車）のビュー
 def user_search_share_car_bike(request):
-    return render(request, 'gt/user_search_share_car_bike.html')
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    context = {
+        "api_key" : api_key
+    }
+    return render(request, 'gt/user_search_share_car_bike.html', context)
 # シェアリング検索（徒歩）のビュー
 def user_search_share_car_walk(request):
-    return render(request, 'gt/user_search_share_car_walk.html')
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    context = {
+        "api_key" : api_key
+    }
+    return render(request, 'gt/user_search_share_car_walk.html', context)
 # シェアリング検索（車１）のビュー
 def user_search_share_bike_car(request):
-    return render(request, 'gt/user_search_share_bike_car.html')
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    context = {
+        "api_key" : api_key
+    }
+    return render(request, 'gt/user_search_share_bike_car.html', context)
 # シェアリング検索（自転車１）のビュー
 def user_search_share_bike_bike(request):
-    return render(request, 'gt/user_search_share_bike_bike.html')
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    context = {
+        "api_key" : api_key
+    }
+    return render(request, 'gt/user_search_share_bike_bike.html', context)
 # シェアリング検索（徒歩１）のビュー
 def user_search_share_bike_walk(request):
-    return render(request, 'gt/user_search_share_bike_walk.html')
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    context = {
+        "api_key" : api_key
+    }
+    return render(request, 'gt/user_search_share_bike_walk.html', context)
 
 # 管理者用トップページのビュー
 @login_required
@@ -281,7 +323,9 @@ def admin_map_detail(request, pk, vehicle_type):
 
 # ジオコードAPIの関数
 def get_geocode(address):
-    api_key = "AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4"  # 適切なAPIキーに置き換えてください
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"# 適切なAPIキーに置き換えてください
     params = {'address': address, 'key': api_key}
     response = requests.get('https://maps.googleapis.com/maps/api/geocode/json', params=params)
 
@@ -659,9 +703,7 @@ def user_my_map(request):
     # APIキーを取得
     # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
-
     account = Account.objects.get(user=request.user)
-
     # スポット情報を取得し、json_dataを適切にデコード
     user_spots = []
     for spot in Spot.objects.filter(account=account).values('spot_name', 'address', 'json_data'):
@@ -770,7 +812,14 @@ def account_history_view(request):
 @login_required
 def log_detail_view(request, pk):
     log_detail = get_object_or_404(SearchHistory, pk=pk)
-    return render(request, 'gt/user_log_detail.html', {'log_detail': log_detail})
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    context = {
+        'api_key' : api_key,
+        'log_detail' : log_detail
+    }
+    return render(request, 'gt/user_log_detail.html', context)
 
 # ログ削除ビュー
 @login_required
