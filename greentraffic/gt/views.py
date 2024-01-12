@@ -30,6 +30,8 @@ from django.db.models.functions import TruncMonth
 from django.conf import settings
 import boto3
 
+from django.views.decorators.http import require_http_methods
+
 # GoogleMapAPIキーを取得する関数
 def get_api_key():
     ssm = boto3.client('ssm', region_name='us-east-1')
@@ -41,6 +43,41 @@ def get_train_api_key():
     ssm = boto3.client('ssm', region_name='us-east-1')
     parameter = ssm.get_parameter(Name='train_api_key', WithDecryption=True)
     return parameter['Parameter']['Value']
+
+# 電車のfetchの関数
+@require_http_methods(["GET"])
+def fetch_jorudan_cheap_route(request):
+    api_key = "J2vqRoi1ciaJzktP"
+    # api_key = get_train_api_key()  # ここで安全にAPIキーを取得
+    # フロントエンドから渡されるクエリパラメータを取得
+    start = request.GET.get('start')
+    end = request.GET.get('end')
+    waypoint1 = request.GET.get('waypoint1')
+    waypoint2 = request.GET.get('waypoint2')
+    departureDate = request.GET.get('departureDate')
+    departureTime = request.GET.get('departureTime')
+    sort = request.GET.get('sort')
+
+    base_url = 'https://cloud.jorudan.biz/api/gv'
+    params = {
+        'ak': api_key,
+        'f' : 1,
+        'rm' : 'sr',
+        'eki1' : start,
+        'eki2' : end,
+        'kbn1' : 'R',
+        'date' : departureDate,
+        'time' : departureTime,
+        'opt1' : 0,
+        'opt2' : 0,
+        'opt3' : 1,
+        'opt4' : 0,
+        'max' : 8,
+        'sort' : sort,
+        'trtm' : 3
+    }
+    response = requests.get(base_url, params=params)
+    return JsonResponse(response.json())
 
 # ロガーの設定
 logger = logging.getLogger(__name__)
@@ -80,11 +117,8 @@ def user_search_short(request):
     # APIキーを取得
     # api_key = get_api_key()
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
-    # train_api_key = get_train_api_key()
-    train_api_key = "J2vqRoi1ciaJzktP"
     context = {
-        "api_key" : api_key,
-        "train_api_key" : train_api_key
+        "api_key" : api_key
     }
     return render(request, 'gt/user_search_short.html', context)
 
@@ -93,11 +127,8 @@ def user_search_cheap(request):
     # APIキーを取得
     # api_key = get_api_key()
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
-    # train_api_key = get_train_api_key()
-    train_api_key = "J2vqRoi1ciaJzktP"
     context = {
         "api_key" : api_key,
-        "train_api_key" : train_api_key
     }
     return render(request, 'gt/user_search_cheap.html', context)
 

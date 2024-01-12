@@ -74,26 +74,18 @@
       const departureDate = departureDateInput.split('-').join('');
      // 時間をhhmm形式に変換
       const departureTime = departureTimeInput.split(':').join('');
-      const queryParams = {
-        //APIリクエストに必要なパラメータ
-        f : 1,
-        rm : 'sr',
-        eki1 : start,
-        eki2 : end,
-        kbn1 : 'R',
-        date : departureDate,
-        time : departureTime,
-        opt1 : 0,
-        opt2 : 0,
-        opt3 : 1,
-        opt4 : 0,
-        max : 8,
-        sort : 0,
-        trtm : 3
-      }
-      const queryString = new URLSearchParams(queryParams).toString();
-      const url = `https://cloud.jorudan.biz/api/gv?ak=J2vqRoi1ciaJzktP&${queryString}`;
 
+      const queryParams = new URLSearchParams({
+        start: start,
+        waypoint1: waypoint1,
+        waypoint2: waypoint2,
+        end: end,
+        date: departureDate,
+        time: departureTime
+        sort: 0,
+      });
+
+      const url = `/fetch-jorudan-cheap-route/?${queryParams.toString()}`;
       fetch(url,{
         method : 'GET',
       })
