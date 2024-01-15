@@ -424,6 +424,15 @@ class AccountRegistration(TemplateView):
             full_address = f"{add_account_form.cleaned_data['state']} {add_account_form.cleaned_data['city']} {add_account_form.cleaned_data['address']}"
             latitude, longitude = get_geocode(full_address)
 
+            if latitude is None or longitude is None:
+                context = {
+                    "AccountCreate": False,
+                    "account_form": account_form,
+                    "add_account_form": add_account_form,
+                    "error_message": "住所から緯度経度の取得に失敗しました。"
+                }
+                return render(request, self.template_name, context=context)
+
             # 緯度経度をセッションのデータに追加
             add_account_data = add_account_form.cleaned_data
             add_account_data['latitude'] = latitude
@@ -442,6 +451,7 @@ class AccountRegistration(TemplateView):
                 "AccountCreate": False,
                 "account_form": account_form,
                 "add_account_form": add_account_form,
+                "error_message": "確認メール送信に失敗しました。登録内容を確認してください。"
             }
         return render(request, self.template_name, context=context)
 

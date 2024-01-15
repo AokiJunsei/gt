@@ -5,6 +5,21 @@ from django.core.exceptions import ValidationError
 import re
 import json
 
+
+# 日本の都道府県リスト
+PREFECTURES = [
+    '北海道', '青森県', '岩手県', '宮城県', '秋田県',
+    '山形県', '福島県', '茨城県', '栃木県', '群馬県',
+    '埼玉県', '千葉県', '東京都', '神奈川県', '新潟県',
+    '富山県', '石川県', '福井県', '山梨県', '長野県',
+    '岐阜県', '静岡県', '愛知県', '三重県', '滋賀県',
+    '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県',
+    '鳥取県', '島根県', '岡山県', '広島県', '山口県',
+    '徳島県', '香川県', '愛媛県', '高知県', '福岡県',
+    '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県',
+    '鹿児島県', '沖縄県'
+]
+
 # フォームクラス作成
 class AccountForm(forms.ModelForm):
     username = forms.CharField(
@@ -63,6 +78,17 @@ class AccountForm(forms.ModelForm):
 
         return cleaned_data
 
+
+# 郵便番号の長さを検証するカスタムバリデータ
+def validate_zipcode_length(value):
+    if len(value) != 7:
+        raise ValidationError('郵便番号は7文字でなければなりません。')
+
+# 都道府県バリデーション
+def validate_prefecture(value):
+    if value not in PREFECTURES:
+        raise ValidationError('有効な都道府県を入力してください。')
+
 # 追加のアカウント情報用のフォーム
 class AddAccountForm(forms.ModelForm):
     last_name = forms.CharField(
@@ -84,21 +110,28 @@ class AddAccountForm(forms.ModelForm):
     zipcode = forms.CharField(
         max_length=7,
         required=True,
+        validators=[validate_zipcode_length],
         widget=forms.TextInput(attrs={
             'placeholder': '例：1018351'
         }),
         label='郵便番号',
     )
-    state = forms.CharField(max_length=100, required=True, label='都道府県',widget=forms.TextInput(attrs={
+    state = forms.CharField(
+        max_length=100,
+        required=True,
+        validators=[validate_prefecture],
+        widget=forms.TextInput(attrs={
             'placeholder': '例：東京都 '
-        }),)
+        }),
+        label='都道府県',
+    )
     city = forms.CharField(max_length=100, required=True, label='市区町村',widget=forms.TextInput(attrs={
             'placeholder': '例：千代田区西神田 '
         }),)
     address_1 = forms.CharField(max_length=100, required=True, label='番地',widget=forms.TextInput(attrs={
             'placeholder': '例：2-4-11 '
         }),)
-    address_2 = forms.CharField(max_length=100, required=True, label='建物名・部屋番号',widget=forms.TextInput(attrs={
+    address_2 = forms.CharField(max_length=100, label='建物名・部屋番号',widget=forms.TextInput(attrs={
             'placeholder': '例：TICビル '
         }),)
     class Meta:
