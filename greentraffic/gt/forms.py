@@ -166,11 +166,7 @@ class AccountUpdateForm(forms.ModelForm):
             'address_2': "建物名・部屋番号",
             'gender': "性別",
         }
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if username and User.objects.filter(username=username).exclude(pk=self.instance.user.pk).exists():
-            raise ValidationError('・ユーザーIDは既に使用されています。')
-        return username
+
 
     def clean_email(self):
         email = self.cleaned_data.get('email')

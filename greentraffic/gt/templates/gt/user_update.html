@@ -6,15 +6,6 @@
     <form action="{% url 'gt:user_update' %}" method="POST">
         {% csrf_token %}
         <table class="reg_form">
-          <tr>
-            <th>{{ user_form.username.label_tag }}</th>
-            <td>
-              {{ user_form.username }}
-              {% if user_form.username.errors %}
-              <td class="error">{{ user_form.username.errors|first }}</td>
-              {% endif %}
-            </td>
-          </tr>
           <!-- メールフィールド -->
           <tr>
             <th>{{ user_form.email.label_tag }}</th>
