@@ -555,18 +555,12 @@ def user_update_view(request):
         user_form = AccountForm(request.POST, instance=user)
         account_form = AddAccountForm(request.POST, instance=account)
         if user_form.is_valid() and account_form.is_valid():
-            # User モデルの更新
             user = user_form.save(commit=False)
-            user.set_password(user_form.cleaned_data['password'])  # パスワードをハッシュ化して保存
+            if 'password' in user_form.cleaned_data and user_form.cleaned_data['password']:
+                user.set_password(user_form.cleaned_data['password'])  # パスワードが提供された場合のみ更新
             user.save()
-
-            # Account モデルの更新
-            # セッションを更新してログイン状態を維持
             update_session_auth_hash(request, user)
-
-            # Account モデルの更新
             account_form.save()
-
             return redirect('gt:user_info')
     else:
         user_form = AccountForm(instance=user, initial={'username': user.username, 'email': user.email})

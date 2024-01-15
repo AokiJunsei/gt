@@ -179,15 +179,14 @@ class AccountUpdateForm(forms.ModelForm):
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
 
-        # パスワードの更新を行う場合のみチェック
-        if password or confirm_password:
+        if password and confirm_password:
             if len(password) < 8:
                 raise ValidationError('・パスワードは8文字以上である必要があります。')
             if not re.search(r'\d', password):
                 raise ValidationError('・パスワードには少なくとも1つの数字を含める必要があります。')
             if password != confirm_password:
                 self.add_error('confirm_password', '・パスワードが一致しません。')
-        return cleaned_data
+            return cleaned_data
 
 class LocationForm(forms.Form):
     name = forms.CharField(label='登録名', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': '例：東京都'})    )
