@@ -838,16 +838,19 @@ def user_my_map(request):
             start = end = travel_mode = None
 
             try:
-                # スポット情報があれば、それをデコードして使用
+            # スポット情報のデコード
+                start_spot_label = end_spot_label = None
                 if start_spot_json:
                     start_spot = json.loads(start_spot_json.replace("'", '"'))
                     start = f"{start_spot['lat']}, {start_spot['lng']}"
+                    start_spot_label = dict(form.fields['start_spot'].choices).get(start_spot_json)
                 else:
                     start = form.cleaned_data.get('start')
 
                 if end_spot_json:
                     end_spot = json.loads(end_spot_json.replace("'", '"'))
                     end = f"{end_spot['lat']}, {end_spot['lng']}"
+                    end_spot_label = dict(form.fields['end_spot'].choices).get(end_spot_json)
                 else:
                     end = form.cleaned_data.get('end')
 
@@ -859,6 +862,8 @@ def user_my_map(request):
                     search_query=f"{start} から {end}",
                     start_location=start,
                     end_location=end,
+                    start_spot_label=start_spot_label,
+                    end_spot_label=end_spot_label,
                     travel_mode=travel_mode,
                     search_datetime=timezone.now()
                 )

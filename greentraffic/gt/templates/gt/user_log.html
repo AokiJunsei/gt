@@ -16,7 +16,21 @@
                 <div class="post-preview d-flex justify-content-between align-items-center">
                     <div>
                         <a href="{% url 'gt:log_detail' history.pk %}">
-                            <h2 class="post-title">{{ history.search_query }}</h2>
+
+                            <!-- 出発地がスポットの場合 -->
+                            {% if history.start_spot_label %}
+                            <h2 class="post-title">出発地スポット: {{ history.start_spot_label }}</h2>
+                            {% else %}
+                            <h2 class="post-title">出発地: {{ history.start_location }}</h2>
+                            {% endif %}
+
+                            <!-- 目的地がスポットの場合 -->
+                            {% if history.end_spot_label %}
+                            <h2 class="post-title">目的地スポット: {{ history.end_spot_label }}</h2>
+                            {% else %}
+                            <h2 class="post-title">目的地: {{ history.end_location }}</h2>
+                            {% endif %}
+
                             <h3 class="post-subtitle">TravelMode : {{ history.travel_mode }}</h3>
                             <h3 class="post-subtitle">検索日時: {{ history.search_datetime }}</h3>
                         </a>

@@ -310,7 +310,11 @@ footer.footer {
   margin-top: 10px;
   margin-right: 5px; /* 右のマージン */
 }
-
+.input-group label{
+  font-size: 20px;
+  margin-top: 10px;
+  margin-right: 5px; /* 右のマージン */
+}
 .input-group i {
   padding-top: 2px; /* アイコンの位置調整 */
 }
@@ -613,11 +617,12 @@ label {
   color: white; /* 白色のテキスト */
   border: none; /* 枠線なし */
   border-radius: 5px; /* 角を丸くする */
+  text-align: center;
+  transition: all 0.3s ease;
+  display: inline-block; /* ボタンをインラインブロック要素に変更 */
+  cursor: pointer; /* カーソルをポインターに変更 */
 }
 
-.button-class {
-  transition: all 0.3s ease;
-}
 .button-class:hover {
   transform: scale(1.1);
 }

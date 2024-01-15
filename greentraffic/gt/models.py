@@ -28,6 +28,9 @@ class SearchHistory(models.Model):
     search_query = models.CharField(max_length=100, verbose_name="検索クエリ")
     start_location = models.CharField(max_length=255, blank=True, null=True, verbose_name="出発地")
     end_location = models.CharField(max_length=255, blank=True, null=True, verbose_name="目的地")
+    start_spot_label = models.CharField(max_length=255, blank=True, null=True, verbose_name="出発地スポット")
+    end_spot_label = models.CharField(max_length=255, blank=True, null=True, verbose_name="目的地スポット")
+
     travel_mode = models.CharField(max_length=100, blank=True, null=True, verbose_name="トラベルモード")
 
     def __str__(self):
