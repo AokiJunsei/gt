@@ -237,9 +237,9 @@ footer.footer {
 #directions-panel.expanded {
   max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1000px) {
   #directions-panel {
-    top:70%;
+    top:10%;
     width: 100%;
   }
   #directions-panel.expanded {
@@ -791,7 +791,7 @@ label {
 /* help処理 */
 #help-container {
   text-align: center;
-  display: flex;
+  display: none; /* 初期状態で非表示に設定 */
   justify-content: center;
   align-items: center; /* 垂直方向に中央に配置 */
   position: absolute;

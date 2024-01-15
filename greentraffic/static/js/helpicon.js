@@ -3,7 +3,7 @@ var isHelpEnabled = false;
 
 // ヘルプテキストのデータ
 var helpTexts = {
-	'start': '出発地点を入力してください。',
+	'start': '出発地を入力してください。',
 	'waypoint1': '中継地点1を入力してください。',
 	'waypoint2': '中継地点2を入力してください。',
 	'end': '目的地を入力してください。',
@@ -18,6 +18,12 @@ var helpTexts = {
 	'departure-time': '出発する時間を選択してください。',
 	'car-link': 'アイコンをクリックして、Anycaのウェブサイトを開きます。',
 	'bike-link': 'アイコンをクリックして、HELLO CYCLINのウェブサイトを開きます。',
+	'id_start':'出発地を入力してください。',
+	'spot-start-input-group': '出発地を選択してください。',
+	'id_end':'目的地を入力してください。',
+	'spot-end-input-group':'目的地を選択してください。',
+	'travel_mode':'travel_modeを選択してください。',
+	'content-tab':'コンテンツを表示する場所です。'
 };
 
 // ヘルプテキスト関連の要素の取得
@@ -107,9 +113,11 @@ function addEventListeners(id, mouseEnterHandler, mouseLeaveHandler) {
 
 // ページがロードされた後にイベントリスナーを設定
 window.onload = function () {
+	
 	['start', 'waypoint1', 'waypoint2', 'end', 'current-location-icon',
 		'swap-icon', 'swap-icon-updown', 'toggle-icon', 'toggle-button',
-		'departure-date', 'departure-time', 'help-icon', 'car-link', 'bike-link'
+		'departure-date', 'departure-time', 'help-icon', 'car-link', 'bike-link','id_start',
+		'spot-start-input-group','id_end','spot-end-input-group','travel_mode','content-tab',
 	].forEach(function (id) {
 		addEventListeners(id, function (event) {
 			showHelpText(id, event);
