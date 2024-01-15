@@ -787,3 +787,15 @@ label {
     gap: 20px; /* 要素間の間隔を設定 */
   }
 }
+
+/* mystyle.css */
+#help-container {
+  display: none;
+  position: absolute;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.95); /* 背景に透明度を設定 */
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  z-index: 100;
+}
+

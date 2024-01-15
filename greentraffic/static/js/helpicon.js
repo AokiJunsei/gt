@@ -33,16 +33,25 @@ var isHelpEnabled = false;
 
 // ヘルプテキストのデータ
 var helpTexts = {
-	'start': '出発地点を入力してください。現在地を取得するにはコンパスアイコンをクリックします。',
-	'waypoint1': '中継地点1を入力してください。経路に追加されます。',
-	'waypoint2': '中継地点2を入力してください。経路に追加されます。',
+	'start': '出発地点を入力してください。',
+	'waypoint1': '中継地点1を入力してください。',
+	'waypoint2': '中継地点2を入力してください。',
 	'end': '目的地を入力してください。',
-	'search': '入力した情報に基づいて経路を検索します。',
-	// その他の要素についても同様に追加
+	'help-icon': 'ヘルプを表示します。',
+	'toggle-icon': '入力フォームの表示を切り替えます。',
+	'toggle-button': '経路の詳細パネルを開閉します。',
+	'btn-border': '検索結果を表示します。',
+	// 新規追加の定義
+	'current-location-icon': '現在位置を取得します。',
+	'swap-icon': '中継地点を入れ替えます。',
+	'swap-icon-updown': '出発地と目的地を入れ替えます。',
+	'help-icon': 'ヘルプを表示します。',  // 既に定義されていると仮定
+	'toggle-icon': '入力フォームの表示を切り替えます。',  // 既に定義されていると仮定
+	'toggle-button': '経路の詳細パネルを開閉します。',  // 既に定義されていると仮定
 };
 
 // ヘルプテキストを表示する関数
-function showHelpText(elementId) {
+function showHelpText(elementId, event) {
 	if (!isHelpEnabled) {
 		return; // ヘルプが無効の場合は何もしない
 	}
@@ -50,8 +59,13 @@ function showHelpText(elementId) {
 	var helpContainer = document.getElementById('help-container');
 	var helpTextElement = document.getElementById('help-text');
 
+	var mouseX = event.clientX;
+	var mouseY = event.clientY;
+
 	helpTextElement.textContent = helpText;
 	helpContainer.style.display = 'block';
+	helpContainer.style.left = mouseX + 'px';
+	helpContainer.style.top = (mouseY + 25) + 'px';
 }
 
 // ヘルプテキストを非表示にする関数
@@ -60,7 +74,6 @@ function hideHelpText() {
 	helpContainer.style.display = 'none';
 }
 
-// ヘルプアイコンのクリックイベントハンドラー
 // ヘルプアイコンのクリックイベントハンドラー
 document.getElementById('help-icon').addEventListener('click', function () {
 	loadAndShowModal();
@@ -75,34 +88,66 @@ function hideHelpText() {
 
 // ページがロードされた後にイベントリスナーを設定
 window.onload = function () {
-	// 各要素にイベントリスナーを追加
-	document.getElementById('start').addEventListener('mouseenter', function () {
-		showHelpText('start');
+	// イベントリスナーの設定
+	document.getElementById('start').addEventListener('mouseenter', function (event) {
+		showHelpText('start', event);
 	});
 	document.getElementById('start').addEventListener('mouseleave', hideHelpText);
 
-	// waypoint1に対するイベントリスナー
-	document.getElementById('waypoint1').addEventListener('mouseenter', function () {
-		showHelpText('waypoint1');
+	document.getElementById('waypoint1').addEventListener('mouseenter', function (event) {
+		showHelpText('waypoint1', event);
 	});
 	document.getElementById('waypoint1').addEventListener('mouseleave', hideHelpText);
 
-	// waypoint2に対するイベントリスナー
-	document.getElementById('waypoint2').addEventListener('mouseenter', function () {
-		showHelpText('waypoint2');
+	document.getElementById('waypoint2').addEventListener('mouseenter', function (event) {
+		showHelpText('waypoint2', event);
 	});
 	document.getElementById('waypoint2').addEventListener('mouseleave', hideHelpText);
 
-	// endに対するイベントリスナー
-	document.getElementById('end').addEventListener('mouseenter', function () {
-		showHelpText('end');
+	document.getElementById('end').addEventListener('mouseenter', function (event) {
+		showHelpText('end', event);
 	});
 	document.getElementById('end').addEventListener('mouseleave', hideHelpText);
 
-	// searchボタンに対するイベントリスナー
-	document.querySelector('.btn-border').addEventListener('mouseenter', function () {
-		showHelpText('search');
+	document.querySelector('.btn-border').addEventListener('mouseenter', function (event) {
+		showHelpText('search', event);
 	});
 	document.querySelector('.btn-border').addEventListener('mouseleave', hideHelpText);
-	// ...
+	document.getElementById('current-location-icon').addEventListener('mouseenter', function (event) {
+		showHelpText('current-location-icon', event);
+	});
+	document.getElementById('current-location-icon').addEventListener('mouseleave', hideHelpText);
+
+	document.getElementById('swap-icon').addEventListener('mouseenter', function (event) {
+		showHelpText('swap-icon', event);
+	});
+	document.getElementById('swap-icon').addEventListener('mouseleave', hideHelpText);
+
+	document.getElementById('swap-icon-updown').addEventListener('mouseenter', function (event) {
+		showHelpText('swap-icon-updown', event);
+	});
+	document.getElementById('swap-icon-updown').addEventListener('mouseleave', hideHelpText);
+	document.getElementById('help-icon').addEventListener('mouseenter', function (event) {
+		showHelpText('help-icon', event);
+	});
+	document.getElementById('help-icon').addEventListener('mouseleave', hideHelpText);
+
+	document.getElementById('toggle-icon').addEventListener('mouseenter', function (event) {
+		showHelpText('toggle-icon', event);
+	});
+	document.getElementById('toggle-icon').addEventListener('mouseleave', hideHelpText);
+
+	document.getElementById('toggle-button').addEventListener('mouseenter', function (event) {
+		showHelpText('toggle-button', event);
+	});
+	document.getElementById('toggle-button').addEventListener('mouseleave', hideHelpText);
+
+	var searchButton = document.querySelector('.btn-border');
+    if (searchButton) {
+        searchButton.addEventListener('mouseenter', function (event) {
+            showHelpText('btn-border', event);
+        });
+        searchButton.addEventListener('mouseleave', hideHelpText);
+    }
+	// 他の要素についても同様にイベントリスナーを設定
 };
