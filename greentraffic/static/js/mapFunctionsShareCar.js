@@ -279,12 +279,4 @@ function showRouteInformation(response) {
 			directionsPanel.appendChild(stepInfo);
 		}
 	}
-	// ボタンを追加
-	const button = document.createElement("button");
-	button.innerHTML = "Anyca にアクセス";
-	button.className = "hello-cycling-button";
-	button.onclick = function() {
-		window.open('https://anyca.net/', '_blank');
-	};
-	directionsPanel.appendChild(button);
 }
