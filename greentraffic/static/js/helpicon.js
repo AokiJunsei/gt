@@ -48,6 +48,8 @@ var helpTexts = {
 	'help-icon': 'ヘルプを表示します。',  // 既に定義されていると仮定
 	'toggle-icon': '入力フォームの表示を切り替えます。',  // 既に定義されていると仮定
 	'toggle-button': '経路の詳細パネルを開閉します。',  // 既に定義されていると仮定
+	'departure-date': '出発する日付を選択してください。',
+	'departure-time': '出発する時間を選択してください。',
 };
 
 // ヘルプテキストを表示する関数
@@ -143,11 +145,22 @@ window.onload = function () {
 	document.getElementById('toggle-button').addEventListener('mouseleave', hideHelpText);
 
 	var searchButton = document.querySelector('.btn-border');
-    if (searchButton) {
-        searchButton.addEventListener('mouseenter', function (event) {
-            showHelpText('btn-border', event);
-        });
-        searchButton.addEventListener('mouseleave', hideHelpText);
-    }
+	if (searchButton) {
+		searchButton.addEventListener('mouseenter', function (event) {
+			showHelpText('btn-border', event);
+		});
+		searchButton.addEventListener('mouseleave', hideHelpText);
+	}
+	// 出発日に対するイベントリスナー
+	document.getElementById('departure-date').addEventListener('mouseenter', function (event) {
+		showHelpText('departure-date', event);
+	});
+	document.getElementById('departure-date').addEventListener
+		('mouseleave', hideHelpText);
+
+	document.getElementById('departure-time').addEventListener('mouseenter', function (event) {
+		showHelpText('departure-time', event);
+	});
+	document.getElementById('departure-time').addEventListener('mouseleave', hideHelpText);
 	// 他の要素についても同様にイベントリスナーを設定
 };
