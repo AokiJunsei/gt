@@ -1,33 +1,3 @@
-// 「ヘルプ」のモーダルウィンドウ追加
-function loadAndShowModal() {
-	fetch('/gt/help/')
-		.then(response => response.text())
-		.then(data => {
-			document.querySelector('#helpModal .modal-body').innerHTML = data;
-			var modal = new bootstrap.Modal(document.getElementById('helpModal'));
-			modal.show();
-		});
-}
-
-document.addEventListener('DOMContentLoaded', (event) => {
-	document.getElementById('help-icon').addEventListener('click', loadAndShowModal);
-});
-
-var helpModal = document.getElementById('helpModal');
-
-helpModal.addEventListener('hidden.bs.modal', function (event) {
-	// モーダルが閉じたら実行される
-	var backdrops = document.getElementsByClassName('modal-backdrop');
-	// modal-backdrop クラスを持つ要素がまだ存在するかどうか確認する
-	if (backdrops.length > 0) {
-		// 存在する場合は、それらを削除する
-		Array.from(backdrops).forEach(function (backdrop) {
-			backdrop.remove();
-		});
-	}
-});
-
-
 // ヘルプ表示の有効/無効を管理するフラグ
 var isHelpEnabled = false;
 
@@ -41,109 +11,110 @@ var helpTexts = {
 	'toggle-icon': '入力フォームの表示を切り替えます。',
 	'toggle-button': '経路の詳細パネルを開閉します。',
 	'btn-border': '検索結果を表示します。',
-	// 新規追加の定義
 	'current-location-icon': '現在位置を取得します。',
 	'swap-icon': '中継地点を入れ替えます。',
 	'swap-icon-updown': '出発地と目的地を入れ替えます。',
-	'help-icon': 'ヘルプを表示します。',  // 既に定義されていると仮定
-	'toggle-icon': '入力フォームの表示を切り替えます。',  // 既に定義されていると仮定
-	'toggle-button': '経路の詳細パネルを開閉します。',  // 既に定義されていると仮定
 	'departure-date': '出発する日付を選択してください。',
 	'departure-time': '出発する時間を選択してください。',
+	'car-link': 'アイコンをクリックして、Anycaのウェブサイトを開きます。',
+	'bike-link': 'アイコンをクリックして、HELLO CYCLINのウェブサイトを開きます。',
 };
+
+// ヘルプテキスト関連の要素の取得
+var helpContainer = document.getElementById('help-container');
+var helpTextElement = document.getElementById('help-text');
+var helpIcon = document.getElementById('help-icon');
 
 // ヘルプテキストを表示する関数
 function showHelpText(elementId, event) {
 	if (!isHelpEnabled) {
-		return; // ヘルプが無効の場合は何もしない
+		return;
 	}
+
 	var helpText = helpTexts[elementId];
-	var helpContainer = document.getElementById('help-container');
-	var helpTextElement = document.getElementById('help-text');
-
-	var mouseX = event.clientX;
-	var mouseY = event.clientY;
-
 	helpTextElement.textContent = helpText;
+
+	// テキストの幅を計算（テキストの表示前に一時的に表示）
+	helpContainer.style.visibility = 'hidden'; // 一時的に非表示
 	helpContainer.style.display = 'block';
-	helpContainer.style.left = mouseX + 'px';
-	helpContainer.style.top = (mouseY + 25) + 'px';
+	var containerWidth = helpContainer.offsetWidth;
+	var containerHeight = helpContainer.offsetHeight;
+	helpContainer.style.visibility = ''; // 元に戻す
+	helpContainer.style.display = 'none';
+
+	// 画面のサイズを取得
+	var screenWidth = window.innerWidth;
+	var screenHeight = window.innerHeight;
+
+	// テキストの位置を調整
+	var posX = event.clientX;
+	var posY = event.clientY;
+
+	// 画面の右端または下端にテキストがはみ出さないように調整
+	if (posX + containerWidth > screenWidth) {
+		posX -= containerWidth;
+	}
+	if (posY + containerHeight > screenHeight) {
+		posY -= containerHeight;
+	}
+
+	// テキストの位置を更新
+	helpContainer.style.left = posX + 'px';
+	helpContainer.style.top = posY + 'px';
+
+	// テキストを表示
+	helpContainer.style.display = 'block';
 }
 
+function showHelpModeStatus() {
+	var statusText = isHelpEnabled ? 'ヘルプモードが有効になりました' : 'ヘルプモードが無効になりました';
+	var statusElement = document.getElementById('help-status');
+
+	statusElement.textContent = statusText;
+	statusElement.style.display = 'block';
+
+	// 数秒後にテキストを非表示にする
+	setTimeout(function () {
+		statusElement.style.display = 'none';
+	}, 3000); // 3秒後に非表示
+}
 // ヘルプテキストを非表示にする関数
 function hideHelpText() {
-	var helpContainer = document.getElementById('help-container');
 	helpContainer.style.display = 'none';
+}
+
+// ヘルプアイコンの視覚的な更新を行う関数
+function updateHelpIconVisual() {
+	helpIcon.style.color = isHelpEnabled ? 'green' : 'black';
 }
 
 // ヘルプアイコンのクリックイベントハンドラー
-document.getElementById('help-icon').addEventListener('click', function () {
-	loadAndShowModal();
-	isHelpEnabled = !isHelpEnabled; // ヘルプ表示の有効/無効をトグルする
+
+helpIcon.addEventListener('click', function () {
+	isHelpEnabled = !isHelpEnabled;
+	updateHelpIconVisual();
+	showHelpModeStatus(); // ヘルプモードの状態を示すテキストを表示
 });
 
-// ヘルプテキストを非表示にする関数
-function hideHelpText() {
-	var helpContainer = document.getElementById('help-container');
-	helpContainer.style.display = 'none';
+// イベントリスナーを追加する関数
+function addEventListeners(id, mouseEnterHandler, mouseLeaveHandler) {
+	var element = document.getElementById(id);
+	if (element) {
+		element.addEventListener('mouseenter', mouseEnterHandler);
+		element.addEventListener('mouseleave', mouseLeaveHandler);
+	}
 }
 
 // ページがロードされた後にイベントリスナーを設定
 window.onload = function () {
-	// イベントリスナーの設定
-	document.getElementById('start').addEventListener('mouseenter', function (event) {
-		showHelpText('start', event);
+	['start', 'waypoint1', 'waypoint2', 'end', 'current-location-icon',
+		'swap-icon', 'swap-icon-updown', 'toggle-icon', 'toggle-button',
+		'departure-date', 'departure-time', 'help-icon', 'car-link', 'bike-link'
+	].forEach(function (id) {
+		addEventListeners(id, function (event) {
+			showHelpText(id, event);
+		}, hideHelpText);
 	});
-	document.getElementById('start').addEventListener('mouseleave', hideHelpText);
-
-	document.getElementById('waypoint1').addEventListener('mouseenter', function (event) {
-		showHelpText('waypoint1', event);
-	});
-	document.getElementById('waypoint1').addEventListener('mouseleave', hideHelpText);
-
-	document.getElementById('waypoint2').addEventListener('mouseenter', function (event) {
-		showHelpText('waypoint2', event);
-	});
-	document.getElementById('waypoint2').addEventListener('mouseleave', hideHelpText);
-
-	document.getElementById('end').addEventListener('mouseenter', function (event) {
-		showHelpText('end', event);
-	});
-	document.getElementById('end').addEventListener('mouseleave', hideHelpText);
-
-	document.querySelector('.btn-border').addEventListener('mouseenter', function (event) {
-		showHelpText('search', event);
-	});
-	document.querySelector('.btn-border').addEventListener('mouseleave', hideHelpText);
-	document.getElementById('current-location-icon').addEventListener('mouseenter', function (event) {
-		showHelpText('current-location-icon', event);
-	});
-	document.getElementById('current-location-icon').addEventListener('mouseleave', hideHelpText);
-
-	document.getElementById('swap-icon').addEventListener('mouseenter', function (event) {
-		showHelpText('swap-icon', event);
-	});
-	document.getElementById('swap-icon').addEventListener('mouseleave', hideHelpText);
-
-	document.getElementById('swap-icon-updown').addEventListener('mouseenter', function (event) {
-		showHelpText('swap-icon-updown', event);
-	});
-	document.getElementById('swap-icon-updown').addEventListener('mouseleave', hideHelpText);
-	document.getElementById('help-icon').addEventListener('mouseenter', function (event) {
-		showHelpText('help-icon', event);
-	});
-	document.getElementById('help-icon').addEventListener('mouseleave', hideHelpText);
-
-	document.getElementById('toggle-icon').addEventListener('mouseenter', function (event) {
-		showHelpText('toggle-icon', event);
-	});
-	document.getElementById('toggle-icon').addEventListener('mouseleave', hideHelpText);
-
-	document.getElementById('toggle-button').addEventListener('mouseenter', function (event) {
-		showHelpText('toggle-button', event);
-	});
-	document.getElementById('toggle-button').addEventListener('mouseleave', hideHelpText);
-
 	var searchButton = document.querySelector('.btn-border');
 	if (searchButton) {
 		searchButton.addEventListener('mouseenter', function (event) {
@@ -151,16 +122,4 @@ window.onload = function () {
 		});
 		searchButton.addEventListener('mouseleave', hideHelpText);
 	}
-	// 出発日に対するイベントリスナー
-	document.getElementById('departure-date').addEventListener('mouseenter', function (event) {
-		showHelpText('departure-date', event);
-	});
-	document.getElementById('departure-date').addEventListener
-		('mouseleave', hideHelpText);
-
-	document.getElementById('departure-time').addEventListener('mouseenter', function (event) {
-		showHelpText('departure-time', event);
-	});
-	document.getElementById('departure-time').addEventListener('mouseleave', hideHelpText);
-	// 他の要素についても同様にイベントリスナーを設定
 };

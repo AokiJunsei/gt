@@ -4,8 +4,15 @@
 
 {% block content %}
 <body onload="initMap()">
-  <!--フォームの表示非表示-->
+  <div id="help-container">
+    <div id="help-text"></div>
+  </div>
   <div id="map-container">
+    <div>
+      <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+    </div>
+    <!-- ヘルプモードの状態表示用の要素 -->
+    <div id="help-status" style="display: none;"></div>
     <div>
       <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
     </div>
@@ -110,5 +117,6 @@
   <script src="{% static 'js/floatingPanel.js' %}"></script>
   <script src="{% static 'js/pageLoadActions.js' %}"></script>
   <script src="{% static 'js/mapFunctionsTrain.js' %}"></script>
+  <script src="{% static 'js/helpicon.js' %}"></script>
 </body>
 {% endblock content %}

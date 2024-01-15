@@ -788,14 +788,37 @@ label {
   }
 }
 
-/* mystyle.css */
+/* help処理 */
 #help-container {
-  display: none;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 垂直方向に中央に配置 */
   position: absolute;
   padding: 10px;
   background: rgba(255, 255, 255, 0.95); /* 背景に透明度を設定 */
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  border-radius: 10px; /* より大きな丸みを持たせます */
+  border: 2px solid #ccc; /* より太い境界線に設定します */
   z-index: 100;
+  white-space: nowrap; /* テキストを一行に収める */
+  overflow: hidden; /* 余分なテキストを隠す */
+  text-overflow: ellipsis; /* 切り詰めたテキストの末尾に省略記号を表示する */
 }
-
+#help-text {
+  font-size: 16px; /* フォントサイズを調整します */
+  color: #333; /* テキストカラーを設定します */
+  text-decoration: none; /* 下線を削除します */
+}
+#help-status {
+  position: fixed;
+  top: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px;
+  background-color: #f8f9fa; /* 薄い背景色 */
+  color: #333; /* テキスト色 */
+  border: 1px solid #ddd; /* 境界線 */
+  border-radius: 5px; /* 角丸 */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 影 */
+  z-index: 1000; /* 他の要素の上に表示 */
+}

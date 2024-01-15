@@ -6,7 +6,7 @@
 <body onload="initMap()">
   <div id="floating-panel">
     <h3>シェア検索
-      <a href = 'https://anyca.net/' target="_blank">
+      <a id='car-link' href = 'https://anyca.net/' target="_blank">
         <i class="fas fa-car fa-lg mr-2" style="color: black;"></i>
       </a>
     </h3>
@@ -26,8 +26,15 @@
       <button class="btn-border"onclick="trainTF()">検索</button>
     </div>
   </div>
-  <!--フォームの表示非表示-->
+  <div id="help-container">
+    <div id="help-text"></div>
+  </div>
   <div id="map-container">
+    <div>
+      <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+    </div>
+    <!-- ヘルプモードの状態表示用の要素 -->
+    <div id="help-status" style="display: none;"></div>
     <div>
       <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
     </div>
@@ -161,5 +168,6 @@
     async defer
     src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=geometry&callback=initMap&v=weekly"
   ></script>
+  <script src="{% static 'js/helpicon.js' %}"></script>
 </body>
 {% endblock content %}
