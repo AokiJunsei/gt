@@ -1,15 +1,15 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Account
-from django import forms
 from django.core.exceptions import ValidationError
 import re
+import json
 
 # フォームクラス作成
 class AccountForm(forms.ModelForm):
     username = forms.CharField(
-        max_length=100, 
-        required=False, 
+        max_length=100,
+        required=True,
         label='ユーザーID',
         widget=forms.TextInput(attrs={
             'placeholder': '例：test'
@@ -17,8 +17,8 @@ class AccountForm(forms.ModelForm):
     )
     # パスワード入力：非表示対応
     email = forms.CharField(
-        max_length=100, 
-        required=False, 
+        max_length=100,
+        required=True,
         label='メール',
         widget=forms.TextInput(attrs={
             'placeholder': '例：xxx@xxx.com'
@@ -26,66 +26,85 @@ class AccountForm(forms.ModelForm):
     )
     password = forms.CharField(widget=forms.PasswordInput(attrs={
             'placeholder': '8文字以上数字を含む',
-        }), 
+        }),
         label="パスワード" )
-    
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'パスワード確認',
+        }),
+        label="パスワード確認"
+    )
+
     class Meta:
-        # ユーザー認証
         model = User
-        # フィールド指定
-        fields = ('username', 'email', 'password')
+        fields = ('username', 'email', 'password', 'confirm_password')
         # フィールド名指定
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise ValidationError("・ユーザーIDは既に使用されています。")
+        return username
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
         if len(password) < 8:
-            raise ValidationError('パスワードは8文字以上である必要があります。')
+            raise ValidationError('・パスワードは8文字以上である必要があります。')
         if not re.search(r'\d', password):
-            raise ValidationError('パスワードには少なくとも1つの数字を含める必要があります。')
+            raise ValidationError('・パスワードには少なくとも1つの数字を含める必要があります。')
         return password
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        # パスワードが一致するか確認
+        if password and confirm_password and password != confirm_password:
+            self.add_error('confirm_password', '・パスワードが一致しません。')
+
+        return cleaned_data
 
 # 追加のアカウント情報用のフォーム
 class AddAccountForm(forms.ModelForm):
     last_name = forms.CharField(
-        max_length=100, 
-        required=False, 
+        max_length=100,
+        required=True,
         label='苗字',
         widget=forms.TextInput(attrs={
             'placeholder': '例：大原'
         })
     )
     first_name = forms.CharField(
-        max_length=100, 
-        required=False, 
+        max_length=100,
+        required=True,
         label='名前',
         widget=forms.TextInput(attrs={
             'placeholder': '例：太郎'
         })
     )
     zipcode = forms.CharField(
-        max_length=7, 
-        required=False, 
+        max_length=7,
+        required=True,
         widget=forms.TextInput(attrs={
             'placeholder': '例：1018351'
         }),
         label='郵便番号',
     )
-    state = forms.CharField(max_length=100, required=False, label='都道府県',widget=forms.TextInput(attrs={
+    state = forms.CharField(max_length=100, required=True, label='都道府県',widget=forms.TextInput(attrs={
             'placeholder': '例：東京都 '
         }),)
-    city = forms.CharField(max_length=100, required=False, label='市区町村',widget=forms.TextInput(attrs={
+    city = forms.CharField(max_length=100, required=True, label='市区町村',widget=forms.TextInput(attrs={
             'placeholder': '例：千代田区西神田 '
         }),)
-    address_1 = forms.CharField(max_length=100, required=False, label='番地',widget=forms.TextInput(attrs={
+    address_1 = forms.CharField(max_length=100, required=True, label='番地',widget=forms.TextInput(attrs={
             'placeholder': '例：2-4-11 '
         }),)
-    address_2 = forms.CharField(max_length=100, required=False, label='建物名・部屋番号',widget=forms.TextInput(attrs={
+    address_2 = forms.CharField(max_length=100, required=True, label='建物名・部屋番号',widget=forms.TextInput(attrs={
             'placeholder': '例：TICビル '
         }),)
     class Meta:
         # モデルクラスを指定
         model = Account
-        
+
         # フィールド指定
         fields = ('last_name', 'first_name', 'address', 'zipcode', 'state', 'city', 'address_1', 'address_2', 'gender',)
         # フィールド名指定
@@ -112,23 +131,31 @@ class AccountDeleteForm(forms.Form):
 
 class AccountUpdateForm(forms.ModelForm):
     username = forms.CharField(
-        max_length=150, 
-        required=False, 
-        label='ユーザーID'  # ラベルを追加
+        max_length=150,
+        required=True,
+        label='ユーザーID'
     )
     email = forms.EmailField(
-        required=False, 
-        label='メールアドレス'  # ラベルを追加
+        required=True,
+        label='メールアドレス'
     )
     password = forms.CharField(
-        max_length=8, 
-        widget=forms.PasswordInput(),  # PasswordInputウィジェットを使用
+        widget=forms.PasswordInput(),
         label="新しいパスワード",
-        required=False
+        required= True # 更新の際にはパスワードが必須ではない場合
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(),
+        label="パスワード確認",
+        required=True  # 更新の際にはパスワードが必須ではない場合
     )
     class Meta:
         model = Account
-        fields = ['username', 'email', 'last_name', 'first_name', 'zipcode', 'state', 'city', 'address_1', 'address_2', 'gender']
+        fields = [
+            'username', 'email', 'last_name', 'first_name', 
+            'zipcode', 'state', 'city', 'address_1', 
+            'address_2', 'gender', 'password', 'confirm_password'
+        ]
         labels = {
             'last_name': "苗字",
             'first_name': "名前",
@@ -142,22 +169,29 @@ class AccountUpdateForm(forms.ModelForm):
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if username and User.objects.filter(username=username).exclude(pk=self.instance.user.pk).exists():
-            raise ValidationError('このユーザーIDは既に使用されています。')
+            raise ValidationError('・ユーザーIDは既に使用されています。')
         return username
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if email and User.objects.filter(email=email).exclude(pk=self.instance.user.pk).exists():
-            raise ValidationError('このメールアドレスは既に使用されています。')
+            raise ValidationError('・メールアドレスは既に使用されています。')
         return email
-    
-    def clean_password(self):
-        password = self.cleaned_data.get('password')
-        if len(password) < 8:
-            raise ValidationError('パスワードは8文字以上である必要があります。')
-        if not re.search(r'\d', password):
-            raise ValidationError('パスワードには少なくとも1つの数字を含める必要があります。')
-        return password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        # パスワードの更新を行う場合のみチェック
+        if password or confirm_password:
+            if len(password) < 8:
+                raise ValidationError('・パスワードは8文字以上である必要があります。')
+            if not re.search(r'\d', password):
+                raise ValidationError('・パスワードには少なくとも1つの数字を含める必要があります。')
+            if password != confirm_password:
+                self.add_error('confirm_password', '・パスワードが一致しません。')
+        return cleaned_data
 
 class LocationForm(forms.Form):
     name = forms.CharField(label='登録名', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': '例：東京都'})    )
@@ -184,8 +218,16 @@ class RouteSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         user_spots = kwargs.pop('user_spots', [])
         super(RouteSearchForm, self).__init__(*args, **kwargs)
+
         # 初期選択肢を含むスポットの選択肢を作成
         spot_choices = [('', '---')]  # 初期値として空の選択肢を追加
-        spot_choices += [(spot['json_data'], spot['spot_name']) for spot in user_spots]
+        for spot in user_spots:
+            spot_label = f"{spot['spot_name']} - {spot['address']}"  # スポット名と住所を組み合わせたラベル
+            # JSON文字列をオプションの値としてセット
+            spot_value = json.dumps({
+                'lat': spot['json_data']['lat'],
+                'lng': spot['json_data']['lng']
+            })
+            spot_choices.append((spot_value, spot_label))
         self.fields['start_spot'].choices = spot_choices
         self.fields['end_spot'].choices = spot_choices

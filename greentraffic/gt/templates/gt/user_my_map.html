@@ -12,6 +12,7 @@
       <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
     </div>
     <div id="floating-panel">
+      <h3>my map</h3>
       <form method="post">
         {% csrf_token %}
         <h3>経路検索</h3>
@@ -22,7 +23,7 @@
         </div>
 
         <!-- 出発地スポット選択 -->
-        <div class="form-group " id="spot-start-input-group" style="display:none;">
+        <div class="input-group " id="spot-start-input-group">
           {{ form.start_spot.label_tag }}
           {{ form.start_spot }}
         </div>
@@ -32,7 +33,7 @@
           {{ form.end.label_tag }} {{ form.end }}
         </div>
         <!-- 目的地スポット選択 -->
-        <div class="input-group" id="spot-end-input-group" style="display:none;">
+        <div class="input-group" id="spot-end-input-group">
           {{ form.end_spot.label_tag }}
           {{ form.end_spot }}
         </div>
@@ -42,9 +43,8 @@
           {{ form.travel_mode }}
         </div>
 
-        <div class="mode-selector center-container">
-          <button type="submit" class="button-class">検索</button>
-          <i id="toggle-spot-input" class="fas fa-history" style="font-size: 32px;"></i>
+        <div class="mode-selector">
+          <button type="submit" class="btn-border">検索</button>
         </div>
 
       </form>
@@ -59,64 +59,10 @@
   </div>
 
   <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5diRbD4Ex24SsS0_YISzQW5f19mckhf4&callback=initMap&v=weekly"
+    src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap&v=weekly"
     defer
   ></script>
 
-  <script>
-    var inputElements = document.querySelectorAll('#spot-start-input-group input');
-
-    inputElements.forEach(function(inputElement) {
-        inputElement.addEventListener('change', function() {
-            var jsonSafeValue = this.value.replace(/'/g, '"');
-            console.log('JSON-safe value:', jsonSafeValue);
-
-            try {
-                var parsedValue = JSON.parse(jsonSafeValue);
-                var newValue = `${parsedValue.lat}, ${parsedValue.lng}`;
-                document.getElementById('id_start').value = newValue;
-            } catch (e) {
-                console.error('Error parsing JSON:', e);
-            }
-        });
-    });
-
-    var inputElementsEnd = document.querySelectorAll('#spot-end-input-group input');
-
-    inputElementsEnd.forEach(function(inputElement) {
-        inputElementsEnd.addEventListener('change', function() {
-            var jsonSafeValue = this.value.replace(/'/g, '"');
-            console.log('JSON-safe value:', jsonSafeValue);
-
-            try {
-                var parsedValue = JSON.parse(jsonSafeValue);
-                var newValue = `${parsedValue.lat}, ${parsedValue.lng}`;
-                document.getElementById('id_start').value = newValue;
-            } catch (e) {
-                console.error('Error parsing JSON:', e);
-            }
-        });
-    });
-
-
-    function toggleSpotInput() {
-      var spotstartInputGroup = document.getElementById('spot-start-input-group');
-      var spotendInputGroup = document.getElementById('spot-end-input-group');
-      if (spotstartInputGroup.style.display === 'none') {
-        spotstartInputGroup.style.display = 'block';
-      } else {
-        spotstartInputGroup.style.display = 'none';
-      }
-      if (spotendInputGroup.style.display === 'none') {
-        spotendInputGroup.style.display = 'block';
-      } else {
-        spotendInputGroup.style.display = 'none';
-      }
-    }
-
-    // アイコンボタンにクリックイベントリスナーを追加
-    document.getElementById('toggle-spot-input').addEventListener('click', toggleSpotInput);
-  </script>
   <script type="text/javascript">
 
     var map;
@@ -126,19 +72,6 @@
     const startQuery = "{{ start|escapejs }}";
     const endQuery = "{{ end|escapejs }}";
     const travelModeQuery = "{{ travel_mode|escapejs }}";
-
-    function toggleInputForm() {
-      var x = document.getElementById('floating-panel');
-      var icon = document.getElementById('toggle-icon');
-
-      if (!x.style.display || x.style.display === 'block') {
-        x.style.display = 'none'; // フォームを非表示にする
-        icon.className = 'fas fa-eye-slash'; // アイコンを非表示アイコンに変更
-      } else {
-        x.style.display = 'block'; // フォームを表示にする
-        icon.className = 'fas fa-eye'; // アイコンを表示アイコンに変更
-      }
-    }
 
     //マップ情報
     function initMap() {
@@ -291,49 +224,6 @@
       map.setCenter(location);
     }
 
-    // パネルを表示/非表示切り替える関数
-    function toggleDirectionsPanel() {
-      const directionsPanel = document.getElementById("directions-panel");
-      const contentTab = document.getElementById("content-tab");
-      const detailsTab = document.getElementById("details-tab");
-
-      if (!directionsPanelVisible) {
-        // パネルを表示
-        directionsPanel.style.display = "block";
-        contentTab.classList.add("active");
-        detailsTab.classList.remove("active");
-      } else {
-        // パネルを非表示
-        directionsPanel.style.display = "none";
-      }
-      // 表示状態を反転させる
-      directionsPanelVisible = !directionsPanelVisible;
-    }
-
-    function toggleTab(tabName) {
-      const contentTab = document.getElementById("content-tab");
-      const detailsTab = document.getElementById("details-tab");
-
-      if (tabName === "content") {
-        contentTab.classList.add("active");
-        detailsTab.classList.remove("active");
-      } else {
-        contentTab.classList.remove("active");
-        detailsTab.classList.add("active");
-      }
-    }
-
-    /*出発地と到着地の内容を入れ替える関数*/
-    function swapStartEnd() {
-      const startInput = document.getElementById("start");
-      const endInput = document.getElementById("end");
-
-      // 入れ替えボタン
-      const temp = startInput.value;
-      startInput.value = endInput.value;
-      endInput.value = temp;
-    }
-
     /*リアルタイムで現在地を取得する*/
     function updateCurrentLocation() {
       if (navigator.geolocation) {
@@ -356,69 +246,10 @@
       }
     }
 
-    var initialLeft = 20; // 左端からの距離
-    var initialTop = 20;  // 上端からの距離
-    document.addEventListener('DOMContentLoaded', function() {
-    var floatingPanel = document.getElementById('floating-panel');
-    var isDragging = false;
-    var offsetX, offsetY;
-
-    floatingPanel.addEventListener('mousedown', function(e) {
-    isDragging = true;
-    offsetX = e.clientX - floatingPanel.getBoundingClientRect().left;
-    offsetY = e.clientY - floatingPanel.getBoundingClientRect().top;
-    window.getSelection().removeAllRanges();
-    });
-
-    document.addEventListener('mouseup', function() {
-    isDragging = false;
-    });
-
-    document.addEventListener('mousemove', function(e) {
-    if (isDragging) {
-      var mouseX = e.clientX;
-      var mouseY = e.clientY;
-      var newLeft = mouseX - offsetX;
-      // 画面の下部を超えないようにするために、newTop の値を制限します。
-      var newTop = Math.min(mouseY - offsetY, window.innerHeight - floatingPanel.offsetHeight - 10); // 下部の余白を10pxに設定
-
-      newLeft = Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth);
-      newLeft = Math.max(newLeft, 0);
-
-      floatingPanel.style.left = newLeft + 'px';
-      floatingPanel.style.top = Math.max(0, newTop) + 'px';
-    }
-    });
-    document.addEventListener('mousemove', function(e) {
-    if (isDragging) {
-    var mouseX = e.clientX;
-    var mouseY = e.clientY;
-    var newLeft = mouseX - offsetX;
-    // 画面の下部を超えないようにするために、newTop の値を制限します。
-    var newTop = Math.min(mouseY - offsetY, window.innerHeight - floatingPanel.offsetHeight - 65); // 下部の余白を10pxに設定
-
-    newLeft = Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth);
-    newLeft = Math.max(newLeft, 0);
-
-    floatingPanel.style.left = newLeft + 'px';
-    floatingPanel.style.top = Math.max(0, newTop) + 'px';
-    }
-    });
-    window.addEventListener('resize', function() {
-    // ウィンドウのリサイズ時に、右端を超えないように位置を調整する
-    var rightEdge = window.innerWidth - floatingPanel.offsetWidth;
-    var currentLeft = parseInt(floatingPanel.style.left, 10);
-    if (currentLeft > rightEdge) {
-      floatingPanel.style.left = rightEdge + 'px';
-    }
-    });
-    });
-
     function expandPanel() {
-    var panel = document.getElementById('directions-panel');
-    panel.classList.add('expanded'); // expanded クラスを追加して拡大します
+      var panel = document.getElementById('directions-panel');
+      panel.classList.add('expanded'); // expanded クラスを追加して拡大します
     }
-
 
     window.onload = function() {
       initMap();
@@ -438,7 +269,7 @@
         console.error("Map object is not initialized yet.");
         return;
       }
-        calculateAndDisplayRoute()
+      calculateAndDisplayRoute()
     }
 
     /*経路検索メソッド*/
@@ -484,9 +315,8 @@
         }
       }
     }
-
-    /*検索結果のタブの開閉*/
-    let directionsPanelVisible = false;
   </script>
+  <!-- JavaScriptファイルへのリンク -->
+  <script src="{% static 'js/floatingPanel.js' %}"></script>
 </body>
 {% endblock content %}

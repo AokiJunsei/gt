@@ -92,7 +92,7 @@ DATABASES = {
         'NAME': 'postgres',  # RDSで作成したデータベース名
         'USER': 'postgres',  # RDSで設定したユーザー名
         'PASSWORD': '0801koBA',  # ユーザーのパスワード（セキュリティのために環境変数から取得する方法を推奨します）
-        'HOST': 'test1.c1qrmylhq4fs.us-east-1.rds.amazonaws.com',  # RDSのエンドポイント
+        'HOST': 'gt1.cxyaygg2ow37.us-east-1.rds.amazonaws.com',  # RDSのエンドポイント
         'PORT': '5432',  # ポート番号
     }
 }

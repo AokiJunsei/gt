@@ -115,7 +115,7 @@ hr {
 
 h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
   margin-top: 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   font-weight: 500;
   line-height: 1.2;
 }
@@ -371,7 +371,20 @@ select {
 }
 
 select {
-  word-wrap: normal;
+  display: block;
+  padding: 0.15em 0.5em; /* 内側の余白 */
+  margin-top: 10px;
+  border: 1px solid #000; /* ボーダーの設定 */
+  -webkit-appearance: none; /* ブラウザのデフォルトスタイルを無効化 */
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #fff; /* 背景色 */
+  background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); /* 矢印のアイコン */
+  background-repeat: no-repeat;
+  background-position: right 1em top 50%; /* 矢印のアイコンの位置 */
+  background-size: 12px; /* 矢印のアイコンのサイズ */
+  font-size: 1rem; /* フォントサイズ */
+  width: 40%;
 }
 select:disabled {
   opacity: 1;
@@ -753,6 +766,7 @@ progress {
 .col-5 {
   flex: 0 0 auto;
   width: 41.66666667%;
+  padding-left: 25%;
 }
 
 .col-6 {

@@ -16,13 +16,14 @@ div.reg {
   margin-right: 20%;
 }
 
+
 table.reg_form {
   width: 100%; /* テーブルの幅を100%に設定 */
 }
 /* 各テーブルセルのスタイル */
 table.reg_form td {
   min-width: 100px; /* 最小幅を設定 */
-  max-width: 200px; /* 最大幅を設定 */
+  max-width: 250px; /* 最大幅を設定 */
   overflow: hidden; /* 内容がセルをはみ出さないようにする */
   text-overflow: ellipsis; /* 長い文字列を省略形で表示 */
   white-space: nowrap; /* 改行を防止 */
@@ -60,6 +61,13 @@ table.reg_form input::placeholder {
   padding-top: 20px;
   margin: auto; /* 中央揃え */
 }
+.button-log {
+  justify-content: center;
+  align-items: center;
+  margin: auto; /* 中央揃え */
+  margin-top: 20px; /* 上の空白 */
+  margin-bottom: 20px; /* 下の空白 */
+}
 input::placeholder {
   padding-left: 2px;
 }
@@ -93,18 +101,22 @@ input::placeholder {
 }
 .post-title,
 .post-subtitle {
-  max-width: 250px; /* 最大幅を250pxに設定 */
+  max-width: 230px; /* 最大幅を250pxに設定 */
   overflow: hidden; /* はみ出したテキストを隠す */
   text-overflow: ellipsis; /* はみ出したテキストを三点リーダーで表示 */
   white-space: nowrap; /* テキストの折り返しを防止 */
 }
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .post-title,
   .post-subtitle {
-  max-width: 150px; /* 最大幅を250pxに設定 */
+  max-width: 130px; /* 最大幅を250pxに設定 */
   overflow: hidden; /* はみ出したテキストを隠す */
   text-overflow: ellipsis; /* はみ出したテキストを三点リーダーで表示 */
   white-space: nowrap; /* テキストの折り返しを防止 */
+}
+.btn {
+  padding: 8px 20px;
+  font-size: 16px;
 }
 }
 /* キャンセルボタンのスタイル */
@@ -148,6 +160,7 @@ input::placeholder {
 
 footer.footer {
   position: fixed;
+  padding-top: 10px;
   left: 0;
   bottom: 0;
   width: 100%;
@@ -155,35 +168,23 @@ footer.footer {
   background-color: #333; /* フッターの背景色を適宜調整してください */
   color: white;
   text-align: center;
-  z-index: 1000; /* 他の要素より上に表示されるように */
+  z-index: 2; /* 他の要素より上に表示されるように */
 }
 
 /* メインコンテンツの下部にフッターの高さ分のスペースを確保 */
-body,
-html {
-  margin: 0;
-}
-@media (max-width: 768px) {
+
+@media screen and (max-width: 768px) {
   table.reg_form {
+    width: auto;
     display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+    overflow-x: auto; /* 横スクロールを許可 */
+  }
+  table.reg_form td
+  {
+    white-space: normal; /* 折り返しを許可 */
   }
 }
-@media (max-width: 768px) {
-  table.reg_form {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
-@media (max-width: 768px) {
-  table.reg_form {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
+
 
 /* ヘッダーiconの隣にスペースを確保 */
 .mr-2 {
@@ -210,6 +211,11 @@ html {
   height: calc(100vh - 40px);
 }
 
+#map-log {
+  padding-top: 0; /* 上のパディングを取り除く */
+  position: relative;
+  height: calc(100vh - 40px);
+}
 #map {
   height: 100%;
 }
@@ -220,7 +226,7 @@ html {
   left: 0;
   width: 30%;
   bottom: 20px;
-  max-height: 100px; /* 初期の最大高さ */
+  max-height: 65px; /* 初期の最大高さ */
   overflow-y: auto;
   background-color: rgba(255, 255, 255, 0.9);
   padding: 10px;
@@ -231,6 +237,30 @@ html {
 #directions-panel.expanded {
   max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
 }
+@media screen and (max-width: 800px) {
+  #directions-panel {
+    top:70%;
+    width: 100%;
+  }
+  #directions-panel.expanded {
+    top:70%;
+    width: 100%;
+    max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
+  }
+}
+
+/* 2023/12/24 外部サイト遷移のためのボタンのcssを追記 */
+.hello-cycling-button {
+  background-color: #4CAF50; /* 緑色の背景 */
+  color: white; /* テキストの色 */
+  padding: 10px 20px; /* パディング */
+  border: none; /* ボーダーを非表示に */
+  border-radius: 5px; /* 角丸の設定 */
+  cursor: pointer; /* カーソルをポインターに */
+  font-size: 16px; /* フォントサイズ */
+  margin-top: 10px; /* 上部のマージン */
+}
+
 
 #floating-panel {
   /* 既存のスタイル */
@@ -270,7 +300,11 @@ html {
   justify-content: center; /* 中央揃え */
 }
 
-
+.input-group label{
+  font-size: 18px;
+  margin-top: 10px;
+  margin-right: 5px; /* 右のマージン */
+}
 .input-group input,
 .input-group i {
   margin-top: 10px;
@@ -328,19 +362,7 @@ html {
 .cp_ipselect select::-ms-expand {
 	display: none;
 }
-.cp_ipselect:after {
-	position: absolute;
-	top: 18px;
-	right: 10px;
-	width: 0;
-	height: 0;
-	padding: 0;
-	content: '';
-	border-left: 6px solid transparent;
-	border-right: 6px solid transparent;
-	border-top: 6px solid rgba(0, 0, 0, 0.3);
-	pointer-events: none;
-}
+
 .cp_sl06_selectlabel {
 	color: rgba(0,0,0, 0.5);
 	font-size: 18px;
@@ -405,7 +427,7 @@ html {
   white-space: normal; /* Allow text to wrap within the panel */
 }
 @media only screen and (max-width: 600px) {
-  .jjj .btn, .jjj a.btn {
+  .jjj .btn, .jjj .btn {
     display: block;
     width: 100%;
     margin-bottom: 10px;
@@ -413,18 +435,116 @@ html {
   }
 }
 
+table.reg_form td:nth-child(6) select {
+  margin-top: 5px;
+}
+
+
 .tab {
   display: inline-block;
   padding: 10px;
   cursor: pointer;
+  background-color:#fff;
 }
 
+
+/* タブコンテンツのスタイル */
 .tab-content {
-  display: none;
+  display: none; /* 初期状態で非表示 */
+  background-color: var(--bs-btn-bg);
+  border-radius: 4px; /* 角丸 */
+ 
 }
-
 .active {
   display: block;
+}
+/* タブのホバー効果 */
+.tab:hover {
+  background-color: #e9ecef; /* ホバー時の背景色 */
+}
+
+/* アクティブなタブのスタイル */
+.active-tab {
+  background-color: #007bff;
+  color: white;
+}
+
+/* タブの基本スタイル */
+.tab {
+  display: inline-block;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-right: 2px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+
+/* タブコンテンツ内の段落のスタイル */
+.tab-content p {
+  margin-top: 15px; /* 段落間の余白 */
+  line-height: 1.6; /* 行の高さ */
+  font-size: 1rem; /* 文字サイズ */
+}
+
+/* 最後のパラグラフのスタイル調整 */
+.tab-content p:last-child {
+  margin-bottom: 0; /* 最後の段落の下余白を削除 */
+}
+
+/* 強調テキストのスタイル */
+.tab-content p span {
+  font-weight: 600; /* より太いフォントウェイト */
+  color: #000; /* 強調色 */
+}
+
+.segment-info {
+  border: 1px solid #cccccc; /* より柔らかいグレーに変更 */
+  margin-bottom: 20px; /* 余白を少し広げる */
+  padding: 10px; /* パディングを増やす */
+  border-radius: 10px; /* 角をより丸く */
+  background-color: #ffffff; /* 明るい白に変更 */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1); /* より深みのあるシャドウに */
+  position: relative; /* 矢印の位置の基準とするため */
+  overflow: hidden; /* 矢印などのはみ出しを防ぐ */
+}
+
+.segment-title {
+  font-weight: bold;
+  color: #007bff; /* より鮮やかなブルーに変更 */
+  margin-bottom: 15px; /* タイトルの下のマージンを増やす */
+  font-size: 1.2em; /* タイトルのフォントサイズを大きく */
+}
+
+.segment-info p {
+  margin: 10px 0; /* パラグラフ間のマージンを広げる */
+  margin-bottom: 15px;
+  line-height: 1.5; /* 行間を広げる */
+  position: relative; /* 矢印の位置の基準とするため */
+}
+
+.segment-info i.fas.fa-arrow-down {
+  display: block; /* アイコンをブロック要素として扱い、下のマージンを有効にします */
+  margin-bottom: 15px; /* 下の余白を追加 */
+  text-align: center; /* アイコンを中央揃えにします */
+}
+
+/* モバイルビューなどの小さい画面で矢印が見切れないようにするために、
+   セグメント情報の左側に余白を追加します。 */
+@media screen and (max-width: 768px) {
+  .segment-info {
+    padding-left: 50px; /* 左側のパディングを増やす */
+  }
+}
+
+
+/* 2024/01/11追記　鈴木 */
+#help-icon {
+  position: absolute; /* ボタンを固定位置にする */
+  top: 51px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+  right: -21px; /* 右端から10pxの位置に設定 */
+  z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
 }
 
 #toggle-icon {
@@ -440,7 +560,7 @@ html {
   right: -20px; /* 右端から10pxの位置に設定 */
   z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
 }
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
   #toggle-icon {
     position: absolute; /* ボタンを固定位置にする */
     top: 60px; /* ヘッダーや他の要素との重なりを避けるために調整 */
@@ -454,6 +574,14 @@ html {
     right: 24px; /* 右端から10pxの位置に設定 */
     z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
   }
+
+  #help-icon {
+    position: absolute; /* ボタンを固定位置にする */
+    top: 101px; /* ヘッダーや他の要素との重なりを避けるために調整 */
+    right: 23px; /* 右端から10pxの位置に設定 */
+    z-index: 10; /* 必要に応じて z-index を設定して他の要素の上に表示 */
+  }
+  
 }
 #current-location-icon {
   cursor: pointer; /* アイコンがクリック可能であることを示す */
@@ -526,4 +654,141 @@ label {
 .pagination .page-item.active .page-link {
   background-color: #007bff; /* アクティブなページの背景色 */
   color: white; /* アクティブなページの文字色 */
+}
+
+/*topへ戻るbtn*/
+#page-top {
+  position: fixed;
+  right: 20px;
+  bottom: 70px;
+  height: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  transform: rotate(90deg);
+  font-size: 90%;
+  line-height: 1.5rem;
+  color: #737373;
+  padding: 0 0 0 35px;
+  border-top: solid 1px;
+}
+#page-top::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -1px;
+  left: 0px;
+  width: 15px;
+  border-top: solid 1px;
+  transform: rotate(35deg);
+  transform-origin: left top;
+}
+#page-top:hover {
+  color: #000000; /* ここで色を変更 */
+  cursor: pointer; /* カーソルをポインタに変更 */
+}
+.initially-hidden {
+  display: none;
+}
+/*その他と主な共通部分は省略*/
+
+/*主な共通部分は省略*/
+
+.btn-border {
+  border: 2px solid #000;
+  border-radius: 0;
+  background: #fff;
+
+  -webkit-transform-style: preserve-3d;
+
+  transform-style: preserve-3d;
+
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
+  position: relative;
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  color: #212529;
+  border-radius: 0.5rem;
+}
+
+
+.btn-border:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 15px;
+  height: 100%;
+
+  content: '';
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  -webkit-transform: translateX(0) translateY(0);
+  transform: translateX(0) translateY(0);
+
+  border-radius: 0 50% 50% 0;
+  background: #000;
+}
+
+.btn-border:hover:before {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: bold;
+  line-height: 30px;
+
+  width: 30px;
+  height: 30px;
+
+  content: '\f061';
+  -webkit-transform: translateX(220%) translateY(.1rem);
+  transform: translateX(220%) translateY(.1rem);
+
+  color: #fff;
+  border-radius: 50%;
+}
+.kid{
+  margin-top: 0;
+}
+.no-margin-top {
+  margin-top: 0;
+}
+.chart {
+  flex: 0 0 auto;
+  width: 400px;
+  height: 500px;
+}
+
+.chartcont {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 20px;
+}
+
+/* 画面幅が1600px以下の場合のスタイル */
+@media screen and (max-width: 1000px) {
+  .chart {
+    width: 400px;
+  }
+  .chartcont {
+    display: flex;
+    flex-direction: column; /* 要素を縦に並べる */
+    align-items: center;
+    justify-content: center;
+    height: auto; /* 高さを自動調整にする */
+    gap: 20px; /* 要素間の間隔を設定 */
+  }
 }

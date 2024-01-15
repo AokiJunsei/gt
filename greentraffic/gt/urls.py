@@ -18,7 +18,6 @@ urlpatterns = [
     path('search_share_bike_bike/', views.user_search_share_bike_bike, name="search_share_bike_bike"),
     path('search_share_bike_walk/', views.user_search_share_bike_walk, name="search_share_bike_walk"),
     path('my_map/', views.user_my_map, name="my_map"),
-    path('my_map_train/', views.user_my_map_train, name="my_map_train"),
 
     path('map_change/<str:vehicle_type>/<int:pk>/', views.admin_map_change, name='admin_map_change'),
     path('map_delete/<str:vehicle_type>/<int:pk>/', views.admin_map_delete, name='admin_map_delete'),
@@ -53,4 +52,7 @@ urlpatterns = [
     path('api/map_cars', views.get_map_cars, name='get_map_cars'),
     path('api/map_bikes', views.get_map_bikes, name='get_map_bikes'),
 
+    path('help/', views.modal_content, name='modal-content'),
+
+    path('fetch-jorudan-cheap-route/', views.fetch_jorudan_cheap_route, name='fetch_jorudan_cheap_route')
     ]

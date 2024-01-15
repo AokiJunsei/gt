@@ -1,12 +1,26 @@
-{% extends "base.html" %}
-
+{% extends 'base.html' %}
 {% load static %}
-{% block title %}管理サイト{% endblock %}
 
+{% block title %}管理サイト/統計情報{% endblock %}
 
-{% block head %}
-{% endblock %}
+{% block head %}{% endblock %}
 
 {% block content %}
-{% endblock content %}
+<div class="chartcont d-flex align-items-center">
+    <div id="state_chart" class="chart"></div>
+    <div id="creation_chart" class="chart"></div>
+    <div id="coordinates_chart" class="chart"></div>
+</div>
 
+	<div id="map" style="height: 500px;margin-bottom: 20px;"></div>
+
+	<script>
+		window.stateData = JSON.parse('{{ state_counts|safe }}');
+		window.creationData = JSON.parse('{{ creation_dates|safe }}');
+		window.coordinatesData = JSON.parse('{{ coordinates_data|safe }}');
+	</script>
+
+	<script src="{% static 'js/statistics.js' %}"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap" async defer></script>
+
+{% endblock %}

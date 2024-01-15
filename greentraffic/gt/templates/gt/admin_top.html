@@ -9,8 +9,6 @@
 <div class="container px-4 px-lg-5 my-div-style">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
-            {% comment %} 検索のインプットフォーム {% endcomment %}
-
             {% comment %} 自転車と車のリストの切り替え {% endcomment %}
             <div class="cp_ipselect">
                 <select id="modelSelector" class="cp_sl06" required>
@@ -148,7 +146,7 @@
             {% endif %}
         </div>
     </div>
-     
+
     <!-- '追加する'ボタンをフッター直前に配置 -->
     <div class="button-container mb-4 justify-content-end">
         <a class="btn btn-primary" href="{% url 'gt:admin_map_register' %}">追加する</a>
@@ -167,22 +165,6 @@
 
             // 選択されたリストを表示
             document.getElementById(selectedModel + 'List').style.display = 'block';
-
-            // 検索ボックスをクリア
-            document.getElementById('searchInput').value = '';
-        });
-
-        // 検索機能
-        document.getElementById('searchInput').addEventListener('keyup', function() {
-            var searchQuery = this.value.toLowerCase();
-            var visibleList = document.querySelector('.model-list:not([style*="display: none"])');
-
-            if (visibleList) {
-                visibleList.querySelectorAll('.list-item').forEach(function(item) {
-                    var text = item.textContent.toLowerCase();
-                    item.style.display = text.includes(searchQuery) ? '' : 'none';
-                });
-            }
         });
 
     </script>
