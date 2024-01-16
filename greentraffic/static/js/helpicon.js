@@ -156,7 +156,7 @@ window.onload = function () {
         'share-car-search', 'share-car-search-car', 'share-car-search-bike', 'share-car-search-walk', 
         'share-bike-search', 'share-bike-search-car', 'share-bike-search-bike', 'share-bike-search-walk',
 		'Mymap-search','Mymap-search-all','register', 'user-login', 'logout', 
-        'user-info', 'user_spot_list', 'account_history','setting'
+        'user-info', 'user_spot_list', 'account_history','setting',
 	].forEach(function (id) {
 		addEventListeners(id, function (event) {
 			showHelpText(id, event);
