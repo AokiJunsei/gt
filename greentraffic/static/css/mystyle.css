@@ -799,7 +799,7 @@ label {
   background: rgba(255, 255, 255, 0.95); /* 背景に透明度を設定 */
   border-radius: 10px; /* より大きな丸みを持たせます */
   border: 2px solid #ccc; /* より太い境界線に設定します */
-  z-index: 100;
+  z-index: 9999;
   white-space: nowrap; /* テキストを一行に収める */
   overflow: hidden; /* 余分なテキストを隠す */
   text-overflow: ellipsis; /* 切り詰めたテキストの末尾に省略記号を表示する */
