@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from .models import Account, MapCar ,MapBike ,Spot ,SearchHistory ,User
-from .forms import AccountForm, AddAccountForm, LocationForm ,SpotForm,RouteSearchForm
+from .forms import AccountForm, AddAccountForm, LocationForm ,SpotForm,RouteSearchForm ,UpdateAccountForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 import requests
@@ -319,7 +319,7 @@ def admin_map_change(request,vehicle_type, pk):
                     map_change.save()
 
                     message_success = "データが保存されました"
-                return render(request, 'gt/admin_map_register.html', {
+                return render(request, 'gt/admin_map_change.html', {
                     'form': form,
                     'message': message_success,
                     'json_data': map_change.json_data,
@@ -562,7 +562,7 @@ def user_update_view(request):
     account = user.account
 
     if request.method == 'POST':
-        user_form = AccountForm(request.POST, instance=user)
+        user_form = UpdateAccountForm(request.POST, instance=user)
         account_form = AddAccountForm(request.POST, instance=account)
         if user_form.is_valid() and account_form.is_valid():
             user = user_form.save(commit=False)
@@ -570,7 +570,21 @@ def user_update_view(request):
                 user.set_password(user_form.cleaned_data['password'])  # パスワードが提供された場合のみ更新
             user.save()
             update_session_auth_hash(request, user)
-            account_form.save()
+
+            # 住所が更新されたかをチェック
+            account_modified = account_form.save(commit=False)
+            if account_form.has_changed() and 'zipcode' in account_form.changed_data:
+                # 緯度経度の取得
+                full_address = f"{account_modified.state} {account_modified.city} {account_modified.address_1}"
+                lat, lng = get_geocode(full_address)
+                if lat is not None and lng is not None:
+                    account_modified.latitude = lat
+                    account_modified.longitude = lng
+                else:
+                    account_form.add_error(None, "住所に基づいた緯度経度の取得に失敗しました。")
+                    return render(request, 'user_update.html', {'user_form': user_form, 'account_form': account_form})
+
+            account_modified.save()
             return redirect('gt:user_info')
     else:
         user_form = AccountForm(instance=user, initial={'username': user.username, 'email': user.email})
@@ -699,7 +713,7 @@ def user_spot_change(request, pk):
                 # データベースに保存
                 spot_change.save()
 
-                return render(request, 'gt/user_spot_register.html', {
+                return render(request, 'gt/user_spot_change.html', {
                     'form': form,
                     'message': message_success,
                     'json_data': spot_change.json_data,
@@ -961,3 +975,8 @@ def admin_user_info(request):
 # settingsのモーダルウィンドウを表示
 def modal_content(request):
     return render(request, 'setting_help.html')
+
+# メールorユーザーIDの変更
+@login_required
+def user_email_update_view(request):
+    return render(request,'user_email_change.html')

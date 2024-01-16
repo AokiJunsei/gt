@@ -822,3 +822,7 @@ label {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 影 */
   z-index: 1000; /* 他の要素の上に表示 */
 }
+
+.error {
+  color: red; /* 赤色に設定 */
+}
