@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from .models import Account, MapCar ,MapBike ,Spot ,SearchHistory ,User
-from .forms import AccountForm, AddAccountForm, LocationForm ,SpotForm,RouteSearchForm
+from .forms import AccountForm, AddAccountForm, LocationForm ,SpotForm,RouteSearchForm ,UpdateAccountForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 import requests
@@ -30,6 +30,8 @@ from django.db.models.functions import TruncMonth
 from django.conf import settings
 import boto3
 
+from django.views.decorators.http import require_http_methods
+
 # GoogleMapAPIキーを取得する関数
 def get_api_key():
     ssm = boto3.client('ssm', region_name='us-east-1')
@@ -41,6 +43,41 @@ def get_train_api_key():
     ssm = boto3.client('ssm', region_name='us-east-1')
     parameter = ssm.get_parameter(Name='train_api_key', WithDecryption=True)
     return parameter['Parameter']['Value']
+
+# 電車のfetchの関数
+@require_http_methods(["GET"])
+def fetch_jorudan_cheap_route(request):
+    api_key = "J2vqRoi1ciaJzktP"
+    # api_key = get_train_api_key()  # ここで安全にAPIキーを取得
+    # フロントエンドから渡されるクエリパラメータを取得
+    start = request.GET.get('start')
+    end = request.GET.get('end')
+    waypoint1 = request.GET.get('waypoint1')
+    waypoint2 = request.GET.get('waypoint2')
+    departureDate = request.GET.get('departureDate')
+    departureTime = request.GET.get('departureTime')
+    sort = request.GET.get('sort')
+
+    base_url = 'https://cloud.jorudan.biz/api/gv'
+    params = {
+        'ak': api_key,
+        'f' : 1,
+        'rm' : 'sr',
+        'eki1' : start,
+        'eki2' : end,
+        'kbn1' : 'R',
+        'date' : departureDate,
+        'time' : departureTime,
+        'opt1' : 0,
+        'opt2' : 0,
+        'opt3' : 1,
+        'opt4' : 0,
+        'max' : 8,
+        'sort' : sort,
+        'trtm' : 3
+    }
+    response = requests.get(base_url, params=params)
+    return JsonResponse(response.json())
 
 # ロガーの設定
 logger = logging.getLogger(__name__)
@@ -80,11 +117,8 @@ def user_search_short(request):
     # APIキーを取得
     # api_key = get_api_key()
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
-    # train_api_key = get_train_api_key()
-    train_api_key = "J2vqRoi1ciaJzktP"
     context = {
-        "api_key" : api_key,
-        "train_api_key" : train_api_key
+        "api_key" : api_key
     }
     return render(request, 'gt/user_search_short.html', context)
 
@@ -93,11 +127,8 @@ def user_search_cheap(request):
     # APIキーを取得
     # api_key = get_api_key()
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
-    # train_api_key = get_train_api_key()
-    train_api_key = "J2vqRoi1ciaJzktP"
     context = {
         "api_key" : api_key,
-        "train_api_key" : train_api_key
     }
     return render(request, 'gt/user_search_cheap.html', context)
 
@@ -288,7 +319,7 @@ def admin_map_change(request,vehicle_type, pk):
                     map_change.save()
 
                     message_success = "データが保存されました"
-                return render(request, 'gt/admin_map_register.html', {
+                return render(request, 'gt/admin_map_change.html', {
                     'form': form,
                     'message': message_success,
                     'json_data': map_change.json_data,
@@ -393,6 +424,15 @@ class AccountRegistration(TemplateView):
             full_address = f"{add_account_form.cleaned_data['state']} {add_account_form.cleaned_data['city']} {add_account_form.cleaned_data['address']}"
             latitude, longitude = get_geocode(full_address)
 
+            if latitude is None or longitude is None:
+                context = {
+                    "AccountCreate": False,
+                    "account_form": account_form,
+                    "add_account_form": add_account_form,
+                    "error_message": "住所から緯度経度の取得に失敗しました。"
+                }
+                return render(request, self.template_name, context=context)
+
             # 緯度経度をセッションのデータに追加
             add_account_data = add_account_form.cleaned_data
             add_account_data['latitude'] = latitude
@@ -411,6 +451,7 @@ class AccountRegistration(TemplateView):
                 "AccountCreate": False,
                 "account_form": account_form,
                 "add_account_form": add_account_form,
+                "error_message": "確認メール送信に失敗しました。登録内容を確認してください。"
             }
         return render(request, self.template_name, context=context)
 
@@ -521,21 +562,29 @@ def user_update_view(request):
     account = user.account
 
     if request.method == 'POST':
-        user_form = AccountForm(request.POST, instance=user)
+        user_form = UpdateAccountForm(request.POST, instance=user)
         account_form = AddAccountForm(request.POST, instance=account)
         if user_form.is_valid() and account_form.is_valid():
-            # User モデルの更新
             user = user_form.save(commit=False)
-            user.set_password(user_form.cleaned_data['password'])  # パスワードをハッシュ化して保存
+            if 'password' in user_form.cleaned_data and user_form.cleaned_data['password']:
+                user.set_password(user_form.cleaned_data['password'])  # パスワードが提供された場合のみ更新
             user.save()
-
-            # Account モデルの更新
-            # セッションを更新してログイン状態を維持
             update_session_auth_hash(request, user)
 
-            # Account モデルの更新
-            account_form.save()
+            # 住所が更新されたかをチェック
+            account_modified = account_form.save(commit=False)
+            if account_form.has_changed() and 'zipcode' in account_form.changed_data:
+                # 緯度経度の取得
+                full_address = f"{account_modified.state} {account_modified.city} {account_modified.address_1}"
+                lat, lng = get_geocode(full_address)
+                if lat is not None and lng is not None:
+                    account_modified.latitude = lat
+                    account_modified.longitude = lng
+                else:
+                    account_form.add_error(None, "住所に基づいた緯度経度の取得に失敗しました。")
+                    return render(request, 'user_update.html', {'user_form': user_form, 'account_form': account_form})
 
+            account_modified.save()
             return redirect('gt:user_info')
     else:
         user_form = AccountForm(instance=user, initial={'username': user.username, 'email': user.email})
@@ -664,7 +713,7 @@ def user_spot_change(request, pk):
                 # データベースに保存
                 spot_change.save()
 
-                return render(request, 'gt/user_spot_register.html', {
+                return render(request, 'gt/user_spot_change.html', {
                     'form': form,
                     'message': message_success,
                     'json_data': spot_change.json_data,
@@ -807,16 +856,19 @@ def user_my_map(request):
             start = end = travel_mode = None
 
             try:
-                # スポット情報があれば、それをデコードして使用
+            # スポット情報のデコード
+                start_spot_label = end_spot_label = None
                 if start_spot_json:
                     start_spot = json.loads(start_spot_json.replace("'", '"'))
                     start = f"{start_spot['lat']}, {start_spot['lng']}"
+                    start_spot_label = dict(form.fields['start_spot'].choices).get(start_spot_json)
                 else:
                     start = form.cleaned_data.get('start')
 
                 if end_spot_json:
                     end_spot = json.loads(end_spot_json.replace("'", '"'))
                     end = f"{end_spot['lat']}, {end_spot['lng']}"
+                    end_spot_label = dict(form.fields['end_spot'].choices).get(end_spot_json)
                 else:
                     end = form.cleaned_data.get('end')
 
@@ -828,6 +880,8 @@ def user_my_map(request):
                     search_query=f"{start} から {end}",
                     start_location=start,
                     end_location=end,
+                    start_spot_label=start_spot_label,
+                    end_spot_label=end_spot_label,
                     travel_mode=travel_mode,
                     search_datetime=timezone.now()
                 )
@@ -921,3 +975,8 @@ def admin_user_info(request):
 # settingsのモーダルウィンドウを表示
 def modal_content(request):
     return render(request, 'setting_help.html')
+
+# メールorユーザーIDの変更
+@login_required
+def user_email_update_view(request):
+    return render(request,'user_email_change.html')

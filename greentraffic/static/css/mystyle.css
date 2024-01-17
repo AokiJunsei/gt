@@ -7,14 +7,9 @@ div.reg {
   background-color: #eeeeee;
   margin: auto; /* 中央揃えに */
   max-width: 640px; /* 最大幅を設定 */
-  padding-top: 10px;
   padding: 10px;
 }
 
-.message {
-  text-align: right;
-  margin-right: 20%;
-}
 
 
 table.reg_form {
@@ -211,7 +206,24 @@ footer.footer {
   position: relative;
   height: calc(100vh - 40px);
 }
-
+#auth-container{
+  margin: auto; 
+  padding-top: 0; /* 上のパディングを取り除く */
+  position: relative;
+  max-height: 100%;
+  max-width: 760px;
+}
+.message {
+  text-align: right;
+  margin-left: 50%; /* 左から70%のマージンを設定 */
+  overflow: hidden; /* 内容がセルをはみ出さないようにする */
+  white-space: nowrap; /* 改行を防止 */
+}
+@media screen and (max-width: 800px) {
+  .message {
+    margin-left: 30%; /* 左から70%のマージンを設定 */
+  }
+}
 #map-log {
   padding-top: 0; /* 上のパディングを取り除く */
   position: relative;
@@ -238,9 +250,9 @@ footer.footer {
 #directions-panel.expanded {
   max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1000px) {
   #directions-panel {
-    top:70%;
+    top:10%;
     width: 100%;
   }
   #directions-panel.expanded {
@@ -506,7 +518,9 @@ table.reg_form td:nth-child(6) select {
   position: relative; /* 矢印の位置の基準とするため */
   overflow: hidden; /* 矢印などのはみ出しを防ぐ */
 }
-
+#ssss{
+width: auto;
+}
 .segment-title {
   font-weight: bold;
   color: #007bff; /* より鮮やかなブルーに変更 */
@@ -787,4 +801,43 @@ label {
     height: auto; /* 高さを自動調整にする */
     gap: 20px; /* 要素間の間隔を設定 */
   }
+}
+
+/* help処理 */
+#help-container {
+  text-align: center;
+  display: none; /* 初期状態で非表示に設定 */
+  justify-content: center;
+  align-items: center; /* 垂直方向に中央に配置 */
+  position: absolute;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.95); /* 背景に透明度を設定 */
+  border-radius: 10px; /* より大きな丸みを持たせます */
+  border: 2px solid #ccc; /* より太い境界線に設定します */
+  z-index: 9999;
+  white-space: nowrap; /* テキストを一行に収める */
+  overflow: hidden; /* 余分なテキストを隠す */
+  text-overflow: ellipsis; /* 切り詰めたテキストの末尾に省略記号を表示する */
+}
+#help-text {
+  font-size: 16px; /* フォントサイズを調整します */
+  color: #333; /* テキストカラーを設定します */
+  text-decoration: none; /* 下線を削除します */
+}
+#help-status {
+  position: fixed;
+  top: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px;
+  background-color: #f8f9fa; /* 薄い背景色 */
+  color: #333; /* テキスト色 */
+  border: 1px solid #ddd; /* 境界線 */
+  border-radius: 5px; /* 角丸 */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 影 */
+  z-index: 1000; /* 他の要素の上に表示 */
+}
+
+.error {
+  color: red; /* 赤色に設定 */
 }

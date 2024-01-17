@@ -28,6 +28,7 @@ urlpatterns = [
     path('account_info/', views.user_info, name='user_info'),
     path('user_update/', views.user_update_view, name='user_update'),
     path('user_delete/', views.user_delete_view, name='user_delete'),
+    path('email_update/', views.user_email_update_view, name='user_email_update'),
 
     path('account_history/', views.account_history_view, name='account_history'),
     path('log_detail/<int:pk>/', views.log_detail_view, name='log_detail'),
@@ -53,4 +54,6 @@ urlpatterns = [
     path('api/map_bikes', views.get_map_bikes, name='get_map_bikes'),
 
     path('help/', views.modal_content, name='modal-content'),
+
+    path('fetch-jorudan-cheap-route/', views.fetch_jorudan_cheap_route, name='fetch_jorudan_cheap_route')
     ]

@@ -5,6 +5,21 @@ from django.core.exceptions import ValidationError
 import re
 import json
 
+
+# 日本の都道府県リスト
+PREFECTURES = [
+    '北海道', '青森県', '岩手県', '宮城県', '秋田県',
+    '山形県', '福島県', '茨城県', '栃木県', '群馬県',
+    '埼玉県', '千葉県', '東京都', '神奈川県', '新潟県',
+    '富山県', '石川県', '福井県', '山梨県', '長野県',
+    '岐阜県', '静岡県', '愛知県', '三重県', '滋賀県',
+    '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県',
+    '鳥取県', '島根県', '岡山県', '広島県', '山口県',
+    '徳島県', '香川県', '愛媛県', '高知県', '福岡県',
+    '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県',
+    '鹿児島県', '沖縄県'
+]
+
 # フォームクラス作成
 class AccountForm(forms.ModelForm):
     username = forms.CharField(
@@ -42,15 +57,15 @@ class AccountForm(forms.ModelForm):
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
-            raise ValidationError("・ユーザーIDは既に使用されています。")
+            raise ValidationError("ユーザーIDは既に使用されています。")
         return username
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
         if len(password) < 8:
-            raise ValidationError('・パスワードは8文字以上である必要があります。')
+            raise ValidationError('パスワードは8文字以上である必要があります。')
         if not re.search(r'\d', password):
-            raise ValidationError('・パスワードには少なくとも1つの数字を含める必要があります。')
+            raise ValidationError('パスワードには少なくとも1つの数字を含める必要があります。')
         return password
     def clean(self):
         cleaned_data = super().clean()
@@ -59,9 +74,77 @@ class AccountForm(forms.ModelForm):
 
         # パスワードが一致するか確認
         if password and confirm_password and password != confirm_password:
-            self.add_error('confirm_password', '・パスワードが一致しません。')
+            self.add_error('confirm_password', 'パスワードが一致しません。')
 
         return cleaned_data
+
+
+# ユーザー更新フォームクラス作成
+class UpdateAccountForm(forms.ModelForm):
+    username = forms.CharField(
+        max_length=100,
+        required=True,
+        label='ユーザーID',
+        widget=forms.TextInput(attrs={
+            'placeholder': '例：test'
+        })
+    )
+    # パスワード入力：非表示対応
+    email = forms.CharField(
+        max_length=100,
+        required=True,
+        label='メール',
+        widget=forms.TextInput(attrs={
+            'placeholder': '例：xxx@xxx.com'
+        })
+    )
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+            'placeholder': '8文字以上数字を含む',
+        }),
+        label="パスワード" )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'パスワード確認',
+        }),
+        label="パスワード確認"
+    )
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password', 'confirm_password')
+        # フィールド名指定
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        return username
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if len(password) < 8:
+            raise ValidationError('パスワードは8文字以上である必要があります。')
+        if not re.search(r'\d', password):
+            raise ValidationError('パスワードには少なくとも1つの数字を含める必要があります。')
+        return password
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        # パスワードが一致するか確認
+        if password and confirm_password and password != confirm_password:
+            self.add_error('confirm_password', 'パスワードが一致しません。')
+
+        return cleaned_data
+
+
+# 郵便番号の長さを検証するカスタムバリデータ
+def validate_zipcode_length(value):
+    if len(value) != 7:
+        raise ValidationError('郵便番号は7文字でなければなりません。')
+
+# 都道府県バリデーション
+def validate_prefecture(value):
+    if value not in PREFECTURES:
+        raise ValidationError('有効な都道府県を入力してください。')
 
 # 追加のアカウント情報用のフォーム
 class AddAccountForm(forms.ModelForm):
@@ -84,21 +167,28 @@ class AddAccountForm(forms.ModelForm):
     zipcode = forms.CharField(
         max_length=7,
         required=True,
+        validators=[validate_zipcode_length],
         widget=forms.TextInput(attrs={
             'placeholder': '例：1018351'
         }),
         label='郵便番号',
     )
-    state = forms.CharField(max_length=100, required=True, label='都道府県',widget=forms.TextInput(attrs={
+    state = forms.CharField(
+        max_length=100,
+        required=True,
+        validators=[validate_prefecture],
+        widget=forms.TextInput(attrs={
             'placeholder': '例：東京都 '
-        }),)
+        }),
+        label='都道府県',
+    )
     city = forms.CharField(max_length=100, required=True, label='市区町村',widget=forms.TextInput(attrs={
             'placeholder': '例：千代田区西神田 '
         }),)
     address_1 = forms.CharField(max_length=100, required=True, label='番地',widget=forms.TextInput(attrs={
             'placeholder': '例：2-4-11 '
         }),)
-    address_2 = forms.CharField(max_length=100, required=True, label='建物名・部屋番号',widget=forms.TextInput(attrs={
+    address_2 = forms.CharField(max_length=100, label='建物名・部屋番号',widget=forms.TextInput(attrs={
             'placeholder': '例：TICビル '
         }),)
     class Meta:
@@ -166,16 +256,12 @@ class AccountUpdateForm(forms.ModelForm):
             'address_2': "建物名・部屋番号",
             'gender': "性別",
         }
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if username and User.objects.filter(username=username).exclude(pk=self.instance.user.pk).exists():
-            raise ValidationError('・ユーザーIDは既に使用されています。')
-        return username
+
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if email and User.objects.filter(email=email).exclude(pk=self.instance.user.pk).exists():
-            raise ValidationError('・メールアドレスは既に使用されています。')
+            raise ValidationError('メールアドレスは既に使用されています。')
         return email
 
     def clean(self):
@@ -183,15 +269,14 @@ class AccountUpdateForm(forms.ModelForm):
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
 
-        # パスワードの更新を行う場合のみチェック
-        if password or confirm_password:
+        if password and confirm_password:
             if len(password) < 8:
-                raise ValidationError('・パスワードは8文字以上である必要があります。')
+                raise ValidationError('パスワードは8文字以上である必要があります。')
             if not re.search(r'\d', password):
-                raise ValidationError('・パスワードには少なくとも1つの数字を含める必要があります。')
+                raise ValidationError('パスワードには少なくとも1つの数字を含める必要があります。')
             if password != confirm_password:
-                self.add_error('confirm_password', '・パスワードが一致しません。')
-        return cleaned_data
+                self.add_error('confirm_password', 'パスワードが一致しません。')
+            return cleaned_data
 
 class LocationForm(forms.Form):
     name = forms.CharField(label='登録名', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': '例：東京都'})    )

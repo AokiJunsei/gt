@@ -4,8 +4,15 @@
 
 {% block content %}
 <body onload="initMap()">
-  <!--フォームの表示非表示-->
+  <div id="help-container">
+    <div id="help-text"></div>
+  </div>
   <div id="map-container">
+    <div>
+      <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+    </div>
+    <!-- ヘルプモードの状態表示用の要素 -->
+    <div id="help-status" style="display: none;"></div>
     <div>
       <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
     </div>
@@ -13,7 +20,7 @@
       <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
     </div>
     <div id="floating-panel">
-      <h3>最安検索</h3>
+      <h3>最短検索</h3>
       <div class="input-group">
         <label>出発地: </label>
         <input type="text" id="start" placeholder="出発地を入力してください" />
@@ -35,7 +42,7 @@
       <div class="input-group">
         <label>目的地: </label>
         <input type="text" id="end" placeholder="目的地を入力してください" />
-        <i id="swap-icon-updown" class="fas fa-exchange-alt" onclick="swapStartEnd()"></i>
+        <i id="swap-icon-updown" class="fas fa-exchange-alt" onclick="swapStartEnd()"></i><br>
       </div>
       <label>出発時刻: </label>
       <input type="date" id="departure-date" />
@@ -44,6 +51,7 @@
         <button class="btn-border"onclick="trainTF()">検索</button>
       </div>
     </div>
+
     <div id="map"></div>
     <div id="directions-panel">
       <div class="tab" onclick="toggleTab('content')">Content</div>
@@ -73,26 +81,18 @@
       const departureDate = departureDateInput.split('-').join('');
      // 時間をhhmm形式に変換
       const departureTime = departureTimeInput.split(':').join('');
-      const queryParams = {
-        //APIリクエストに必要なパラメータ
-        f : 1,
-        rm : 'sr',
-        eki1 : start,
-        eki2 : end,
-        kbn1 : 'R',
-        date : departureDate,
-        time : departureTime,
-        opt1 : 0,
-        opt2 : 0,
-        opt3 : 1,
-        opt4 : 0,
-        max : 8,
-        sort : 3,
-        trtm : 3
-      }
-      const queryString = new URLSearchParams(queryParams).toString();
-      const url = `https://cloud.jorudan.biz/api/gv?ak=J2vqRoi1ciaJzktP&${queryString}`;
 
+      const queryParams = new URLSearchParams({
+        start: start,
+        waypoint1: waypoint1,
+        waypoint2: waypoint2,
+        end: end,
+        date: departureDate,
+        time: departureTime
+        sort: 3,
+      });
+
+      const url = `/fetch-jorudan-cheap-route/?${queryParams.toString()}`;
       fetch(url,{
         method : 'GET',
       })
@@ -113,10 +113,10 @@
         console.error('Error:',error)
       });
     }
-
   </script>
   <script src="{% static 'js/floatingPanel.js' %}"></script>
   <script src="{% static 'js/pageLoadActions.js' %}"></script>
   <script src="{% static 'js/mapFunctionsTrain.js' %}"></script>
+  <script src="{% static 'js/helpicon.js' %}"></script>
 </body>
 {% endblock content %}

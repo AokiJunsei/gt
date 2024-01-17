@@ -14,7 +14,19 @@
                 <strong>経路</strong>
             </div>
             <div class="col-6">
-                {{ log_detail.search_query }}
+                <!-- 出発地がスポットの場合 -->
+                {% if log_detail.start_spot_label %}
+                <p>出発地スポット　:　{{ log_detail.start_spot_label }}</p>
+                {% else %}
+                <p>出発地　:　{{ log_detail.start_location }}</p>
+                {% endif %}
+
+                <!-- 目的地がスポットの場合 -->
+                {% if log_detail.end_spot_label %}
+                <p>目的地スポット　:　{{ log_detail.end_spot_label }}</p>
+                {% else %}
+                <p>目的地　:　{{ log_detail.end_location }}</p>
+                {% endif %}
             </div>
         </div>
 

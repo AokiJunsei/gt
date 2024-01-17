@@ -2,6 +2,15 @@
 {% load static %}
 
 {% block content %}
+<div id="help-container">
+  <div id="help-text"></div>
+</div>
+<div id="auth-container">
+  <div>
+    <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+  </div>
+  <!-- ヘルプモードの状態表示用の要素 -->
+  <div id="help-status" style="display: none;"></div>
 <h1>ログイン画面</h1>
 
 {% if error_message %}
@@ -16,19 +25,23 @@
     {% csrf_token %}
     <table class="reg_form">
       <th><label for="userid">ユーザーID:</label></th>
-      <td><input type="text" name="userid"></td>
+      <td id='userID'><input type="text" name="userid"></td>
       <th><label for="password">パスワード：</label></th>
-      <td><input type="password" name="password"></td>
+      <td id='login-password'><input type="password" name="password"></td>
       </tr>
       </table>
 
     <div class="button-container">
-        <a href="{% url 'gt:top' %}" class="btn btn-secondary">キャンセル</a>
-        <input type="submit" class="btn btn-submit" value="ログイン">
+        <a id='back' href="{% url 'gt:top' %}" class="btn btn-secondary">キャンセル</a>
+        <input id='login' type="submit" class="btn btn-submit" value="ログイン">
     </div>
   </form>
 </div>
+<div class='ssss'>
 <p class="message">アカウントをお持ちですか？：
-  <a href="{% url 'gt:register' %}">アカウントを作成</a>
+  <a id='register1' href="{% url 'gt:register' %}">アカウントを作成</a>
 </p>
+</div>
+<script src="{% static 'js/helpicon.js' %}"></script>
+
 {% endblock %}

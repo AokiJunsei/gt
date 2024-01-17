@@ -1,17 +1,19 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 {% block title %}登録情報更新ページ{% endblock %}
 {% block content %}
-<h1>登録情報の変更</h1>
+<h2>登録情報の変更</h2>
 <div class="reg">
     <form action="{% url 'gt:user_update' %}" method="POST">
         {% csrf_token %}
         <table class="reg_form">
+          <!-- ユーザー名フィールド -->
           <tr>
             <th>{{ user_form.username.label_tag }}</th>
             <td>
-              {{ user_form.username }}
+              <input type="text" name="{{ user_form.username.html_name }}" value="{{ user_form.username.value }}" readonly id="{{ user_form.username.id_for_label }}" class="form-control" />
               {% if user_form.username.errors %}
-              <td class="error">{{ user_form.username.errors|first }}</td>
+              <div class="error">{{ user_form.username.errors|first }}</div>
               {% endif %}
             </td>
           </tr>
@@ -19,53 +21,73 @@
           <tr>
             <th>{{ user_form.email.label_tag }}</th>
             <td>
-              {{ user_form.email }}
+              {% if user_form.email.value %}
+              <input type="email" name="{{ user_form.email.html_name }}" value="{{ user_form.email.value }}" readonly id="{{ user_form.email.id_for_label }}" class="form-control" />
+              {% else %}
+                {{ user_form.email }}
+              {% endif %}
               {% if user_form.email.errors %}
               <td class="error">{{ user_form.email.errors|first }}</td>
               {% endif %}
             </td>
           </tr>
-              <tr>
-          <th>{{ user_form.password.label_tag }}</th>
-          <td>
-            {{ user_form.password }}
-            {% if user_form.password.errors %}
-            <td class="error">{{ user_form.password.errors|first }}</td>
-            {% endif %}
-          </td>
-        </tr>
-        <!-- パスワード確認フィールド -->
-        <tr>
-          <th>{{ user_form.confirm_password.label_tag }}</th>
-          <td>
-            {{ user_form.confirm_password }}
-            {% if user_form.confirm_password.errors %}
-            <td class="error">{{ user_form.confirm_password.errors|first }}</td>
-            {% endif %}
-          </td>
-        </tr>
-            <tr>
-              <th>{{ account_form.last_name.label_tag }}</th>
-              <td>{{ account_form.last_name }}</td>
-              <th>{{ account_form.first_name.label_tag }}</th>
-              <td>{{ account_form.first_name }}</td>
-            </tr>
-            <tr>
-              <th>{{ account_form.zipcode.label_tag }}</th>
-              <td>{{ account_form.zipcode }}</td>
-              <th>{{ account_form.state.label_tag }}</th>
-              <td>{{ account_form.state }}</td>
-            </tr>
-            <tr>
-              <th>{{ account_form.city.label_tag }}</th>
-              <td>{{ account_form.city }}</td>
-              <th>{{ account_form.address_1.label_tag }}</th>
-              <td>{{ account_form.address_1 }}</td>
-            </tr>
-            <tr>
-              <th>{{ account_form.address_2.label_tag }}</th>
-              <td>{{ account_form.address_2 }}</td>
-            </tr>
+          <!-- パスワードフィールド -->
+          <tr>
+            <th>{{ user_form.password.label_tag }}</th>
+            <td>
+              <input type="password" name="{{ user_form.password.html_name }}" value="" id="{{ user_form.password.id_for_label }}" class="form-control" />
+              {% if user_form.password.errors %}
+              <div class="error">{{ user_form.password.errors|first }}</div>
+              {% endif %}
+            </td>
+          </tr>
+          <!-- パスワード確認フィールド -->
+          <tr>
+            <th>{{ user_form.confirm_password.label_tag }}</th>
+            <td>
+              <input type="password" name="{{ user_form.confirm_password.html_name }}" value="" id="{{ user_form.confirm_password.id_for_label }}" class="form-control" />
+              {% if user_form.confirm_password.errors %}
+              <div class="error">{{ user_form.confirm_password.errors|first }}</div>
+              {% endif %}
+            </td>
+          </tr>
+
+          <tr>
+            <th>{{ account_form.last_name.label_tag }}</th>
+            <td>
+              <input type="text" name="{{ account_form.last_name.html_name }}" value="{{ account_form.last_name.value }}" id="{{ account_form.last_name.id_for_label }}" class="form-control" />
+            </td>
+            <th>{{ account_form.first_name.label_tag }}</th>
+            <td>
+              <input type="text" name="{{ account_form.first_name.html_name }}" value="{{ account_form.first_name.value }}" id="{{ account_form.first_name.id_for_label }}" class="form-control" />
+            </td>
+          </tr>
+          <tr>
+            <th>{{ account_form.zipcode.label_tag }}</th>
+            <td>
+              <input type="text" name="{{ account_form.zipcode.html_name }}" value="{{ account_form.zipcode.value }}" id="{{ account_form.zipcode.id_for_label }}" class="form-control" />
+            </td>
+            <th>{{ account_form.state.label_tag }}</th>
+            <td>
+              <input type="text" name="{{ account_form.state.html_name }}" value="{{ account_form.state.value }}" id="{{ account_form.state.id_for_label }}" class="form-control" />
+            </td>
+          </tr>
+          <tr>
+            <th>{{ account_form.city.label_tag }}</th>
+            <td>
+              <input type="text" name="{{ account_form.city.html_name }}" value="{{ account_form.city.value }}" id="{{ account_form.city.id_for_label }}" class="form-control" />
+            </td>
+            <th>{{ account_form.address_1.label_tag }}</th>
+            <td>
+              <input type="text" name="{{ account_form.address_1.html_name }}" value="{{ account_form.address_1.value }}" id="{{ account_form.address_1.id_for_label }}" class="form-control" />
+            </td>
+          </tr>
+          <tr>
+            <th>{{ account_form.address_2.label_tag }}</th>
+            <td colspan="3">
+              <input type="text" name="{{ account_form.address_2.html_name }}" value="{{ account_form.address_2.value }}" id="{{ account_form.address_2.id_for_label }}" class="form-control" />
+            </td>
+          </tr>
 
           </table>
         <div class="button-container">
@@ -73,5 +95,8 @@
             <button class="btn btn-success" type="submit">変更</button>
         </div>
     </form>
+    <p class="message">ユーザーID、もしくは、メールアドレスの変更はこちら：
+      <a href="{% url 'gt:user_email_update' %}">変更</a>
+    </p>
 </div>
 {% endblock %}

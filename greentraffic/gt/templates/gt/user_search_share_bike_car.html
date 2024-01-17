@@ -5,7 +5,12 @@
 {% block content %}
 <body onload="initMap()">
   <div id="floating-panel">
-    <h3>シェア検索 <i class="fas fa-car fa-lg mr-2"></i></h3>
+    <h3>シェア検索
+      <a id='bike-link' href = "https://www.hellocycling.jp/appinfo/" target="_blank">
+          <i class="fas fa-car fa-lg mr-2" style="color: black;"></i>
+      </a>
+    </h3>
+
     <div class="input-group">
       <label>出発地: </label>
       <input type="text" id="start" placeholder="出発地を入力してください" />
@@ -21,8 +26,17 @@
       <button class="btn-border"onclick="trainTF()">検索</button>
     </div>
   </div>
-  <!--フォームの表示非表示-->
+  <div id="help-container">
+    <div id="help-text"></div>
+  </div>
   <div id="map-container">
+    <div>
+      <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+    </div>
+    <!-- ヘルプモードの状態表示用の要素 -->
+    <div id="help-status" style="display: none;"></div>
+    <div>
+    <div>
     <div>
       <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
     </div>
@@ -155,5 +169,6 @@
     async defer
     src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=geometry&callback=initMap&v=weekly"
   ></script>
+  <script src="{% static 'js/helpicon.js' %}"></script>
 </body>
 {% endblock content %}
