@@ -972,10 +972,6 @@ def admin_user_info(request):
     }
     return render(request, 'admin_user_info.html', context)
 
-# settingsのモーダルウィンドウを表示
-def modal_content(request):
-    return render(request, 'setting_help.html')
-
 # メールorユーザーIDの変更
 @login_required
 def user_email_update_view(request):

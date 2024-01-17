@@ -53,7 +53,5 @@ urlpatterns = [
     path('api/map_cars', views.get_map_cars, name='get_map_cars'),
     path('api/map_bikes', views.get_map_bikes, name='get_map_bikes'),
 
-    path('help/', views.modal_content, name='modal-content'),
-
     path('fetch-jorudan-cheap-route/', views.fetch_jorudan_cheap_route, name='fetch_jorudan_cheap_route')
     ]
