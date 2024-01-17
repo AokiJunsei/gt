@@ -6,13 +6,20 @@
 {% endblock %}
 
 {% block content %}
-
+<div id="help-container">
+  <div id="help-text"></div>
+</div>
+<div id="auth-container">
+  <div>
+    <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+  </div>
+  <!-- ヘルプモードの状態表示用の要素 -->
+  <div id="help-status" style="display: none;"></div>
 <!-- 登録フォームの内容 -->
 {% if AccountCreate %}
   <h1>メールを確認してください</h1>
   <a href="{% url 'gt:top' %}" class="btn btn-cancel">topに戻る</a>
 {% else %}
-
 <h1>新規登録</h1>
   <div class="reg">
     {% if error_message %}
@@ -21,10 +28,11 @@
     <!-- 登録フォームの構造 -->
     <form enctype="multipart/form-data" method="post">
       {% csrf_token %}
+      
       <table class="reg_form">
         <tr>
           <th>{{ account_form.username.label_tag }}</th>
-          <td>
+          <td id='username'>
             {{ account_form.username }}
             {% if account_form.username.errors %}
             <td class="error">{{ account_form.username.errors|first }}</td>
@@ -33,11 +41,11 @@
         </tr>
         <tr>
           <th>{{ account_form.email.label_tag }}</th>
-          <td>{{ account_form.email }}</td>
+          <td id='email'>{{ account_form.email }}</td>
         </tr>
         <tr>
           <th>{{ account_form.password.label_tag }}</th>
-          <td>
+          <td id='password'>
             {{ account_form.password }}
             {% if account_form.password.errors %}
               <td class="error">{{ account_form.password.errors|first }}</td>
@@ -47,7 +55,7 @@
         <!-- ... 他のフィールド ... -->
         <tr>
           <th>{{ account_form.confirm_password.label_tag }}</th>
-          <td>
+          <td id='confirm_password'>
             {{ account_form.confirm_password }}
             {% if account_form.confirm_password.errors %}
               <td class="error">{{ account_form.confirm_password.errors|first }}</td>
@@ -55,32 +63,33 @@
           </td>
         </tr>
           <th>{{ add_account_form.last_name.label_tag }}</th>
-          <td>{{ add_account_form.last_name }}</td>
+          <td id='last_name'>{{ add_account_form.last_name }}</td>
           <th>{{ add_account_form.first_name.label_tag }}</th>
-          <td>{{ add_account_form.first_name }}</td>
+          <td id='first_name'>{{ add_account_form.first_name }}</td>
         </tr>
         <tr>
           <th>{{ add_account_form.zipcode.label_tag }}</th>
-          <td>{{ add_account_form.zipcode }}</td>
+          <td id='zipcode'>{{ add_account_form.zipcode }}</td>
           <th>{{ add_account_form.state.label_tag }}</th>
-          <td>{{ add_account_form.state }}</td>
+          <td id='state'>{{ add_account_form.state }}</td>
         </tr>
         <tr>
           <th>{{ add_account_form.city.label_tag }}</th>
-          <td>{{ add_account_form.city }}</td>
+          <td id='city'>{{ add_account_form.city }}</td>
           <th>{{ add_account_form.address_1.label_tag }}</th>
-          <td>{{ add_account_form.address_1 }}</td>
+          <td id='address_1'>{{ add_account_form.address_1 }}</td>
         </tr>
         <tr>
           <th>{{ add_account_form.address_2.label_tag }}</th>
-          <td>{{ add_account_form.address_2 }}</td>
+          <td id='address_2'>{{ add_account_form.address_2 }}</td>
         </tr>
       </table>
       <div class="button-container">
-        <a class="btn btn-secondary" href="{% url 'gt:top' %}">戻る</a>
-        <input type="submit" value="登録" class="btn btn--radius btn--cubic btn-submit" />
+        <a id='back' class="btn btn-secondary" href="{% url 'gt:top' %}">戻る</a>
+        <input id='enregister' type="submit" value="登録" class="btn btn--radius btn--cubic btn-submit" />
       </div>
     </form>
   </div>
 {% endif %}
+<script src="{% static 'js/helpicon.js' %}"></script>
 {% endblock %}

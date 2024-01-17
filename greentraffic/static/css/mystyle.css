@@ -7,14 +7,9 @@ div.reg {
   background-color: #eeeeee;
   margin: auto; /* 中央揃えに */
   max-width: 640px; /* 最大幅を設定 */
-  padding-top: 10px;
   padding: 10px;
 }
 
-.message {
-  text-align: right;
-  margin-right: 20%;
-}
 
 
 table.reg_form {
@@ -210,7 +205,24 @@ footer.footer {
   position: relative;
   height: calc(100vh - 40px);
 }
-
+#auth-container{
+  margin: auto; 
+  padding-top: 0; /* 上のパディングを取り除く */
+  position: relative;
+  max-height: 100%;
+  max-width: 760px;
+}
+.message {
+  text-align: right;
+  margin-left: 50%; /* 左から70%のマージンを設定 */
+  overflow: hidden; /* 内容がセルをはみ出さないようにする */
+  white-space: nowrap; /* 改行を防止 */
+}
+@media screen and (max-width: 800px) {
+  .message {
+    margin-left: 30%; /* 左から70%のマージンを設定 */
+  }
+}
 #map-log {
   padding-top: 0; /* 上のパディングを取り除く */
   position: relative;
@@ -505,7 +517,9 @@ table.reg_form td:nth-child(6) select {
   position: relative; /* 矢印の位置の基準とするため */
   overflow: hidden; /* 矢印などのはみ出しを防ぐ */
 }
-
+#ssss{
+width: auto;
+}
 .segment-title {
   font-weight: bold;
   color: #007bff; /* より鮮やかなブルーに変更 */

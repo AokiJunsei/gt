@@ -48,12 +48,29 @@ var helpTexts = {
 	'Mymap-search':'mymapオプションを選択できます。',
 	'Mymap-search-all':'mymap検索に推移します。',
 	'register':'新規登録画面に推移します。',
+	'register1':'新規登録画面に推移します。',
 	'user-login':'ログイン画面に推移します。',
 	'logout':'ログアウト画面に推移します。',
 	'user-info':'ユーザー情報画面に推移します。',
 	'user_spot_list':'スポット一覧画面に推移します。',
 	'account_history':'履歴画面に推移します。',
 	'setting':'ログイン時機能オプションを選択できます。',
+	'username':'ログイン時に入力するidを入力してください。',
+	'email':'認証確認メールを送信するためのメールアドレスを入力してください。',
+	'password':'ログイン時に入力できるパスワードを入力してください。',
+	'confirm_password':'パスワード確認のためにもう一度パスワードを入力してください。',
+	'last_name':'苗字を入力してください。',
+	'first_name':'名前を入力してください。',
+	'zipcode':'郵便番号を入力してください。',
+	'state':'都道府県を入力してください。',
+	'city':'市区町村を入力してください。',
+	'address_1':'番地を入力できます。',
+	'address_2':'部屋番号を入力できます。',
+	'back':'前の画面に戻ります。',
+	'enregister':'入力した情報を保存し確認メールを送信します。',
+	'userID':'userIDを入力してください。',
+	'login-password':'パスワードを入力してください。',
+	'login':'ログイン時のページに推移します。',
 };
 
 // ヘルプテキスト関連の要素の取得
@@ -145,19 +162,22 @@ function addEventListeners(id, mouseEnterHandler, mouseLeaveHandler) {
 window.onload = function () {
 	
 	['start', 'waypoint1', 'waypoint2', 'end', 'current-location-icon',
-		'swap-icon', 'swap-icon-updown', 'toggle-icon', 'toggle-button',
-		'departure-date', 'departure-time', 'help-icon', 'car-link', 'bike-link','id_start',
-		'spot-start-input-group','id_end','spot-end-input-group','travel_mode','content-tab',
-		'admin_top','header-logo','footer-image','car-search','car-search-short','car-search', 
-		'walk-search','car-search', 'car-search-short', 
-        'walk-search', 'walk-search-short', 
-        'bike-search', 'bike-search-short', 
-        'train-search', 'train-search-short', 'train-search-cheap', 
-        'share-car-search', 'share-car-search-car', 'share-car-search-bike', 'share-car-search-walk', 
-        'share-bike-search', 'share-bike-search-car', 'share-bike-search-bike', 'share-bike-search-walk',
-		'Mymap-search','Mymap-search-all','register', 'user-login', 'logout', 
-        'user-info', 'user_spot_list', 'account_history','setting',
-	].forEach(function (id) {
+	'swap-icon', 'swap-icon-updown', 'toggle-icon', 'toggle-button',
+	'departure-date', 'departure-time', 'help-icon', 'car-link', 'bike-link', 'id_start',
+	'spot-start-input-group', 'id_end', 'spot-end-input-group', 'travel_mode', 'content-tab',
+	'admin_top', 'header-logo', 'footer-image', 'car-search', 'car-search-short',
+	'walk-search', 'walk-search-short', 
+	'bike-search', 'bike-search-short', 
+	'train-search', 'train-search-short', 'train-search-cheap', 
+	'share-car-search', 'share-car-search-car', 'share-car-search-bike', 'share-car-search-walk', 
+	'share-bike-search', 'share-bike-search-car', 'share-bike-search-bike', 'share-bike-search-walk',
+	'Mymap-search', 'Mymap-search-all', 'register', 'user-login', 'logout', 
+	'user-info', 'user_spot_list', 'account_history', 'setting',
+	'username', 'email', 'password', 'confirm_password', 
+	'last_name', 'first_name', 'zipcode', 'state', 'city', 
+	'address_1', 'address_2','back','enregister','userID',
+	'login-password','login','register1']
+	.forEach(function (id) {
 		addEventListeners(id, function (event) {
 			showHelpText(id, event);
 		}, hideHelpText);
