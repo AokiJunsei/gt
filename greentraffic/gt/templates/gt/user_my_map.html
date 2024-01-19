@@ -259,10 +259,10 @@
       panel.classList.add('expanded'); // expanded クラスを追加して拡大します
     }
 
-    window.onload = function() {
+    window.addEventListener('load', function() {
       initMap();
       checkAndExecuteTrainTF();
-    };
+    });
 
     // フォームがPOSTで送信されたかどうかを判定し、trainTF()を実行する関数
     function checkAndExecuteTrainTF() {
