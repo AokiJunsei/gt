@@ -74,6 +74,7 @@ var helpTexts = {
 	'user-delete':'ユーザー情報削除画面に推移します。',
 	'user-update':'ユーザー情報編集画面に推移します。',
 	'delete':'ユーザー情報を削除します。',
+	'update':'ユーザー情報の変更処理を実行します。'
 };
 
 // ヘルプテキスト関連の要素の取得
@@ -179,7 +180,7 @@ window.onload = function () {
 	'username', 'email', 'password', 'confirm_password', 
 	'last_name', 'first_name', 'zipcode', 'state', 'city', 
 	'address_1', 'address_2','back','enregister','userID',
-	'login-password','login','register1','user-update','user-delete','delete']
+	'login-password','login','register1','user-update','user-delete','delete','update']
 	.forEach(function (id) {
 		addEventListeners(id, function (event) {
 			showHelpText(id, event);

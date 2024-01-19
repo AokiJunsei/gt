@@ -6,6 +6,15 @@
 {% block spot %} active {% endblock %}
 
 {% block content %}
+<div id="help-container">
+    <div id="help-text"></div>
+  </div>
+  <div id="list-container">
+    <div>
+      <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+    </div>
+    <!-- ヘルプモードの状態表示用の要素 -->
+    <div id="help-status" style="display: none;"></div>
 <h1>スポット登録</h1>
     <!-- '追加する'ボタンをフッター直前に配置 -->
     <div class="d-flex justify-content-end mb-4">
@@ -104,4 +113,5 @@
     <!--topへ戻る-->
     <a href="#" id="page-top">TOP</a>
 </div>
+<script src="{% static 'js/helpicon.js' %}"></script>
 {% endblock content %}
