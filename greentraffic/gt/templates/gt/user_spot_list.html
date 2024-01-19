@@ -7,6 +7,10 @@
 
 {% block content %}
 <h1>スポット登録</h1>
+    <!-- '追加する'ボタンをフッター直前に配置 -->
+    <div class="d-flex justify-content-end mb-4">
+        <a class="btn btn-primary" href="{% url 'gt:user_spot_register' %}">追加する</a>
+    </div>
 <div class="container px-4 px-lg-5 my-div-style">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
@@ -96,10 +100,7 @@
         </div>
     </div>
 
-    <!-- '追加する'ボタンをフッター直前に配置 -->
-    <div class="d-flex justify-content-end mb-4">
-        <a class="btn btn-primary" href="{% url 'gt:user_spot_register' %}">追加する</a>
-    </div>
+
     <!--topへ戻る-->
     <a href="#" id="page-top">TOP</a>
 </div>
