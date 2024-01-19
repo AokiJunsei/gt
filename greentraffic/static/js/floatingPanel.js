@@ -176,3 +176,87 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('touchmove', doDrag);
     document.addEventListener('mousemove', doDrag);
 });
+class LivePattern {
+    constructor() {
+      this.canvas = document.getElementById('canvas');
+      this.context = this.canvas.getContext('2d');
+      this.colors = [252, 251, 249, 248, 241, 240];
+      this.animationFrameId = null;
+    }
+  
+    init() {
+      this.setupEventListeners();
+      this.onResize();
+      this.animate();
+    }
+  
+    setupEventListeners() {
+      window.addEventListener('resize', () => this.onResize());
+    }
+  
+    onResize() {
+      this.updateDimensions();
+      this.drawBackground();
+    }
+  
+    updateDimensions() {
+      this.cols = Math.floor(window.innerWidth / 24);
+      this.rows = Math.floor(window.innerHeight / 24) + 1;
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+    }
+  
+    drawTriangle(x, y, color, inverted = false) {
+      this.context.beginPath();
+      this.context.moveTo(x, y);
+      this.context.lineTo(inverted ? x - 22 : x + 22, y + 11);
+      this.context.lineTo(x, y + 22);
+      this.context.fillStyle = `rgb(${color}, ${color}, ${color})`;
+      this.context.fill();
+      this.context.closePath();
+    }
+  
+    getColor() {
+      return this.colors[Math.floor(Math.random() * this.colors.length)];
+    }
+  
+    drawBackground() {
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      for (let x = 0; x < this.cols; x++) {
+        for (let y = 0; y < this.rows; y++) {
+          const eq = x % 2;
+          const destY = eq === 1 ? Math.round((y - 0.5) * 24) : y * 24;
+          this.drawTriangle(x * 24 + 2, destY, this.getColor());
+          this.drawTriangle(x * 24, destY, this.getColor(), true);
+        }
+      }
+    }
+  
+    animate() {
+      // アニメーションの中断を防ぐために、アニメーションフレームIDをキャンセルします。
+      if (this.animationFrameId) {
+        cancelAnimationFrame(this.animationFrameId);
+      }
+  
+      const animateLoop = () => {
+        this.animationFrameId = requestAnimationFrame(animateLoop);
+        const x = Math.floor(Math.random() * this.cols);
+        const y = Math.floor(Math.random() * this.rows);
+        const eq = x % 2;
+        const color = this.getColor();
+  
+        if (eq === 1) {
+          this.drawTriangle(x * 24, Math.round((y - 0.5) * 24), color, true);
+        } else {
+          this.drawTriangle(x * 24 + 2, y * 24, color);
+        }
+      };
+  
+      this.animationFrameId = requestAnimationFrame(animateLoop);
+    }
+  }
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    const pattern = new LivePattern();
+    pattern.init();
+  });

@@ -1,7 +1,17 @@
 {% extends 'base.html' %}
 {% load custom_filters %}
+{% load static %}
 {% block title %}登録情報更新ページ{% endblock %}
 {% block content %}
+<div id="help-container">
+  <div id="help-text"></div>
+</div>
+<div id="auth-container">
+  <div>
+    <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+  </div>
+  <!-- ヘルプモードの状態表示用の要素 -->
+  <div id="help-status" style="display: none;"></div>
 <div class="reg">
   <h2>登録情報の変更</h2>
     <form action="{% url 'gt:user_update' %}" method="POST">
@@ -34,7 +44,7 @@
           <!-- パスワードフィールド -->
           <tr>
             <th>{{ user_form.password.label_tag }}</th>
-            <td>
+            <td id='password'>
               <input type="password" name="{{ user_form.password.html_name }}" value="" id="{{ user_form.password.id_for_label }}" class="form-control" />
               {% if user_form.password.errors %}
               <div class="error">{{ user_form.password.errors|first }}</div>
@@ -44,7 +54,7 @@
           <!-- パスワード確認フィールド -->
           <tr>
             <th>{{ user_form.confirm_password.label_tag }}</th>
-            <td>
+            <td id='confirm_password'>
               <input type="password" name="{{ user_form.confirm_password.html_name }}" value="" id="{{ user_form.confirm_password.id_for_label }}" class="form-control" />
               {% if user_form.confirm_password.errors %}
               <div class="error">{{ user_form.confirm_password.errors|first }}</div>
@@ -54,37 +64,37 @@
 
           <tr>
             <th>{{ account_form.last_name.label_tag }}</th>
-            <td>
+            <td id='last_name'>
               <input type="text" name="{{ account_form.last_name.html_name }}" value="{{ account_form.last_name.value }}" id="{{ account_form.last_name.id_for_label }}" class="form-control" />
             </td>
             <th>{{ account_form.first_name.label_tag }}</th>
-            <td>
+            <td id='first_name'>
               <input type="text" name="{{ account_form.first_name.html_name }}" value="{{ account_form.first_name.value }}" id="{{ account_form.first_name.id_for_label }}" class="form-control" />
             </td>
           </tr>
           <tr>
             <th>{{ account_form.zipcode.label_tag }}</th>
-            <td>
+            <td id='zipcode'>
               <input type="text" name="{{ account_form.zipcode.html_name }}" value="{{ account_form.zipcode.value }}" id="{{ account_form.zipcode.id_for_label }}" class="form-control" />
             </td>
             <th>{{ account_form.state.label_tag }}</th>
-            <td>
+            <td id='state'>
               <input type="text" name="{{ account_form.state.html_name }}" value="{{ account_form.state.value }}" id="{{ account_form.state.id_for_label }}" class="form-control" />
             </td>
           </tr>
           <tr>
             <th>{{ account_form.city.label_tag }}</th>
-            <td>
+            <td id='city'>
               <input type="text" name="{{ account_form.city.html_name }}" value="{{ account_form.city.value }}" id="{{ account_form.city.id_for_label }}" class="form-control" />
             </td>
             <th>{{ account_form.address_1.label_tag }}</th>
-            <td>
+            <td  id='address_1'>
               <input type="text" name="{{ account_form.address_1.html_name }}" value="{{ account_form.address_1.value }}" id="{{ account_form.address_1.id_for_label }}" class="form-control" />
             </td>
           </tr>
           <tr>
             <th>{{ account_form.address_2.label_tag }}</th>
-            <td colspan="3">
+            <td  id='address_2' colspan="3">
               <input type="text" name="{{ account_form.address_2.html_name }}" value="{{ account_form.address_2.value }}" id="{{ account_form.address_2.id_for_label }}" class="form-control" />
             </td>
           </tr>
@@ -99,4 +109,5 @@
       <a href="{% url 'gt:user_email_update' %}">変更</a>
     </p>
 </div>
+<script src="{% static 'js/helpicon.js' %}"></script>
 {% endblock %}

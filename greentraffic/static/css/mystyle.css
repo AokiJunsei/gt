@@ -844,3 +844,11 @@ label {
 .error {
   color: red; /* 赤色に設定 */
 }
+canvas {
+  position: fixed; /* floating-panel 内での絶対位置 */
+  top: 0;
+  left: 0;
+  width: 100%; /* 親要素の幅に合わせる */
+  height: 100%; /* 親要素の高さに合わせる */
+  z-index: -1; /* floating-panelのコンテンツの背後に配置 */
+}
