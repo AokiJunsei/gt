@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		var target = e.target;
 	
 		// イベントの発生源がinput, button, i (アイコン) 要素でない場合にのみドラッグを開始
-		if (target.tagName !== 'INPUT' && target.tagName !== 'BUTTON' && target.tagName !== 'I') {
+		if (target.tagName !== 'INPUT' && target.tagName !== 'BUTTON' && target.tagName !== 'I'&& target.tagName !== 'SELECT') {
 			isDragging = true;
 			var event = e.type === 'touchstart' ? e.touches[0] : e;
 			offsetX = event.clientX - floatingPanel.getBoundingClientRect().left;
