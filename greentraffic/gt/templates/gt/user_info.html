@@ -4,9 +4,19 @@
 {% block title %}マイページ{% endblock %}
 
 {% block content %}
-<h2>登録情報</h2>
+<div id="help-container">
+    <div id="help-text"></div>
+  </div>
+  <div id="auth-container">
+    <div>
+      <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+    </div>
+    <!-- ヘルプモードの状態表示用の要素 -->
+    <div id="help-status" style="display: none;"></div>
+
 {% if user.is_authenticated %}
 <div class="reg">
+    <h2>登録情報</h2>
     {% csrf_token %}
     <table class="reg_form">
         <tr>
@@ -27,9 +37,10 @@
         </tr>
     </table>
     <div class="button-container">
-        <a href="{% url 'gt:user_delete' %}" class="btn btn--radius btn--cubic btn-cancel">削除</a>
-        <a href="{% url 'gt:user_update' %}" class="btn btn--radius btn--cubic btn-submit">編集</a>
+        <a id='user-delete' href="{% url 'gt:user_delete' %}" class="btn btn--radius btn--cubic btn-cancel">削除</a>
+        <a id='user-update' href="{% url 'gt:user_update' %}" class="btn btn--radius btn--cubic btn-submit">編集</a>
     </div>
 </div>
+<script src="{% static 'js/helpicon.js' %}"></script>
 {% endif %}
 {% endblock %}

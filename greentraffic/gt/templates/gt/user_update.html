@@ -2,8 +2,8 @@
 {% load custom_filters %}
 {% block title %}登録情報更新ページ{% endblock %}
 {% block content %}
-<h2>登録情報の変更</h2>
 <div class="reg">
+  <h2>登録情報の変更</h2>
     <form action="{% url 'gt:user_update' %}" method="POST">
         {% csrf_token %}
         <table class="reg_form">

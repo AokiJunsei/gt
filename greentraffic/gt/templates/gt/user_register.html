@@ -20,8 +20,9 @@
   <h1>メールを確認してください</h1>
   <a href="{% url 'gt:top' %}" class="btn btn-cancel">topに戻る</a>
 {% else %}
-<h1>新規登録</h1>
+
   <div class="reg">
+    <h1>新規登録</h1>
     {% if error_message %}
 <div class="error">{{ error_message }}</div>
 {% endif %}
