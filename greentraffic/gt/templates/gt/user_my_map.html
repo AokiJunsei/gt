@@ -65,7 +65,7 @@
       <div id="details-tab" class="tab-content"></div>
     </div>
   </div>
-
+  <script src="{% static 'js/helpicon.js' %}"></script>
   <script
     src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap&v=weekly"
     defer
@@ -325,7 +325,8 @@
     }
   </script>
   <!-- JavaScriptファイルへのリンク -->
+  
   <script src="{% static 'js/floatingPanel.js' %}"></script>
-  <script src="{% static 'js/helpicon.js' %}"></script>
+
 </body>
 {% endblock content %}
