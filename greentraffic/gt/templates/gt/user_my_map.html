@@ -66,7 +66,7 @@
       <div id="details-tab" class="tab-content"></div>
     </div>
   </div>
-
+  <script src="{% static 'js/helpicon.js' %}"></script>
   <script
     src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap&v=weekly"
     defer
@@ -260,10 +260,10 @@
       panel.classList.add('expanded'); // expanded クラスを追加して拡大します
     }
 
-    window.onload = function() {
+    window.addEventListener('load', function() {
       initMap();
       checkAndExecuteTrainTF();
-    };
+    });
 
     // フォームがPOSTで送信されたかどうかを判定し、trainTF()を実行する関数
     function checkAndExecuteTrainTF() {
@@ -326,7 +326,8 @@
     }
   </script>
   <!-- JavaScriptファイルへのリンク -->
+  
   <script src="{% static 'js/floatingPanel.js' %}"></script>
-  <script src="{% static 'js/helpicon.js' %}"></script>
+
 </body>
 {% endblock content %}

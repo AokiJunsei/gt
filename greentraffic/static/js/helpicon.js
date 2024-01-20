@@ -163,7 +163,7 @@ function addEventListeners(id, mouseEnterHandler, mouseLeaveHandler) {
 }
 
 // ページがロードされた後にイベントリスナーを設定
-window.onload = function () {
+window.addEventListener('load', function() {
 	
 	['start', 'waypoint1', 'waypoint2', 'end', 'current-location-icon',
 	'swap-icon', 'swap-icon-updown', 'toggle-icon', 'toggle-button',
@@ -193,4 +193,4 @@ window.onload = function () {
 		});
 		searchButton.addEventListener('mouseleave', hideHelpText);
 	}
-};
+});

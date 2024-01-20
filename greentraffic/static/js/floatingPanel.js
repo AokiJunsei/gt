@@ -139,14 +139,19 @@ document.addEventListener('DOMContentLoaded', function() {
     var isDragging = false;
     var offsetX, offsetY;
 	
-    // タッチイベントとマウスイベントの両方をサポート
-    function startDrag(e) {
-        isDragging = true;
-        var event = e.type === 'touchstart' ? e.touches[0] : e;
-        offsetX = event.clientX - floatingPanel.getBoundingClientRect().left;
-        offsetY = event.clientY - floatingPanel.getBoundingClientRect().top;
-        window.getSelection().removeAllRanges();
-    }
+	function startDrag(e) {
+		var target = e.target;
+	
+		// イベントの発生源がinput, button, i (アイコン) 要素でない場合にのみドラッグを開始
+		if (target.tagName !== 'INPUT' && target.tagName !== 'BUTTON' && target.tagName !== 'I'&& target.tagName !== 'SELECT') {
+			isDragging = true;
+			var event = e.type === 'touchstart' ? e.touches[0] : e;
+			offsetX = event.clientX - floatingPanel.getBoundingClientRect().left;
+			offsetY = event.clientY - floatingPanel.getBoundingClientRect().top;
+			window.getSelection().removeAllRanges();
+			e.preventDefault(); // デフォルトのタッチイベント（ページのスクロールなど）を防ぐ
+		}
+	}
 
     function endDrag() {
         isDragging = false;
@@ -168,13 +173,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // タッチイベントリスナーを追加
-    floatingPanel.addEventListener('touchstart', startDrag);
-    floatingPanel.addEventListener('mousedown', startDrag);
-    document.addEventListener('touchend', endDrag);
-    document.addEventListener('mouseup', endDrag);
-    document.addEventListener('touchmove', doDrag);
-    document.addEventListener('mousemove', doDrag);
+	// タッチイベントリスナーを追加
+	floatingPanel.addEventListener('touchstart', startDrag, {passive: false}); // 変更: passiveオプションをfalseに設定
+	floatingPanel.addEventListener('mousedown', startDrag);
+	document.addEventListener('touchend', endDrag);
+	document.addEventListener('mouseup', endDrag);
+	document.addEventListener('touchmove', doDrag, {passive: false}); // 変更: passiveオプションをfalseに設定
+	document.addEventListener('mousemove', doDrag);
 });
 class LivePattern {
     constructor() {
