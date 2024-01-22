@@ -6,7 +6,15 @@
 {% block log_list %} active {% endblock %}
 
 {% block content %}
-
+<div id="help-container">
+    <div id="help-text"></div>
+  </div>
+  <div id="list-container">
+    <div>
+      <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+    </div>
+    <!-- ヘルプモードの状態表示用の要素 -->
+    <div id="help-status" style="display: none;"></div>
 <h3>検索履歴</h3>
 <div class="container px-4 px-lg-5 my-div-style">
     <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -14,7 +22,7 @@
             {% if log_list %}
                 {% for history in log_list %}
                 <div class="post-preview d-flex justify-content-between align-items-center">
-                    <div>
+                    <div  id='log-detail' >
                         <a href="{% url 'gt:log_detail' history.pk %}">
 
                             <!-- 出発地がスポットの場合 -->
@@ -36,10 +44,10 @@
                         </a>
                     </div>
                     <div>
-                        <a href="{% url 'gt:my_map' %}?log_id={{ history.pk }}" class="btn btn-success">
+                        <a id='log-re' href="{% url 'gt:my_map' %}?log_id={{ history.pk }}" class="btn btn-success">
                             再検索
                         </a>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ history.pk }}">
+                        <button id='log-delete' type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ history.pk }}">
                             削除
                         </button>
                     </div>
@@ -115,4 +123,5 @@
     <!--topへ戻る-->
     <a href="#" id="page-top">TOP</a>
 </div>
+<script src="{% static 'js/helpicon.js' %}"></script>
 {% endblock content %}

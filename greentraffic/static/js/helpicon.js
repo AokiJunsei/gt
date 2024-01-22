@@ -79,6 +79,22 @@ var helpTexts = {
 	'spot-update':'スポット変更画面に推移します。',
 	'spot-delete':'スポット削除確認を行います。',
 	'spot-register':'スポット作成画面に推移します。',
+	'page-top':'ページのtopに戻ります。',
+	'spot-name':'登録名を入力してください。',
+	'spot-address':'住所を入力してください。',
+	'spot-registration':'スポットをDBに登録します。',
+	'spot-change':'スポットの情報を変更します。',
+	'log-re':'再検索をmymapで実行します。',
+	'log-detail':'履歴の詳細画面に推移します。',
+	'log-delete':'履歴の削除確認を行います。',
+	'admin-select':'マップに登録する交通手段を選択してください。',
+	'admin-change':'マップ情報変更画面に推移します。',
+	'admin-delete':'マップ情報削除画面に推移します。',
+	'admin-detail':'マップ情報詳細画面に推移します。',
+	'':'',
+	'':'',
+	'':'',
+	'':'',
 };
 
 // ヘルプテキスト関連の要素の取得
@@ -185,7 +201,9 @@ window.addEventListener('load', function() {
 	'last_name', 'first_name', 'zipcode', 'state', 'city', 
 	'address_1', 'address_2','back','enregister','userID',
 	'login-password','login','register1','user-update','user-delete','delete','update',
-	'spot-detail','spot-update','spot-delete','spot-register',
+	'spot-detail','spot-update','spot-delete','spot-register','page-top','spot-name','spot-address','spot-registration',
+	'spot-change','log-re','log-detail','log-delete','admin-select','admin-change','admin-delete',
+	'admin-detail',,
 	]
 	.forEach(function (id) {
 		addEventListeners(id, function (event) {

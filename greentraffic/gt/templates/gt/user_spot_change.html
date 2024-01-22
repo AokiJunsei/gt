@@ -4,7 +4,15 @@
 
 {% block content %}
 <main>
-    <!-- アラートメッセージ -->
+	<div id="help-container">
+		<div id="help-text"></div>
+	  </div>
+	  <div id="auth-container">
+		<div>
+		  <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+		</div>
+		<!-- ヘルプモードの状態表示用の要素 -->
+		<div id="help-status" style="display: none;"></div>
 	<h1>スポット変更</h1>
 	<div id="alert" class="container mt-3" style="display: none;">
 		<div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -20,14 +28,14 @@
 				<table class="reg_form">
 					<tr>
 						<th>{{ form.name.label_tag }}</th>
-						<td>{{ form.name }}</td>
+						<td id='spot-name'>{{ form.name }}</td>
 						<th>{{ form.address.label_tag }}</th>
-						<td>{{ form.address }}</td>
+						<td id='spot-address'>{{ form.address }}</td>
 					</tr>
 				</table>
 				<div class="button-container">
-				<a class="btn btn-secondary" href="{% url 'gt:user_spot_list' %}">戻る</a>
-				<button type="submit" class="btn btn--radius btn--cubic btn-submit">更新</button>
+				<a id='back' class="btn btn-secondary" href="{% url 'gt:user_spot_list' %}">戻る</a>
+				<button id='spot-change' type="submit" class="btn btn--radius btn--cubic btn-submit">更新</button>
 			</div>
 
 	<!-- 成功時に表示するモーダル -->
@@ -105,5 +113,6 @@
 			});
 		});
 	</script>
+	<script src="{% static 'js/helpicon.js' %}"></script>
 </main>
 {% endblock content %}

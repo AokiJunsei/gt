@@ -6,11 +6,20 @@
 {% block map_list %} active {% endblock %}
 
 {% block content %}
+<div id="help-container">
+    <div id="help-text"></div>
+  </div>
+  <div id="list-container">
+    <div>
+      <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+    </div>
+    <!-- ヘルプモードの状態表示用の要素 -->
+    <div id="help-status" style="display: none;"></div>
 <div class="container px-4 px-lg-5 my-div-style">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
             {% comment %} 自転車と車のリストの切り替え {% endcomment %}
-            <div class="cp_ipselect">
+            <div id='admin-select' class="cp_ipselect">
                 <select id="modelSelector" class="cp_sl06" required>
                     <option value="model1">車</option>
                     <option value="model2">自転車</option>
@@ -31,8 +40,8 @@
                         </a>
                     </div>
                     <div>
-                        <a class="btn btn-success" href="{% url 'gt:admin_map_change' vehicle_type='car' pk=map.pk %}">変更</a>
-                        <button type="button" class="btn btn--radius btn--cubic btn-cancel" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
+                        <a id='admin-change' class="btn btn-success" href="{% url 'gt:admin_map_change' vehicle_type='car' pk=map.pk %}">変更</a>
+                        <button id='admin-delete' type="button" class="btn btn--radius btn--cubic btn-cancel" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ map.pk }}">
                             削除
                         </button>
                     </div>
@@ -162,5 +171,7 @@
         });
 
     </script>
+    <script src="{% static 'js/helpicon.js' %}"></script>
+
 </div>
 {% endblock content %}
