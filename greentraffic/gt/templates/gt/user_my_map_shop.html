@@ -123,16 +123,22 @@
 				if (status === google.maps.places.PlacesServiceStatus.OK) {
 					// 検索結果の詳細を作成
 					var detailsHTML = '<div>' +
-														'<strong>Name:</strong> ' + place.name + '<br>' +
-														'<strong>Address:</strong> ' + place.formatted_address + '<br>' +
-														'<strong>Phone Number:</strong> ' + (place.formatted_phone_number || 'N/A') + '<br>' +
-														'<strong>Rating:</strong> ' + (place.rating || 'N/A') + '<br>' +
-														'<strong>Website:</strong> ' + (place.website || 'N/A') + '<br>' +
-														'<strong>Reviews:</strong> ' + (place.reviews ? place.reviews.map(review => review.text).join(', ') : 'N/A') + '<br>' +
-														'<strong>Types:</strong> ' + (place.types ? place.types.join(', ') : 'N/A') + '<br>' +
-														'<strong>Price Level:</strong> ' + (place.price_level || 'N/A') + '<br>' +
-														'<strong>Opening Hours:</strong> ' + (place.opening_hours ? place.opening_hours.weekday_text.join('<br>') : 'N/A') +
-														'</div>';
+									'<strong>Name:</strong> ' + place.name + '<br>' +
+									'<strong>Address:</strong> ' + place.formatted_address + '<br>' +
+									'<strong>Phone Number:</strong> ' + (place.formatted_phone_number || 'N/A') + '<br>' +
+									'<strong>Rating:</strong> ' + (place.rating || 'N/A') + '<br>' +
+									'<strong>Website:</strong> ' + (place.website || 'N/A') + '<br>' +
+									'<strong>Reviews:</strong> ' + (place.reviews ? place.reviews.map(review => review.text).join(', ') : 'N/A') + '<br>' +
+									'<strong>Types:</strong> ' + (place.types ? place.types.join(', ') : 'N/A') + '<br>' +
+									'<strong>Price Level:</strong> ' + (place.price_level || 'N/A') + '<br>' +
+									'<strong>Opening Hours:</strong> ' + (place.opening_hours ? place.opening_hours.weekday_text.join('<br>') : 'N/A');
+
+					// 写真がある場合は最初の写真を表示
+					if (place.photos && place.photos.length > 0) {
+						var photoUrl = place.photos[0].getUrl({maxWidth: 400, maxHeight: 200});
+						detailsHTML += '<img src="' + photoUrl + '" alt="Place image"><br>';
+					}
+					detailsHTML += '</div>';
 
 					document.getElementById("place-details").innerHTML = detailsHTML;
 				} else {
