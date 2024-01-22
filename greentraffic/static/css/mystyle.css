@@ -188,7 +188,7 @@ footer.footer {
 
 /* ヘッダーiconの隣にスペースを確保 */
 .mr-2 {
-  margin-right: 8px;
+  margin-right: 20px;
 }
 
 /* ヘッダー画面該当ページを白くする */
@@ -201,6 +201,41 @@ footer.footer {
 .navbar .dropdown-menu .dropdown-item.active,
 .navbar .dropdown-menu .dropdown-item:active {
   background-color: #6c757d; /* Bootstrapの灰色 */
+}
+
+.dropdown-menu {
+  border-radius: 0; /* 角丸を取り除き真四角に */
+  margin-top: 0; /* メニューの位置を微調整 */
+}
+
+/*ドロップダウンマークを非表示にする */
+.nav-link.dropdown-toggle[data-bs-toggle="dropdown"]::after {
+  display: none;
+}
+
+.navbar-nav > .nav-item > .nav-link {
+  height: 50px; /* または実際に合わせたい高さに */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1200px) {
+  .navbar-nav {
+    justify-content: flex-start !important; /* アイテムを左に寄せる */
+  }
+
+  .navbar .dropdown-menu {
+    position: absolute !important; /* ドロップダウンメニューをナビゲーションアイテムに対して絶対位置にする */
+    width: auto !important; /* メニューの幅をアイテムに合わせる */
+    top: 100% !important; /* トリガー要素の直下に表示 */
+    left: 0 !important; /* 左端から始める */
+    right: 0 !important; /* 右端まで広げる */
+  }
+  /* ナビゲーションリンクの左寄せ */
+  .nav-link {
+    justify-content: flex-start !important;
+  }
 }
 
 /* 検索のcss */
@@ -269,19 +304,6 @@ footer.footer {
     max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
   }
 }
-
-/* 2023/12/24 外部サイト遷移のためのボタンのcssを追記 */
-.hello-cycling-button {
-  background-color: #4CAF50; /* 緑色の背景 */
-  color: white; /* テキストの色 */
-  padding: 10px 20px; /* パディング */
-  border: none; /* ボーダーを非表示に */
-  border-radius: 5px; /* 角丸の設定 */
-  cursor: pointer; /* カーソルをポインターに */
-  font-size: 16px; /* フォントサイズ */
-  margin-top: 10px; /* 上部のマージン */
-}
-
 
 #floating-panel {
   /* 既存のスタイル */
