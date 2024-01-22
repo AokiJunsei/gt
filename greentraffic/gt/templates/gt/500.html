@@ -1,0 +1,12 @@
+{% extends "gt/base.html" %}
+
+{% block title %}
+Internal Server Error
+{% endblock %}
+
+{% block content %}
+<h1>500 - Internal Server Error</h1>
+<p>サーバー内部でエラーが発生しました。</p>
+<a href="{% url 'gt:top' %}" class="btn btn-cancel">トップページに戻る</a>
+<a href="{% url 'gt:user_login' %}" class="btn btn-submit">ログインページ</a>
+{% endblock %}

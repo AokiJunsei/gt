@@ -1,0 +1,12 @@
+{% extends "gt/base.html" %}
+
+{% block title %}
+Forbidden
+{% endblock %}
+
+{% block content %}
+<h1>403 - Forbidden</h1>
+<p>アクセス権限がありません。</p>
+<a href="{% url 'gt:top' %}" class="btn btn-cancel">トップページに戻る</a>
+<a href="{% url 'gt:user_login' %}" class="btn btn-submit">ログインページ</a>
+{% endblock %}

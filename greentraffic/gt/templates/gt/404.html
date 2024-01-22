@@ -1,0 +1,12 @@
+{% extends "gt/base.html" %}
+
+{% block title %}
+Page Not Found
+{% endblock %}
+
+{% block content %}
+<h1>404 - Page Not Found</h1>
+<p>申し訳ありませんが、お探しのページは見つかりませんでした。</p>
+<a href="{% url 'gt:top' %}" class="btn btn-cancel">トップページに戻る</a>
+<a href="{% url 'gt:user_login' %}" class="btn btn-submit">ログインページ</a>
+{% endblock %}
