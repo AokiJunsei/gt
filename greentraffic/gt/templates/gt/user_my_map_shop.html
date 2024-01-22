@@ -23,10 +23,12 @@
     </div>
 
     <!-- マップ内の検索フォーム -->
-    <div id="map-search-panel">
+    <div id="floating-panel">
+		<div class="input-group">
       <input type="text" id="map-search-input" placeholder="お店を検索">
-			<button id="search-button">検索</button>
+			<button id="search-button"class="btn-border">検索</button>
 		</div>
+	</div>
 
 		<div id="map"></div>
 		<div id="directions-panel">
@@ -34,7 +36,6 @@
 			<!-- 検索結果の詳細表示 -->
 			<div id="place-details" class="tab-content">
 				<!-- 初期状態での案内メッセージ -->
-				<p>店舗の検索結果がここに表示されます。検索バーにキーワードを入力し、「検索」ボタンをクリックしてください。</p>
 			</div>
 		</div>
 	</div>
@@ -121,32 +122,47 @@
 				placeId: placeId
 			}, function(place, status) {
 				if (status === google.maps.places.PlacesServiceStatus.OK) {
-					// 検索結果の詳細を作成
-					var detailsHTML = '<div>' +
-									'<strong>Name:</strong> ' + place.name + '<br>' +
-									'<strong>Address:</strong> ' + place.formatted_address + '<br>' +
-									'<strong>Phone Number:</strong> ' + (place.formatted_phone_number || 'N/A') + '<br>' +
-									'<strong>Rating:</strong> ' + (place.rating || 'N/A') + '<br>' +
-									'<strong>Website:</strong> ' + (place.website || 'N/A') + '<br>' +
-									'<strong>Reviews:</strong> ' + (place.reviews ? place.reviews.map(review => review.text).join(', ') : 'N/A') + '<br>' +
-									'<strong>Types:</strong> ' + (place.types ? place.types.join(', ') : 'N/A') + '<br>' +
-									'<strong>Price Level:</strong> ' + (place.price_level || 'N/A') + '<br>' +
-									'<strong>Opening Hours:</strong> ' + (place.opening_hours ? place.opening_hours.weekday_text.join('<br>') : 'N/A');
-
-					// 写真がある場合は最初の写真を表示
-					if (place.photos && place.photos.length > 0) {
-						var photoUrl = place.photos[0].getUrl({maxWidth: 400, maxHeight: 200});
-						detailsHTML += '<img src="' + photoUrl + '" alt="Place image"><br>';
-					}
-					detailsHTML += '</div>';
-
+					// ランダムな色を生成
+					var headerBackgroundColor = getRandomColor(); // カードヘッダーの背景色にランダムな色を適用
+					var headerTextColor = '#FFFFFF'; // 白色
+					var linkColor = '#007BFF'; // Bootstrapのプライマリーカラー
+		
+					// Bootstrapのカードコンポーネントを使用してUIを改善
+					var detailsHTML = `
+					<div class="card border-info mb-3">
+						<div class="card-header" style="background-color: ${headerBackgroundColor}; color: ${headerTextColor};">${place.name}</div>
+						<div class="card-body text-info">
+							<h5 class="card-title">${place.formatted_address}</h5>
+							<p class="card-text">
+								<strong>電話番号:</strong> ${place.formatted_phone_number || '情報なし'}<br>
+								<strong>評価:</strong> ${place.rating || '情報なし'}<br>
+								<strong>ウェブサイト:</strong> ${place.website ? `<a href="${place.website}" target="_blank" style="color: ${linkColor};">ウェブサイトへ</a>` : '情報なし'}<br>
+								<strong>レビュー:</strong> ${place.reviews ? place.reviews.map(review => `<blockquote class="blockquote">${review.text}</blockquote>`).join('') : '情報なし'}<br>
+								<strong>価格レベル:</strong> ${place.price_level || '情報なし'}<br>
+								<strong>営業時間:</strong> <br>${place.opening_hours ? place.opening_hours.weekday_text.join('<br>') : '情報なし'}
+							</p>
+						</div>
+					</div>`;
 					document.getElementById("place-details").innerHTML = detailsHTML;
 				} else {
-					document.getElementById("place-details").innerHTML = '<div>Place details could not be displayed.</div>';
+					document.getElementById("place-details").innerHTML = '<div>詳細情報を表示できませんでした。</div>';
 					console.error('Google Places API returned status: ' + status);
 				}
 			});
 		}
+		
+		// ランダムな色を生成する関数
+		function getRandomColor() {
+			var letters = '0123456789ABCDEF';
+			var color = '#';
+			for (var i = 0; i < 6; i++) {
+				color += letters[Math.floor(Math.random() * 16)];
+			}
+			return color;
+		}
+		
+		
+	
 
   function clearMarkers() {
     // すべてのマーカーをループしてマップから削除
