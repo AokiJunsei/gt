@@ -1,0 +1,225 @@
+{% extends "gt/base.html" %}
+{% load static %}
+{% block title %}Green Traffic{% endblock %}
+
+{% block content %}
+<body>
+  <!--フォームの表示非表示-->
+  <div id="help-container">
+    <div id="help-text"></div>
+  </div>
+  <div id="map-container">
+    <div>
+      <i id="help-icon" class="far fa-question-circle" onclick="loadAndShowModal()"></i>
+    </div>
+    <!-- ヘルプモードの状態表示用の要素 -->
+    <div id="help-status" style="display: none;"></div>
+    <canvas id="canvas"></canvas>
+    <div>
+      <i id="toggle-icon" class="fas fa-eye" onclick="toggleInputForm()"></i>
+    </div>
+    <div>
+      <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
+    </div>
+
+    <!-- マップ内の検索フォーム -->
+    <div id="map-search-panel">
+      <input type="text" id="map-search-input" placeholder="お店を検索">
+			<button id="search-button">検索</button>
+		</div>
+
+		<div id="map"></div>
+		<div id="directions-panel">
+			<div class="tab" onclick="toggleTab('place-details')">Details</div>
+			<!-- 検索結果の詳細表示 -->
+			<div id="place-details" class="tab-content">
+				<!-- 初期状態での案内メッセージ -->
+				<p>店舗の検索結果がここに表示されます。検索バーにキーワードを入力し、「検索」ボタンをクリックしてください。</p>
+			</div>
+		</div>
+	</div>
+	<!-- JavaScriptファイルへのリンク -->
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places&callback=initMap&v=weekly"
+		async defer
+	></script>
+  <script src="{% static 'js/helpicon.js' %}"></script>
+
+  <script type="text/javascript">
+
+		var map, infowindow, service, markers = [];
+
+    //マップ情報
+    function initMap() {
+      var Marker;
+      const initial_location = { lat: 35.689, lng: 139.692 };
+
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 17,
+        center: initial_location,
+      });
+
+      infowindow = new google.maps.InfoWindow();
+      // service の初期化をここに移動
+      service = new google.maps.places.PlacesService(map);
+
+    	setupSearchButton(); // initMap が完了したら検索ボタンをセットアップ
+			checkAndExecuteTrainTF(); // 追加機能のチェックと実行
+    }
+
+    /*上記までがinitMap()*/
+
+    // 検索機能
+    function searchPlaces() {
+      if (!map) {
+        console.error("Map is not initialized yet.");
+        return;
+      }
+      var searchInput = document.getElementById("map-search-input").value;
+
+			// 検索クエリが空でないことを確認
+			if (!searchInput.trim()) {
+				alert("検索クエリを入力してください。");
+				return;
+			}
+
+      service.textSearch({
+        query: searchInput,
+        location: map.getCenter(),
+        radius: 5000
+      }, function(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          clearMarkers();
+          results.forEach(place => {
+            createMarker(place);
+						displayPlaceDetails(place.place_id); // ここで displayPlaceDetails を呼び出す
+						expandPanel()
+          });
+        } else {
+          alert('Place search failed: ' + status);
+        }
+      });
+    }
+
+		function createMarker(place) {
+			var marker = new google.maps.Marker({
+				map: map,
+				position: place.geometry.location
+			});
+
+			google.maps.event.addListener(marker, 'click', function() {
+				infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+					'Address: ' + place.formatted_address + '</div>');
+				infowindow.open(map, this);
+			});
+			// 地図の中心をマーカーの位置に設定する
+  		map.setCenter(marker.getPosition());
+		}
+
+		function displayPlaceDetails(placeId) {
+			service.getDetails({
+				placeId: placeId
+			}, function(place, status) {
+				if (status === google.maps.places.PlacesServiceStatus.OK) {
+					// 検索結果の詳細を作成
+					var detailsHTML = '<div>' +
+														'<strong>Name:</strong> ' + place.name + '<br>' +
+														'<strong>Address:</strong> ' + place.formatted_address + '<br>' +
+														'<strong>Phone Number:</strong> ' + (place.formatted_phone_number || 'N/A') + '<br>' +
+														'<strong>Rating:</strong> ' + (place.rating || 'N/A') + '<br>' +
+														'<strong>Website:</strong> ' + (place.website || 'N/A') + '<br>' +
+														'<strong>Reviews:</strong> ' + (place.reviews ? place.reviews.map(review => review.text).join(', ') : 'N/A') + '<br>' +
+														'<strong>Types:</strong> ' + (place.types ? place.types.join(', ') : 'N/A') + '<br>' +
+														'<strong>Price Level:</strong> ' + (place.price_level || 'N/A') + '<br>' +
+														'<strong>Opening Hours:</strong> ' + (place.opening_hours ? place.opening_hours.weekday_text.join('<br>') : 'N/A') +
+														'</div>';
+
+					document.getElementById("place-details").innerHTML = detailsHTML;
+				} else {
+					document.getElementById("place-details").innerHTML = '<div>Place details could not be displayed.</div>';
+					console.error('Google Places API returned status: ' + status);
+				}
+			});
+		}
+
+  function clearMarkers() {
+    // すべてのマーカーをループしてマップから削除
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+    markers = []; // 配列をリセット
+  }
+
+    function expandPanel() {
+      var panel = document.getElementById('directions-panel');
+      panel.classList.add('expanded'); // expanded クラスを追加して拡大します
+    }
+
+    window.addEventListener('load', function() {
+      initMap();
+      checkAndExecuteTrainTF();
+    });
+
+    function checkAndExecuteTrainTF() {
+      if (!map) {
+        console.error("Map object is not initialized yet.");
+        return;
+      }
+      setupSearchButton()
+			/*expandPanel()*/
+    }
+
+    // initMap が完了したら、検索ボタンにイベントリスナーを設定します。
+		function setupSearchButton() {
+			document.getElementById('search-button').addEventListener('click', searchPlaces);
+		}
+
+		function toggleDirectionsPanel() {
+			var panel = document.getElementById('directions-panel');
+			if (panel.style.display === 'none') {
+				panel.style.display = 'block';
+			} else {
+				panel.style.display = 'none';
+			}
+		}
+
+		document.addEventListener('DOMContentLoaded', (event) => {
+			// 全てのタブコンテンツを非表示にする
+			var tabContents = document.getElementsByClassName('tab-content');
+			for (var i = 0; i < tabContents.length; i++) {
+				tabContents[i].style.display = 'none';
+			}
+
+			// 特定のタブコンテンツだけを表示する
+			var defaultTabContent = document.getElementById('place-details');
+			if (defaultTabContent) {
+				defaultTabContent.style.display = 'block';
+			}
+		});
+
+		function toggleTab(tabId) {
+			// すべてのタブコンテンツを非表示にする
+			var tabContents = document.getElementsByClassName('tab-content');
+			for (var i = 0; i < tabContents.length; i++) {
+				tabContents[i].style.display = 'none';
+			}
+
+			// すべてのタブから 'active' クラスを削除する
+			var tabs = document.getElementsByClassName('tab');
+			for (var i = 0; i < tabs.length; i++) {
+				tabs[i].classList.remove('active');
+			}
+
+			// 選択されたタブコンテンツを表示する
+			var selectedTabContent = document.getElementById(tabId);
+			if (selectedTabContent) {
+				selectedTabContent.style.display = 'block';
+			}
+
+			event.target.classList.add('active');
+		}
+
+  </script>
+
+</body>
+{% endblock content %}

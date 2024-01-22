@@ -1008,3 +1008,14 @@ def admin_user_info(request):
 @login_required
 def user_email_update_view(request):
     return render(request,'user_email_change.html')
+
+# お店検索
+@login_required
+def user_my_map_shop(request):
+    # APIキーを取得
+    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
+    api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+    context = {
+        "api_key" : api_key
+    }
+    return render(request, 'user_my_map_shop.html', context)

@@ -18,6 +18,7 @@ urlpatterns = [
     path('search_share_bike_bike/', views.user_search_share_bike_bike, name="search_share_bike_bike"),
     path('search_share_bike_walk/', views.user_search_share_bike_walk, name="search_share_bike_walk"),
     path('my_map/', views.user_my_map, name="my_map"),
+    path('my_map_shop/',views.user_my_map_shop, name="my_map_shop"),
 
     path('map_change/<str:vehicle_type>/<int:pk>/', views.admin_map_change, name='admin_map_change'),
     path('map_delete/<str:vehicle_type>/<int:pk>/', views.admin_map_delete, name='admin_map_delete'),
