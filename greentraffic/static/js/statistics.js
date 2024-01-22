@@ -16,9 +16,9 @@ function drawCharts() {
   creationData.addColumn('string', 'Month');  // 日付ではなく、月を表す文字列として扱う
   creationData.addColumn('number', 'Count');
   window.creationData.forEach(function (item) {
-    // item.month は 'YYYY-MM' 形式であることを想定しています。
-    // バックエンドからこの形式でデータが渡されるようにしてください。
-    creationData.addRow([item.month, item.count]);
+    var parts = item.month.split('-');
+    var formattedMonth = parts[0] + '年' + parseInt(parts[1]) + '月';
+    creationData.addRow([formattedMonth, item.count]);
   });
   var creationChart = new google.visualization.ColumnChart(document.getElementById('creation_chart'));
   creationChart.draw(creationData, {
