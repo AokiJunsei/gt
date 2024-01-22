@@ -664,14 +664,37 @@ label {
   color: #666; /* 文字色 */
 }
 
+/* ページネーションのリンク全般に関するスタイル */
 .pagination .page-item .page-link {
-  margin: 0 5px; /* 余白 */
-  color: #007bff; /* リンク色 */
+  background-color: #007bff; /* ボタンの背景色 */
+  color: white; /* ボタン内のテキスト色 */
+  margin-bottom: 50px; /* 下部のマージン */
+  margin-left: 5px; /* 左のマージン */
+  margin-right: 5px; /* 右のマージン */
+  z-index: 1; /* z-index */
+  border-radius: 5px; /* 角の丸み */
+  text-align: center; /* テキストを中央揃え */
+  text-decoration: none; /* テキストの下線を消す */
+  display: inline-block; /* インラインブロック要素として表示 */
+  transition: background-color 0.3s, transform 0.3s; /* 背景色と変形のアニメーション */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* ボックスの影 */
+  cursor: pointer; /* マウスカーソルをポインタに */
 }
 
+/* ホバー時のリンクのスタイル */
+.pagination .page-item .page-link:hover {
+  background-color: #0056b3; /* ホバー時の背景色 */
+  color: white; /* ホバー時のテキスト色 */
+  transform: translateY(-2px); /* ホバー時にリンクを少し持ち上げる */
+  box-shadow: 0 6px 12px 0 rgba(0,0,0,0.2); /* ホバー時のボックスの影 */
+}
+
+/* アクティブなページのリンクのスタイル */
+/* アクティブなページのリンクのスタイル */
 .pagination .page-item.active .page-link {
   background-color: #007bff; /* アクティブなページの背景色 */
-  color: white; /* アクティブなページの文字色 */
+  color: white; /* アクティブなページのテキスト色 */
+  border: 2px solid #0056b3; /* アクティブなページの境界線 */
 }
 
 /*topへ戻るbtn*/

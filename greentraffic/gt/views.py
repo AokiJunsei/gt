@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Account, MapCar ,MapBike ,Spot ,SearchHistory ,User
 from .forms import AccountForm, AddAccountForm, LocationForm ,SpotForm,RouteSearchForm ,UpdateAccountForm
@@ -609,12 +610,26 @@ def user_spot_list(request):
     if request.user.is_authenticated:
         try:
             account_instance = Account.objects.get(user=request.user)
-            user_spots = Spot.objects.filter(account=account_instance)
+            all_user_spots = Spot.objects.filter(account=account_instance)  # all_user_spotsに変更
         except ObjectDoesNotExist:
-            user_spots = None
+            all_user_spots = None  # all_user_spotsに変更
     else:
-        user_spots = None
-    return render(request,'user_spot_list.html',{'user_spots':user_spots})
+        all_user_spots = None  # all_user_spotsに変更
+
+    # ページネーションの設定
+    page = request.GET.get('page', 1)  # URLからページ番号を取得
+    paginator = Paginator(all_user_spots, 10)  # 1ページに表示するアイテム数を設定
+    try:
+        user_spots = paginator.page(page)
+    except PageNotAnInteger:
+        # ページが整数でない場合、1ページ目を取得
+        user_spots = paginator.page(1)
+    except EmptyPage:
+        # ページが範囲外の場合、最終ページを取得
+        user_spots = paginator.page(paginator.num_pages)
+
+    return render(request,'user_spot_list.html', {'user_spots': user_spots, 'is_paginated': True if paginator.num_pages > 1 else False, 'page_obj': user_spots})
+
 
 # スポット登録ビュー
 @login_required
@@ -921,8 +936,25 @@ def user_my_map(request):
 @login_required
 def account_history_view(request):
     # ログインしているユーザーの検索履歴を取得
-    search_histories = SearchHistory.objects.filter(account=request.user.account)
-    return render(request, 'gt/user_log.html', {'log_list': search_histories})
+    search_history_list = SearchHistory.objects.filter(account=request.user.account).order_by('-search_datetime')  # 新しいものが先にくるようにする
+    
+    # ページネーターの設定
+    paginator = Paginator(search_history_list, 5)  # 1ページに10項目を表示
+    page = request.GET.get('page', 1)
+    try:
+        search_histories = paginator.page(page)
+    except PageNotAnInteger:
+        search_histories = paginator.page(1)
+    except EmptyPage:
+        search_histories = paginator.page(paginator.num_pages)
+    
+    # テンプレートに渡す
+    return render(request, 'gt/user_log.html', {
+        'log_list': search_histories, 
+        'is_paginated': True if paginator.num_pages > 1 else False, 
+        'page_obj': search_histories
+    })
+
 
 # ログ詳細ビュー
 @login_required

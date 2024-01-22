@@ -82,7 +82,7 @@ var helpTexts = {
 	'page-top':'ページのtopに戻ります。',
 	'spot-name':'登録名を入力してください。',
 	'spot-address':'住所を入力してください。',
-	'spot-registration':'スポットをDBに登録します。',
+	'saveButton':'スポットをDBに登録します。',
 	'spot-change':'スポットの情報を変更します。',
 	'log-re':'再検索をmymapで実行します。',
 	'log-detail':'履歴の詳細画面に推移します。',
@@ -201,7 +201,7 @@ window.addEventListener('load', function() {
 	'last_name', 'first_name', 'zipcode', 'state', 'city', 
 	'address_1', 'address_2','back','enregister','userID',
 	'login-password','login','register1','user-update','user-delete','delete','update',
-	'spot-detail','spot-update','spot-delete','spot-register','page-top','spot-name','spot-address','spot-registration',
+	'spot-detail','spot-update','spot-delete','spot-register','page-top','spot-name','spot-address','saveButton',
 	'spot-change','log-re','log-detail','log-delete','admin-select','admin-change','admin-delete',
 	'admin-detail',,
 	]
