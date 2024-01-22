@@ -857,3 +857,12 @@ canvas {
   height: 100%; /* 親要素の高さに合わせる */
   z-index: -1; /* floating-panelのコンテンツの背後に配置 */
 }
+.fa-slash:before {
+    font-size: 14px!important; /* アイコンのフォントサイズを16pxに設定 */
+    display: inline-block;
+    line-height: 1;
+    text-align: center;
+    width: 16px;  /* コンテナの幅を18pxに設定 */
+    height: 16px; /* コンテナの高さを16pxに設定 */
+    content: "\f715";
+}

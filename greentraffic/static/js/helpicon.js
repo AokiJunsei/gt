@@ -74,7 +74,11 @@ var helpTexts = {
 	'user-delete':'ユーザー情報削除画面に推移します。',
 	'user-update':'ユーザー情報編集画面に推移します。',
 	'delete':'ユーザー情報を削除します。',
-	'update':'ユーザー情報の変更処理を実行します。'
+	'update':'ユーザー情報の変更処理を実行します。',
+	'spot-detail':'スポット詳細画面に推移します。',
+	'spot-update':'スポット変更画面に推移します。',
+	'spot-delete':'スポット削除確認を行います。',
+	'spot-register':'スポット作成画面に推移します。',
 };
 
 // ヘルプテキスト関連の要素の取得
@@ -180,7 +184,9 @@ window.addEventListener('load', function() {
 	'username', 'email', 'password', 'confirm_password', 
 	'last_name', 'first_name', 'zipcode', 'state', 'city', 
 	'address_1', 'address_2','back','enregister','userID',
-	'login-password','login','register1','user-update','user-delete','delete','update']
+	'login-password','login','register1','user-update','user-delete','delete','update',
+	'spot-detail','spot-update','spot-delete','spot-register',
+	]
 	.forEach(function (id) {
 		addEventListeners(id, function (event) {
 			showHelpText(id, event);

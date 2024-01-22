@@ -17,22 +17,21 @@ let directionsPanelVisible = false;
 
 // パネルを表示/非表示切り替える関数
 function toggleDirectionsPanel() {
-	const directionsPanel = document.getElementById("directions-panel");
-	const contentTab = document.getElementById("content-tab");
-	const detailsTab = document.getElementById("details-tab");
+    const directionsPanel = document.getElementById("directions-panel");
+    const toggleButton = document.getElementById("toggle-button"); // アイコンの要素を取得
 
-	if (!directionsPanelVisible) {
-	// パネルを表示
-	directionsPanel.style.display = "block";
-	contentTab.classList.add("active");
-	detailsTab.classList.remove("active");
-	} else {
-	// パネルを非表示
-	directionsPanel.style.display = "none";
-	}
+    if (!directionsPanelVisible) {
+        // パネルを表示
+        directionsPanel.style.display = "block";
+        toggleButton.className = 'fas fa-solid fa-arrow-left'; // アイコンを矢印に変更
+    } else {
+        // パネルを非表示
+        directionsPanel.style.display = "none";
+        toggleButton.className = 'fas fa-slash'; // アイコンをスラッシュに変更
+    }
 
-	// 表示状態を反転させる
-	directionsPanelVisible = !directionsPanelVisible;
+    // 表示状態を反転させる
+    directionsPanelVisible = !directionsPanelVisible;
 }
 
 
