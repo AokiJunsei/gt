@@ -40,3 +40,10 @@ $(document).ready(function(){
         $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
     });
 });
+window.onload = function() {
+    setTimeout(function() {
+        var loadingContainer = document.getElementById('loading-container');
+        loadingContainer.style.display = 'none';
+    }, 3000); // 3000ミリ秒（3秒）後にローディングアニメーションを非表示にする
+};
+
