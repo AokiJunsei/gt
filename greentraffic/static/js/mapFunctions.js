@@ -7,7 +7,7 @@ function initMap() {
 	const initial_location = { lat: 35.689, lng: 139.692 };
 
 	/*現在地更新を5000秒ごとに繰り返す*/
-	setInterval(updateCurrentLocation, 5000);
+	// setInterval(updateCurrentLocation, 5000);
 
 	map = new google.maps.Map(document.getElementById("map"), {
 		zoom: 17,
@@ -155,10 +155,21 @@ function showRouteInformation(response) {
 		const steps = route.legs[0].steps;
 		for (let j = 0; j < steps.length; j++) {
 			const stepInfo = document.createElement("div");
-			stepInfo.innerHTML = steps[j].instructions;
+			const stepLatLng = steps[j].end_location;
+			stepInfo.innerHTML = `<a href="#" onclick="placeMarker(${stepLatLng.lat()}, ${stepLatLng.lng()});">${steps[j].instructions}</a>`;
 			directionsPanel.appendChild(stepInfo);
 		}
 	}
+}
+function placeMarker(lat, lng) {
+    const location = new google.maps.LatLng(lat, lng);
+    new google.maps.Marker({
+        position: location,
+        map: map
+    });
+
+    // オプションで地図の中心を移動させる
+    map.setCenter(location);
 }
 
 function expandPanel() {
