@@ -1,14 +1,21 @@
-// ログアウトのモーダルウィンドウ
 $(document).ready(function() {
     // モーダルが開かれたときのイベント
-    $("#logoutModal").on('shown.bs.modal', function() {
-        console.log("ログアウトモーダルが表示されました。");
+    $("#logoutModal").on('show.bs.modal', function() {
+        // 以前のoverflowの状態を保存
+        var originalBodyOverflow = $('body').css('overflow');
+        $(this).data('originalBodyOverflow', originalBodyOverflow);
+
+        // bodyのoverflowをvisibleに設定してスクロールを維持
+        $('body').css('overflow', 'visible');
     });
 
     // モーダルが閉じられたときのイベント
     $("#logoutModal").on('hidden.bs.modal', function() {
-        console.log("ログアウトモーダルが閉じられました。");
+        // 保存しておいた以前のoverflowの状態に戻す
+        var originalBodyOverflow = $(this).data('originalBodyOverflow');
+        $('body').css('overflow', originalBodyOverflow);
     });
+
 
     // キャンセルボタンと×マークに同じ挙動を設定
     $("#logoutModal .btn-secondary, #logoutModal .close").on('click', function() {
