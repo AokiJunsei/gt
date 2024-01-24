@@ -321,8 +321,6 @@ footer.footer {
   overflow: auto;
   word-wrap: break-word;
   white-space: normal;
-
-  /* 新規追加スタイル */
   display: flex; /* フレックスボックスを有効にする */
   flex-direction: column; /* 子要素を垂直方向に並べる */
   align-items: center; /* 子要素を中央揃えにする */
@@ -456,21 +454,11 @@ footer.footer {
 }
 .mode-Relay {
   margin-top: 10px;
+  transition: margin-top 0.3s ease; /* アニメーション効果を追加 */
 }
 
-.jjj {
-  box-sizing: border-box;
-  overflow: auto; /* Add scrollbars if content overflows */
-  word-wrap: break-word; /* Ensure long words do not cause overflow */
-  white-space: normal; /* Allow text to wrap within the panel */
-}
-@media only screen and (max-width: 600px) {
-  .jjj .btn, .jjj .btn {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-  }
+.mode-Relay:hover {
+  margin-top: 15px; /* マウスを合わせた時のマージントップの値 */
 }
 
 table.reg_form td:nth-child(6) select {
@@ -636,6 +624,7 @@ width: auto;
   font-size: 24px; /* アイコンのサイズを設定 */
   transform: rotate(90deg); /* Rotate the first swap icon only */
 }
+
 #swap-icon-updown {
   cursor: pointer; /* アイコンにマウスを合わせたときにカーソルをポインタに変更 */
   color: #000; /* アイコンの色を設定 */

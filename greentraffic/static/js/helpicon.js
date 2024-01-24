@@ -25,6 +25,8 @@ var helpTexts = {
 	'travel_mode':'travel_modeを選択してください。',
 	'content-tab':'コンテンツを表示する場所です。',
 	'admin_top':'マップ情報一覧に推移します。',
+	'admin_map_register':'マップ情報追加画面に推移します。',
+	'admin_user_info':'利用者情報閲覧画面に推移します。',
 	'gt-top':'車の検索に推移します。',
 	'header-logo':'topページに推移します。',
 	'footer-image':'広告を表示します。',
@@ -203,7 +205,7 @@ window.addEventListener('load', function() {
 	'login-password','login','register1','user-update','user-delete','delete','update',
 	'spot-detail','spot-update','spot-delete','spot-register','page-top','spot-name','spot-address','saveButton',
 	'spot-change','log-re','log-detail','log-delete','admin-select','admin-change','admin-delete',
-	'admin-detail',,
+	'admin-detail','admin_map_register','admin_user_info'
 	]
 	.forEach(function (id) {
 		addEventListeners(id, function (event) {

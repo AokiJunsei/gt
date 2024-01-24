@@ -47,32 +47,37 @@ function toggleTab(tabName) {
 	detailsTab.classList.add("active");
 	}
 }
-
+// アイコンのアニメーション効果を追加する関数
+function animateIcon(iconId, rotationAngle) {
+  const icon = document.getElementById(iconId);
+  icon.style.transition = 'transform 0.3s ease-in-out';
+  icon.style.transform = `rotate(${rotationAngle}deg)`;
+  
+  // 数秒後にアイコンのアニメーションをリセット
+  setTimeout(() => {
+      icon.style.transform = 'none';
+  }, 300);
+}
 /*出発地と到着地の内容を入れ替える関数*/
 function swapStartEnd() {
-	const startInput = document.getElementById("start");
-	const endInput = document.getElementById("end");
+    const startInput = document.getElementById("start");
+    const endInput = document.getElementById("end");
+    animateIcon('swap-icon-updown', 360); // アイコンにアニメーションを追加
 
-	// 入れ替えボタン
-	const temp = startInput.value;
-	startInput.value = endInput.value;
-	endInput.value = temp;
+    const temp = startInput.value;
+    startInput.value = endInput.value;
+    endInput.value = temp;
 }
 
 function toggleWaypoints() {
-	var waypoint1 = document.getElementById('waypoint1-group');
-	var waypoint2 = document.getElementById('waypoint2-group');
-	var waypointLabel = document.getElementById('waypointLabel'); // ラベルの正しいIDを確認してください
+    var waypoint1 = document.getElementById('waypoint1-group');
+    var waypoint2 = document.getElementById('waypoint2-group');
+    var waypointLabel = document.getElementById('waypointLabel');
 
-	// 中継地点が現在表示されているかどうかを判定
-	var isDisplayed = waypoint1.style.display !== 'none';
-
-	// 中継地点の表示・非表示を切り替え
-	waypoint1.style.display = isDisplayed ? 'none' : 'block';
-	waypoint2.style.display = isDisplayed ? 'none' : 'block';
-
-	// ラベルの表示・非表示も切り替える（条件が逆になる）
-	waypointLabel.style.display = isDisplayed ? 'block' : 'none';
+    var isDisplayed = waypoint1.style.display !== 'none';
+    waypoint1.style.display = isDisplayed ? 'none' : 'block';
+    waypoint2.style.display = isDisplayed ? 'none' : 'block';
+    waypointLabel.style.display = isDisplayed ? 'block' : 'none';
 }
 
 var initialLeft = 20; // 左端からの距離

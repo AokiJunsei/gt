@@ -60,7 +60,7 @@
             </div>
             {% if request.user.is_authenticated %}
               {% if request.user.username == "admin" %}
-              <a id='header-logo' class="navbar-brand">Green Traffic</a>
+              <a class="navbar-brand">Green Traffic</a>
               {% else %}
               <a id='header-logo' href="{% url 'gt:top' %}" class="navbar-brand">Green Traffic</a>
               {% endif %}
@@ -73,13 +73,13 @@
                 {% if request.user.is_authenticated %}
                   {% if request.user.username == "admin" %}
                   <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'admin_top' %}active{% endif %}" href="{% url 'gt:admin_top' %}">マップ情報一覧</a>
+                    <a id='admin_top' class="nav-link {% if request.resolver_match.url_name == 'admin_top' %}active{% endif %}" href="{% url 'gt:admin_top' %}">マップ情報一覧</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'admin_map_register' %}active{% endif %}" href="{% url 'gt:admin_map_register' %}">マップ情報追加</a>
+                    <a id='admin_map_register' class="nav-link {% if request.resolver_match.url_name == 'admin_map_register' %}active{% endif %}" href="{% url 'gt:admin_map_register' %}">マップ情報追加</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'admin_user_info' %}active{% endif %}" href="{% url 'gt:admin_user_info' %}">利用者情報閲覧</a>
+                    <a id='admin_user_info' class="nav-link {% if request.resolver_match.url_name == 'admin_user_info' %}active{% endif %}" href="{% url 'gt:admin_user_info' %}">利用者情報閲覧</a>
                   </li>
                   {% else %}
                   <li class="nav-item dropdown">

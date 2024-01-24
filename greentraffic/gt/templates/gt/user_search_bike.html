@@ -22,7 +22,7 @@
       <i id="toggle-button" class="fas fa-solid fa-arrow-left"onclick="toggleDirectionsPanel()"></i>
     </div>
     <div id="floating-panel">
-      <h3>経路検索</h3>
+      <h4>経路検索</h4>
       <div class="input-group">
         <label>出: </label>
         <input type="text" id="start" placeholder="出発地を入力してください" />
@@ -37,9 +37,9 @@
         <input type="text" id="waypoint2" placeholder="中継地点を入力してください">
       </div>
       <!-- 中継地点を表示するボタン -->
-      <div class="mode-Relay">
+      <div class="mode-Relay" onclick="toggleWaypoints()">
         <label>中継地点 </label>
-        <i id="swap-icon" class="fas fa-exchange-alt" onclick="toggleWaypoints()"></i>
+        <i id="swap-icon" class="fas fa-exchange-alt"></i>
       </div>
       <div class="input-group">
         <label>着: </label>
