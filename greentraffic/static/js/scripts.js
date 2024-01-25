@@ -7,11 +7,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
         video.play(); // ビデオを再生
 
         video.onended = function(e) {
-            this.style.display = 'none';
-            sessionStorage.setItem('hasVideoPlayed', 'true');
+            this.classList.add('video-fade-out'); // フェードアウトアニメーションを追加
+            this.addEventListener('animationend', () => {
+                this.style.display = 'none'; // アニメーションが完了したらビデオを非表示にする
+                sessionStorage.setItem('hasVideoPlayed', 'true');
+            }, { once: true }); // イベントリスナーを一度だけ実行
         };
     }
 });
+
 
 
 $(document).ready(function() {

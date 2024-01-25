@@ -673,6 +673,14 @@ label {
   font-size: 1rem; /* サブタイトルのフォントサイズ */
   color: #666; /* 文字色 */
 }
+/* ページネーションコンテナのスタイル */
+.pagination {
+  display: flex; /* Flexboxレイアウトを使用 */
+  justify-content: center; /* 水平方向に中央揃え */
+  align-items: center; /* 垂直方向に中央揃え */
+  list-style: none; /* リストマーカーを非表示に */
+  padding: 0; /* パディングをリセット */
+}
 
 /* ページネーションのリンク全般に関するスタイル */
 .pagination .page-item .page-link {
@@ -975,3 +983,11 @@ body.modal-open {
   transition: opacity 0.3s ease-in-out; /* 透明度の変化を滑らかに */
 }
 
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.video-fade-out {
+  animation: fadeOut 1s ease-out forwards;
+}
