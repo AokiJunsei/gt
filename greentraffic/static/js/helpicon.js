@@ -12,7 +12,7 @@ var helpTexts = {
 	'toggle-button': '経路の詳細パネルを開閉します。',
 	'btn-border': '検索結果を表示します。',
 	'current-location-icon': '現在位置を取得します。',
-	'swap-icon': '中継地点を表示します。',
+	'swap-icon': '中継地点フォームを開閉します。',
 	'swap-icon-updown': '出発地と目的地を入れ替えます。',
 	'departure-date': '出発する日付を選択してください。',
 	'departure-time': '出発する時間を選択してください。',
