@@ -961,6 +961,15 @@ body.modal-open {
   #background-video {
     display: none !important;
   }}
+  #register-video {
+    position: fixed; /* ビデオを固定位置に */
+    top: 0; /* 上端からの距離 */
+    left: 0; /* 左端からの距離 */
+    width: 100%; /* 幅を画面全体に */
+    height: 100%; /* 高さを画面全体に */
+    object-fit: cover; /* コンテンツの比率を保ちつつ、要素の全体を埋める */
+    z-index: -1; /* ビデオを背面に */
+  }
 #time {
   opacity: 0;
   transition: opacity 0.3s ease-in-out; /* 透明度の変化を滑らかに */
