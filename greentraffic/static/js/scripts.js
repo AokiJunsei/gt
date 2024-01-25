@@ -1,3 +1,19 @@
+document.addEventListener('DOMContentLoaded', (event) => {
+    const video = document.getElementById('background-video');
+    const hasVideoPlayed = sessionStorage.getItem('hasVideoPlayed');
+
+    if (!hasVideoPlayed) {
+        video.style.display = 'block'; // ビデオを表示
+        video.play(); // ビデオを再生
+
+        video.onended = function(e) {
+            this.style.display = 'none';
+            sessionStorage.setItem('hasVideoPlayed', 'true');
+        };
+    }
+});
+
+
 $(document).ready(function() {
     // モーダルが開かれたときのイベント
     $("#logoutModal").on('show.bs.modal', function() {
@@ -27,17 +43,23 @@ $(document).ready(function() {
 
 // ヘッダー日付
 document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("text").innerHTML = showNow();
+    const timeElement = document.getElementById("time");
+    timeElement.innerHTML = showNow();
+    setTimeout(() => {
+        timeElement.style.opacity = '1'; // 要素を徐々に表示する
+    }, ); // すぐに実行されるタイマーで微妙な遅延を設定
 
     function showNow() {
-    var now = new Date();
-    var nowyear = now.getFullYear();
-    var nowmonth = now.getMonth() + 1;
-    var nowdate = now.getDate();
-    var text = nowyear + "/" + nowmonth + "/" + nowdate;
-    return text;
+        var now = new Date();
+        var nowyear = now.getFullYear();
+        var nowmonth = now.getMonth() + 1;
+        var nowdate = now.getDate();
+        var text = nowyear + "/" + nowmonth + "/" + nowdate;
+        return text;
     }
 });
+
+
 
 //$(document).ready(function(){
     //$('.nav-item.dropdown.custom-dropdown').mouseenter(function() {
@@ -89,3 +111,4 @@ $(window).on('load', function () {
 	TypingInit(); //初期設定
 	TypingAnime();/* アニメーション用の関数を呼ぶ*/
 });// ここまで画面が読み込まれたらすぐに動かしたい場合の記述
+

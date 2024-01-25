@@ -34,7 +34,9 @@
 
   <body>
     <!-- Logout Modal -->
-
+    <video id="background-video" autoplay muted>
+      <source src="{% static 'assets/Green Traffic.mp4' %}" type="video/mp4">
+  </video>  
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -247,7 +249,7 @@
                 {% else %}
                   <!-- 未ログイン時のナビゲーションアイテム -->
                   <li class="nav-item d-flex align-items-center"style='pointer-events: none;'>
-                    <a class="nav-link" href="#"><div id="text"></div></a>
+                    <a class="nav-link" href="#"><div id="time"></div></a>
                   </li>
                   <li class="nav-item">
                     <a id='register' class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'gt:register' %}">新規登録</a>
