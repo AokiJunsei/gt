@@ -49,6 +49,7 @@ var helpTexts = {
 	'share-bike-search-walk':'歩きで受け取りに行く検索に推移します。',
 	'Mymap-search':'mymapオプションを選択できます。',
 	'Mymap-search-all':'mymap検索に推移します。',
+	'Mymap-search-shop':'shop検索に推移します。',
 	'register':'新規登録画面に推移します。',
 	'register1':'新規登録画面に推移します。',
 	'user-login':'ログイン画面に推移します。',
@@ -103,47 +104,66 @@ var helpTexts = {
 var helpContainer = document.getElementById('help-container');
 var helpTextElement = document.getElementById('help-text');
 var helpIcon = document.getElementById('help-icon');
-
-// ヘルプテキストを表示する関数
+// showHelpText関数の定義
 function showHelpText(elementId, event) {
-	if (!isHelpEnabled) {
-		return;
-	}
+    if (!isHelpEnabled) {
+        return;
+    }
 
-	var helpText = helpTexts[elementId];
-	helpTextElement.textContent = helpText;
+    var helpText = helpTexts[elementId];
+    helpTextElement.textContent = helpText;
 
-	// テキストの幅を計算（テキストの表示前に一時的に表示）
-	helpContainer.style.visibility = 'hidden'; // 一時的に非表示
-	helpContainer.style.display = 'block';
-	var containerWidth = helpContainer.offsetWidth;
-	var containerHeight = helpContainer.offsetHeight;
-	helpContainer.style.visibility = ''; // 元に戻す
-	helpContainer.style.display = 'none';
+    // テキストの幅を計算（テキストの表示前に一時的に表示）
+    helpContainer.style.visibility = 'hidden'; // 一時的に非表示
+    helpContainer.style.display = 'block';
+    var containerWidth = helpContainer.offsetWidth;
+    var containerHeight = helpContainer.offsetHeight;
+    helpContainer.style.visibility = ''; // 元に戻す
+    helpContainer.style.display = 'none';
 
-	// 画面のサイズを取得
-	var screenWidth = window.innerWidth;
-	var screenHeight = window.innerHeight;
+    // 画面のサイズを取得
+    var screenWidth = window.innerWidth;
+    var screenHeight = window.innerHeight;
 
-	// テキストの位置を調整
-	var posX = event.clientX;
-	var posY = event.clientY;
+    // テキストの位置を調整
+    var posX = event.clientX;
+    var posY = event.clientY;
 
-	// 画面の右端または下端にテキストがはみ出さないように調整
-	if (posX + containerWidth > screenWidth) {
-		posX -= containerWidth;
-	}
-	if (posY + containerHeight > screenHeight) {
-		posY -= containerHeight;
-	}
+    // 画面の右端または下端にテキストがはみ出さないように調整
+    if (posX + containerWidth > screenWidth) {
+        posX -= containerWidth;
+    }
+    if (posY + containerHeight > screenHeight) {
+        posY -= containerHeight;
+    }
 
-	// テキストの位置を更新
-	helpContainer.style.left = posX + 'px';
-	helpContainer.style.top = posY + 'px';
+    // テキストの位置を更新
+    helpContainer.style.left = posX - 5 + 'px';
+    helpContainer.style.top = posY + 'px';
 
-	// テキストを表示
-	helpContainer.style.display = 'block';
+    // テキストを表示
+    helpContainer.style.display = 'block';
 }
+
+// デバウンス関数の定義
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+}
+
+// showHelpText関数にデバウンスを適用
+var debouncedShowHelpText = debounce(showHelpText, 10); // 250ミリ秒のデバウンス時間
+
 
 function showHelpModeStatus() {
 	var statusText = isHelpEnabled ? 'ヘルプモードが有効になりました' : 'ヘルプモードが無効になりました';
@@ -205,12 +225,13 @@ window.addEventListener('load', function() {
 	'login-password','login','register1','user-update','user-delete','delete','update',
 	'spot-detail','spot-update','spot-delete','spot-register','page-top','spot-name','spot-address','saveButton',
 	'spot-change','log-re','log-detail','log-delete','admin-select','admin-change','admin-delete',
-	'admin-detail','admin_map_register','admin_user_info'
+	'admin-detail','admin_map_register','admin_user_info','Mymap-search-shop'
 	]
 	.forEach(function (id) {
-		addEventListeners(id, function (event) {
-			showHelpText(id, event);
-		}, hideHelpText);
+// イベントリスナーの設定部分でdebouncedShowHelpTextを使用
+	addEventListeners(id, function (event) {
+    debouncedShowHelpText(id, event);
+}, hideHelpText);
 	});
 	var searchButton = document.querySelector('.btn-border');
 	if (searchButton) {
