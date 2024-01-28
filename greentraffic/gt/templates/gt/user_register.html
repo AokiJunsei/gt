@@ -33,7 +33,6 @@
     <!-- 登録フォームの構造 -->
     <form enctype="multipart/form-data" method="post">
       {% csrf_token %}
-      
       <table class="reg_form">
         <tr>
           <th>{{ account_form.username.label_tag }}</th>
@@ -97,31 +96,36 @@
 {% endif %}
 <script>
   document.addEventListener('DOMContentLoaded', (event) => {
-  const zipcodeInput = document.getElementById('id_zipcode'); // add_account_form.zipcode の ID
-  if (zipcodeInput) {
-    zipcodeInput.onchange = function() {
-      getAddress(this.value);
-    };
-  }
+    const zipcodeInput = document.getElementById('id_zipcode'); // add_account_form.zipcode の ID
+    if (zipcodeInput) {
+      zipcodeInput.onchange = function() {
+        getAddress(this.value);
+      };
+    }
 });
-function getAddress(zipcode) {
-  if(zipcode.length === 7) {
-    const url = `https://api.zipaddress.net/?zipcode=${zipcode}`;
+  function getAddress(zipcode) {
 
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        if(data.code === 200) {
-          document.getElementById('id_state').value = data.data.pref;
-          const cityAddress = data.data.city + data.data.town;
-          document.getElementById('id_city').value = cityAddress;
-        }
-      })
-      .catch(error => {
-        alert('住所取得でエラーが発生しました。');
-      });
+    // id_state と id_city をクリアする
+    document.getElementById('id_state').value = '';
+    document.getElementById('id_city').value = '';
+
+    if(zipcode.length === 7) {
+      const url = `https://api.zipaddress.net/?zipcode=${zipcode}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if(data.code === 200) {
+            document.getElementById('id_state').value = data.data.pref;
+            const cityAddress = data.data.city + data.data.town;
+            document.getElementById('id_city').value = cityAddress;
+          }
+        })
+        .catch(error => {
+          alert('住所取得でエラーが発生しました。');
+        });
+    }
   }
-}
   </script>
 <script src="{% static 'js/helpicon.js' %}"></script>
 {% endblock %}

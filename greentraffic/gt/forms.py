@@ -20,6 +20,21 @@ PREFECTURES = [
     '鹿児島県', '沖縄県'
 ]
 
+# 都道府県バリデーション
+def validate_prefecture(value):
+    if value not in PREFECTURES:
+        raise ValidationError('有効な都道府県を入力してください。')
+
+# 郵便番号のバリデーション
+def validate_zipcode(value):
+    # 半角数字のみ許可する正規表現
+    if not re.match(r'^[0-9]+$', value):
+        raise ValidationError('半角数字を使用してください。')
+
+    # 郵便番号の長さが7文字であることを確認
+    if len(value) != 7:
+        raise ValidationError('郵便番号は7文字でなければなりません。')
+
 # フォームクラス作成
 class AccountForm(forms.ModelForm):
     username = forms.CharField(
@@ -31,11 +46,11 @@ class AccountForm(forms.ModelForm):
         })
     )
     # パスワード入力：非表示対応
-    email = forms.CharField(
+    email = forms.EmailField(
         max_length=100,
         required=True,
         label='メール',
-        widget=forms.TextInput(attrs={
+        widget=forms.EmailInput(attrs={
             'placeholder': '例：xxx@xxx.com'
         })
     )
@@ -90,11 +105,11 @@ class UpdateAccountForm(forms.ModelForm):
         })
     )
     # パスワード入力：非表示対応
-    email = forms.CharField(
+    email = forms.EmailField(
         max_length=100,
         required=True,
         label='メール',
-        widget=forms.TextInput(attrs={
+        widget=forms.EmailInput(attrs={
             'placeholder': '例：xxx@xxx.com'
         })
     )
@@ -124,6 +139,7 @@ class UpdateAccountForm(forms.ModelForm):
         if not re.search(r'\d', password):
             raise ValidationError('パスワードには少なくとも1つの数字を含める必要があります。')
         return password
+
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
@@ -134,17 +150,6 @@ class UpdateAccountForm(forms.ModelForm):
             self.add_error('confirm_password', 'パスワードが一致しません。')
 
         return cleaned_data
-
-
-# 郵便番号の長さを検証するカスタムバリデータ
-def validate_zipcode_length(value):
-    if len(value) != 7:
-        raise ValidationError('郵便番号は7文字でなければなりません。')
-
-# 都道府県バリデーション
-def validate_prefecture(value):
-    if value not in PREFECTURES:
-        raise ValidationError('有効な都道府県を入力してください。')
 
 # 追加のアカウント情報用のフォーム
 class AddAccountForm(forms.ModelForm):
@@ -167,7 +172,7 @@ class AddAccountForm(forms.ModelForm):
     zipcode = forms.CharField(
         max_length=7,
         required=True,
-        validators=[validate_zipcode_length],
+        validators=[validate_zipcode],
         widget=forms.TextInput(attrs={
             'placeholder': '例：1018351'
         }),
@@ -196,7 +201,7 @@ class AddAccountForm(forms.ModelForm):
         model = Account
 
         # フィールド指定
-        fields = ('last_name', 'first_name', 'address', 'zipcode', 'state', 'city', 'address_1', 'address_2', 'gender',)
+        fields = ('last_name', 'first_name', 'address', 'zipcode', 'state', 'city', 'address_1', 'address_2')
         # フィールド名指定
         labels = {
             'last_name': "苗字",
@@ -206,16 +211,13 @@ class AddAccountForm(forms.ModelForm):
             'state': "都道府県",
             'city': "市区町村",
             'address_1': "番地",
-            'address_2': "建物名・部屋番号",
-            'gender': "性別",
+            'address_2': "建物名・部屋番号"
         }
 
 ##########user_delete.htmlのformクラス##########
 
 class AccountDeleteForm(forms.Form):
     confirm_username = forms.CharField(label='Confirm Username', max_length=150)
-
-
 
 ##########user_update.htmlのformクラス##########
 
@@ -242,9 +244,9 @@ class AccountUpdateForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = [
-            'username', 'email', 'last_name', 'first_name', 
-            'zipcode', 'state', 'city', 'address_1', 
-            'address_2', 'gender', 'password', 'confirm_password'
+            'username', 'email', 'last_name', 'first_name',
+            'zipcode', 'state', 'city', 'address_1',
+            'address_2', 'password', 'confirm_password'
         ]
         labels = {
             'last_name': "苗字",
@@ -254,9 +256,7 @@ class AccountUpdateForm(forms.ModelForm):
             'city': "市区町村",
             'address_1': "番地",
             'address_2': "建物名・部屋番号",
-            'gender': "性別",
         }
-
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
