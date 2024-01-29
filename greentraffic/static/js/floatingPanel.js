@@ -185,6 +185,38 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.addEventListener('touchmove', doDrag, {passive: false}); // 変更: passiveオプションをfalseに設定
 	document.addEventListener('mousemove', doDrag);
 });
+// タッチイベントハンドラーの定義
+function startDrag(e) {
+  var target = e.target;
+  // イベントの発生源がinput, button, i (アイコン) 要素でない場合にのみドラッグを開始
+  if (target.tagName !== 'INPUT' && target.tagName !== 'BUTTON' && target.tagName !== 'I' && target.tagName !== 'SELECT') {
+      isDragging = true;
+      var event = e.type === 'touchstart' ? e.touches[0] : e;
+      offsetX = event.clientX - floatingPanel.getBoundingClientRect().left;
+      offsetY = event.clientY - floatingPanel.getBoundingClientRect().top;
+      window.getSelection().removeAllRanges();
+      e.preventDefault(); // デフォルトのタッチイベント（ページのスクロールなど）を防ぐ
+  }
+}
+function endDrag() {
+  isDragging = false;
+}
+
+function doDrag(e) {
+  if (isDragging) {
+      var event = e.type === 'touchmove' ? e.touches[0] : e;
+      var mouseX = event.clientX;
+      var mouseY = event.clientY;
+      var newLeft = mouseX - offsetX;
+      var newTop = mouseY - offsetY;
+
+      newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - floatingPanel.offsetWidth));
+      newTop = Math.max(0, Math.min(newTop, window.innerHeight - floatingPanel.offsetHeight));
+
+      floatingPanel.style.left = newLeft + 'px';
+      floatingPanel.style.top = newTop + 'px';
+  }
+}
 class LivePattern {
     constructor() {
       this.canvas = document.getElementById('canvas');
