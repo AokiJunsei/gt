@@ -349,14 +349,21 @@ footer.footer {
   display: flex; /* フレックスボックスを有効にする */
   flex-direction: column; /* 子要素を垂直方向に並べる */
   align-items: center; /* 子要素を中央揃えにする */
+
 }
 
 @media screen and (max-width: 800px) {
   #floating-panel {
     left: 50%;
-    max-width: 250px; /* 最大幅を設定 */
-    min-width: 250px;
+    max-width: 270px; /* 最大幅を設定 */
+    min-width: 270px;
   }
+  #floating-panel h3 {
+    display: none;
+}
+  #floating-panel h4 {
+    display: none;
+}
 }
 
 
