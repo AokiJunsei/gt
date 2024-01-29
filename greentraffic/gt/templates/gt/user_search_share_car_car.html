@@ -5,11 +5,14 @@
 {% block content %}
 <body onload="initMap()">
   <div id="floating-panel">
-    <h4>シェア検索
+    <div class="input-group">
+    <h4>
+      <i class="fas fa-car fa-lg mr-2" style="color: black;"></i>
+      シェア検索
       <a id='car-link' href = 'https://anyca.net/' target="_blank">
         <i class="fas fa-car fa-lg mr-2" style="color: black;"></i>
       </a>
-    </h4>
+    </h4>    </div>
 
     <div class="input-group">
       <label>出発地: </label>
@@ -19,7 +22,7 @@
     <div class="input-group">
       <label>目的地: </label>
       <input type="text" id="end" placeholder="目的地を入力してください" />
-      <i id="swap-icon" class="fas fa-exchange-alt" onclick="swapStartEnd()"></i>
+        <i id="swap-icon-updown" class="fas fa-exchange-alt" onclick="swapStartEnd()"></i>
     </div>
 
     <div class="mode-selector">

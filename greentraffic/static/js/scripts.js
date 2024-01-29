@@ -7,11 +7,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
         video.play(); // ビデオを再生
 
         video.onended = function(e) {
-            this.style.display = 'none';
-            sessionStorage.setItem('hasVideoPlayed', 'true');
+            this.classList.add('video-fade-out'); // フェードアウトアニメーションを追加
+            this.addEventListener('animationend', () => {
+                this.style.display = 'none'; // アニメーションが完了したらビデオを非表示にする
+                sessionStorage.setItem('hasVideoPlayed', 'true');
+            }, { once: true }); // イベントリスナーを一度だけ実行
         };
     }
 });
+
 
 
 $(document).ready(function() {
@@ -70,19 +74,27 @@ document.addEventListener("DOMContentLoaded", function() {
 //});
 
 
-window.onload = function() {
+// ローディングアニメーションを非表示にする関数
+function hideLoadingAnimation() {
     setTimeout(function() {
         var loadingContainer = document.getElementById('loading-container');
         loadingContainer.style.display = 'none';
     }, 3000); // 3000ミリ秒（3秒）後にローディングアニメーションを非表示にする
-};
-var arr = []
-//初期値の設定
-function TypingInit() {
-	$('.js_typing').each(function (i) { //js_typingクラスを全て処理をおこなう
-		arr[i] = new ShuffleText(this);//動作させるテキストを配列に格納
-	});
 }
+
+// TypingInit関数の定義
+var arr = []; // arr配列の初期化
+function TypingInit() {
+    $('.js_typing').each(function (i) { // js_typingクラスを全て処理する
+        arr[i] = new ShuffleText(this); // 動作させるテキストを配列に格納
+    });
+}
+
+// ページが完全にロードされた後に実行されるイベントリスナー
+window.addEventListener('load', function() {
+    hideLoadingAnimation(); // ローディングアニメーションを非表示にする関数を呼び出す
+    TypingInit(); // TypingInit関数を呼び出す
+});
 //スクロールした際のアニメーションの設定
 function TypingAnime() {
 	$(".js_typing").each(function (i) {

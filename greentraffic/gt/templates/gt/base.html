@@ -155,7 +155,7 @@
                       </li>
                       <li id='Mymap-search-shop'>
                         <a class="dropdown-item" href="{% url 'gt:my_map_shop' %}">
-                          Shop
+                          <i class="fas fa-store mr-2"></i>shop
                         </a>
                       </li>
                     </ul>
@@ -227,7 +227,7 @@
                   {% if request.user.username != "admin" %}
                     <!-- ログインしている非管理者ユーザー向けのナビゲーションアイテム -->
                     <li class="nav-item d-flex align-items-center"style='pointer-events: none;'>
-                      <a class="nav-link" href="#"><div id="text"></div></a>
+                      <a class="nav-link" href="#"><div id="time"></div></a>
                     </li>
                     <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'user_info' or request.resolver_match.url_name == 'user_spot_list' or request.resolver_match.url_name == 'account_history' %}active{% endif %}" id="navbarDropdownMenuLink" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
