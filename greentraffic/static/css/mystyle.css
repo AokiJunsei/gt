@@ -278,19 +278,27 @@ footer.footer {
 }
 
 #directions-panel {
+  display: none; /* 初期状態では非表示 */
   position: absolute;
   top: 100px;
   left: 0;
-  width: 30%;
+  width: 30%; /* 初期幅 */
   bottom: 20px;
   max-height: 65px; /* 初期の最大高さ */
-  overflow-y: auto;
-  background-color: rgba(255, 255, 255, 0.9);
+  overflow-y: auto; /* 内容が多い場合はスクロール可能 */
+  background-color: #f9f9f9; /* 明るい背景色 */
   padding: 10px;
   box-sizing: border-box;
-  transition: max-height 0.3s ease;
+  transition: max-height 0.3s ease; /* 高さ変更のアニメーション */
+  border-radius: 8px; /* 角の丸みを調整 */
+  border: 1px solid #ddd; /* 境界線のスタイル */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 影の追加 */
+  font-family: Arial, sans-serif; /* フォントスタイル */
+  background-color: rgba(249, 249, 249, 0.9); /* 背景色を透明に */
 }
-
+#directions-panel.resizing {
+  border: 2px dashed #666; /* リサイズ中の枠線スタイル */
+}
 #directions-panel.expanded {
   max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
 }
@@ -299,10 +307,27 @@ footer.footer {
     width: 100%;
   }
   #directions-panel.expanded {
-    top:70%;
+    top:60%;
     width: 100%;
     max-height: calc(100vh - 40px); /* 拡大時の最大高さ */
   }
+  #resize-handle {
+    display: none;
+  }
+}
+#resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #666;
+  cursor: nesw-resize;
+  transition: background-color 0.2s ease; /* 色の変化のアニメーション */
+}
+
+#resize-handle:hover {
+  background-color: #555; /* ホバー時の背景色 */
 }
 
 #floating-panel {
@@ -329,7 +354,8 @@ footer.footer {
 @media screen and (max-width: 800px) {
   #floating-panel {
     left: 50%;
-    max-width: 100%; /* 小さい画面ではパネルの幅を画面の90%まで拡大 */
+    max-width: 250px; /* 最大幅を設定 */
+    min-width: 250px;
   }
 }
 
@@ -990,4 +1016,12 @@ body.modal-open {
 
 .video-fade-out {
   animation: fadeOut 1s ease-out forwards;
+}
+
+
+/* アクティブなボタンにフォーカスがあるときのスタイル */
+.btn-border:focus {
+  outline: none; /* デフォルトのアウトラインを削除 */
+  border-color: #4285f4; /* ボーダーカラーを変更 */
+  box-shadow: 0 0 5px rgba(66, 133, 244, 0.5); /* フォーカスされていることがわかるようにシャドウを追加 */
 }

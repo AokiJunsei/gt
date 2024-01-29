@@ -104,7 +104,21 @@ var helpTexts = {
 var helpContainer = document.getElementById('help-container');
 var helpTextElement = document.getElementById('help-text');
 var helpIcon = document.getElementById('help-icon');
-// showHelpText関数の定義
+// showHelpText関数の定
+// イベントリスナーを追加する関数（タッチイベント対応を追加）
+function addEventListeners(id, mouseEnterHandler, mouseLeaveHandler) {
+    var element = document.getElementById(id);
+    if (element) {
+        element.addEventListener('mouseenter', mouseEnterHandler);
+        element.addEventListener('mouseleave', mouseLeaveHandler);
+
+        // タッチイベントのリスナーを追加
+        element.addEventListener('touchstart', function(event) {
+            mouseEnterHandler(event.touches[0]); // タッチイベントの最初のタッチポイントを使用
+        }, false);
+        element.addEventListener('touchend', mouseLeaveHandler, false);
+    }
+}
 function showHelpText(elementId, event) {
     if (!isHelpEnabled) {
         return;
@@ -126,9 +140,8 @@ function showHelpText(elementId, event) {
     var screenHeight = window.innerHeight;
 
     // テキストの位置を調整
-    var posX = event.clientX;
-    var posY = event.clientY;
-
+	var posX = event.clientX || event.pageX;
+    var posY = event.clientY || event.pageY;
     // 画面の右端または下端にテキストがはみ出さないように調整
     if (posX + containerWidth > screenWidth) {
         posX -= containerWidth;

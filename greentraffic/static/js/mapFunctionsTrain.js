@@ -128,11 +128,11 @@ function trainTF(){
     console.error("Map object is not initialized yet.");
     return;
   }
-  fetchRouteAndDisplayOnMap();
-  // let coordinates = extractCoordinates(routeData);
-  // displayRouteOnMap(coordinates, map);
-  // displayRouteInfo(routeData);
-  // expandPanel();
+  /*fetchRouteAndDisplayOnMap();*/
+	let coordinates = extractCoordinates(routeData);
+   	displayRouteOnMap(coordinates, map);
+   	displayRouteInfo(routeData);
+   	expandPanel();
 }
 
 /*リアルタイムで現在地を取得する*/
@@ -339,7 +339,64 @@ function clearMapData() {
 
 function expandPanel() {
 	var panel = document.getElementById('directions-panel');
-	panel.classList.add('expanded'); // expanded クラスを追加して拡大します
+	panel.style.display = 'block'; // パネルを表示する
+	panel.classList.add('expanded');
+  }
+
+// リサイズハンドルのイベントリスナーを設定
+var resizeHandle = document.getElementById('resize-handle');
+var startWidth, startHeight, startX, startY; // 初期サイズとマウス座標を保存する変数
+
+resizeHandle.addEventListener('mousedown', function(e) {
+  e.preventDefault();
+
+  var directionsPanel = document.getElementById('directions-panel');
+  // clientHeightを使用して初期の高さを取得する
+  startWidth = directionsPanel.clientWidth;
+  startHeight = directionsPanel.clientHeight;
+  startX = e.clientX;
+  startY = e.clientY;
+
+  // リサイズ中はmax-heightスタイルを一時的に無効化する
+  directionsPanel.style.maxHeight = 'none';
+
+  window.addEventListener('mousemove', resizePanel);
+  window.addEventListener('mouseup', stopResizing);
+});
+
+function resizePanel(e) {
+  var directionsPanel = document.getElementById('directions-panel');
+  var minWidth = 50; // パネルの最小幅
+  var minHeight = 100; // パネルの最小高さ
+
+  var newWidth = startWidth + (e.clientX - startX);
+  var newHeight = startHeight + (e.clientY - startY);
+  newHeight = Math.max(newHeight, minHeight);
+  directionsPanel.style.height = newHeight + 'px';
+  newWidth = Math.max(newWidth, minWidth);
+
+  directionsPanel.style.width = newWidth + 'px';
+}
+// ウィンドウリサイズ時にパネルの幅を調整するイベントリスナー
+window.addEventListener('resize', function() {
+	var directionsPanel = document.getElementById('directions-panel');
+	if (window.innerWidth <= 1000) {
+	  // 画面幅が1000px以下の場合は幅を100%に設定
+	  directionsPanel.style.width = '100%';
+	} else {
+	  // 画面幅が1000px以上の場合は、リサイズによって設定された幅を保持する
+	  // 現在設定されている幅が100%でなければ、それを保持する
+	  if (directionsPanel.style.width !== '100%') {
+		directionsPanel.style.width = directionsPanel.style.width;
+	  }
+	}
+  });
+function stopResizing() {
+  var directionsPanel = document.getElementById('directions-panel');
+  window.removeEventListener('mousemove', resizePanel);
+  window.removeEventListener('mouseup', stopResizing);
+  // リサイズが終了したら、max-heightを再設定する
+  directionsPanel.style.maxHeight = '';
 }
 
 var routeData = {
