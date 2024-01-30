@@ -1037,3 +1037,6 @@ body.modal-open {
   border-color: #4285f4; /* ボーダーカラーを変更 */
   box-shadow: 0 0 5px rgba(101, 158, 250, 0.5); /* フォーカスされていることがわかるようにシャドウを追加 */
 }
+.card-body, .infowindow-content {
+  color: #000000 !important; /* 黒色 */
+}

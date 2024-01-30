@@ -66,6 +66,17 @@ function createMarker(place) {
 		// 地図の中心をマーカーの位置に設定する
 	map.setCenter(marker.getPosition());
 }
+function getRandomBrightColor() {
+    // 色相をランダムに選択（0から360）
+    var hue = Math.floor(Math.random() * 360);
+    // 彩度を高く設定（70%〜100%の範囲）
+    var saturation = 70 + Math.floor(Math.random() * 30) + '%';
+    // 輝度を高く設定（50%〜70%の範囲）
+    var lightness = 50 + Math.floor(Math.random() * 20) + '%';
+
+    // HSLカラーを返す
+    return `hsl(${hue}, ${saturation}, ${lightness})`;
+}
 
 function displayPlaceDetails(placeId) {
 		service.getDetails({
@@ -73,7 +84,7 @@ function displayPlaceDetails(placeId) {
 		}, function(place, status) {
 		if (status === google.maps.places.PlacesServiceStatus.OK) {
 				// ランダムな色を生成
-				var headerBackgroundColor = getRandomColor(); // カードヘッダーの背景色にランダムな色を適用
+				var headerBackgroundColor = getRandomBrightColor(); // カードヘッダーの背景色にランダムな色を適用
 				var headerTextColor = '#FFFFFF'; // 白色
 				var linkColor = '#007BFF'; // Bootstrapのプライマリーカラー
 
@@ -84,7 +95,7 @@ function displayPlaceDetails(placeId) {
 				var detailsHTML = `
 				<div class="card border-info mb-3">
 				<div class="card-header" style="background-color: ${headerBackgroundColor}; color: ${headerTextColor};">${place.name}</div>
-				<div class="card-body text-info">
+				<div class="card-body text-info" style="color: #000000;">
 						<h5 class="card-title">${place.formatted_address}</h5>
 						${photoUrl ? `<img src="${photoUrl}" class="card-img-top" alt="Place image">` : ''}
 						<p class="card-text">
