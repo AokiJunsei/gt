@@ -163,18 +163,23 @@ resizeHandle.addEventListener('mousedown', function(e) {
 });
 
 function resizePanel(e) {
-  var directionsPanel = document.getElementById('directions-panel');
-  var minWidth = 50; // パネルの最小幅
-  var minHeight = 100; // パネルの最小高さ
-
-  var newWidth = startWidth + (e.clientX - startX);
-  var newHeight = startHeight + (e.clientY - startY);
-  newHeight = Math.max(newHeight, minHeight);
-  directionsPanel.style.height = newHeight + 'px';
-  newWidth = Math.max(newWidth, minWidth);
-
-  directionsPanel.style.width = newWidth + 'px';
-}
+	var directionsPanel = document.getElementById('directions-panel');
+	var minWidth = 50; // パネルの最小幅
+	var minHeight = 100; // パネルの最小高さ
+	var maxWidth = 936; // パネルの最大幅
+	var maxHeight = 400; // パネルの最大高さ
+  
+	var newWidth = startWidth + (e.clientX - startX);
+	var newHeight = startHeight + (e.clientY - startY);
+  
+	// 新しい幅と高さが最小値と最大値の範囲内にあることを確認
+	newWidth = Math.max(Math.min(newWidth, maxWidth), minWidth);
+	newHeight = Math.max(Math.min(newHeight, maxHeight), minHeight);
+  
+	directionsPanel.style.width = newWidth + 'px';
+	directionsPanel.style.height = newHeight + 'px';
+  }
+  
 // ウィンドウリサイズ時にパネルの幅を調整するイベントリスナー
 window.addEventListener('resize', function() {
 	var directionsPanel = document.getElementById('directions-panel');
