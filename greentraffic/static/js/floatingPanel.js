@@ -72,12 +72,10 @@ function swapStartEnd() {
 function toggleWaypoints() {
     var waypoint1 = document.getElementById('waypoint1-group');
     var waypoint2 = document.getElementById('waypoint2-group');
-    var waypointLabel = document.getElementById('waypointLabel');
 
     var isDisplayed = waypoint1.style.display !== 'none';
     waypoint1.style.display = isDisplayed ? 'none' : 'block';
     waypoint2.style.display = isDisplayed ? 'none' : 'block';
-    waypointLabel.style.display = isDisplayed ? 'block' : 'none';
 }
 
 var initialLeft = 20; // 左端からの距離
