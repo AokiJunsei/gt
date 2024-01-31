@@ -174,7 +174,7 @@ class AddAccountForm(forms.ModelForm):
         required=True,
         validators=[validate_zipcode],
         widget=forms.TextInput(attrs={
-            'placeholder': '例：1018351'
+            'placeholder': '例：1010051'
         }),
         label='郵便番号',
     )
@@ -188,14 +188,19 @@ class AddAccountForm(forms.ModelForm):
         label='都道府県',
     )
     city = forms.CharField(max_length=100, required=True, label='市区町村',widget=forms.TextInput(attrs={
-            'placeholder': '例：千代田区西神田 '
+            'placeholder': '例：千代田区神田神保町 '
         }),)
     address_1 = forms.CharField(max_length=100, required=True, label='番地',widget=forms.TextInput(attrs={
             'placeholder': '例：2-4-11 '
         }),)
-    address_2 = forms.CharField(max_length=100, label='建物名・部屋番号',widget=forms.TextInput(attrs={
-            'placeholder': '例：TICビル '
+    address_2 = forms.CharField(
+        max_length=100, 
+        required=False,  # この行を追加
+        label='建物名・部屋番号',
+        widget=forms.TextInput(attrs={
+            'placeholder': '例：TICビル'
         }),)
+
     class Meta:
         # モデルクラスを指定
         model = Account
