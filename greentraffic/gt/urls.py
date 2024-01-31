@@ -29,7 +29,6 @@ urlpatterns = [
     path('account_info/', views.user_info, name='user_info'),
     path('user_update/', views.user_update_view, name='user_update'),
     path('user_delete/', views.user_delete_view, name='user_delete'),
-    path('email_update/', views.user_email_update_view, name='user_email_update'),
 
     path('account_history/', views.account_history_view, name='account_history'),
     path('log_detail/<int:pk>/', views.log_detail_view, name='log_detail'),
