@@ -172,3 +172,6 @@ LOGIN_REDIRECT_URL = 'gt:top'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
 ]
+
+GOOGLE_API_KEY = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
+JOULDAN_API_KEY = "J2vqRoi1ciaJzktP"
