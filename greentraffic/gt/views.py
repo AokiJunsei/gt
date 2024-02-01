@@ -1005,11 +1005,6 @@ def admin_user_info(request):
     }
     return render(request, 'admin_user_info.html', context)
 
-# メールorユーザーIDの変更
-@login_required
-def user_email_update_view(request):
-    return render(request,'user_email_change.html')
-
 # お店検索
 @login_required
 def user_my_map_shop(request):
