@@ -20,6 +20,10 @@
     {% csrf_token %}
     <table class="reg_form">
         <tr>
+            <th>ユーザーID</th>
+            <td>{{ user.username }}</td>
+        </tr>
+        <tr>
             <th>氏名</th>
             <td>{{ user.account.last_name }} {{ user.account.first_name }}</td>
         </tr>
