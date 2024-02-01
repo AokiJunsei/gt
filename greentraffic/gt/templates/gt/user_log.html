@@ -3,7 +3,7 @@
 {% load static %}
 {% block title %}履歴リスト{% endblock %}
 
-{% block log_list %} active {% endblock %}
+{% block search_histories %} active {% endblock %}
 
 {% block content %}
 <div id="help-container">
@@ -19,8 +19,8 @@
 <div class="container px-4 px-lg-5 my-div-style">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
-            {% if log_list %}
-                {% for history in log_list %}
+            {% if search_histories %}
+                {% for history in search_histories %}
                 <div class="post-preview d-flex justify-content-between align-items-center">
                     <div  id='log-detail' >
                         <a href="{% url 'gt:log_detail' history.pk %}">
@@ -29,14 +29,14 @@
                             {% if history.start_spot_label %}
                             <h2 class="post-title">出発地スポット: {{ history.start_spot_label }}</h2>
                             {% else %}
-                            <h2 class="post-title">出: {{ history.start_location }}</h2>
+                            <h2 class="post-title">出発地: {{ history.start_location }}</h2>
                             {% endif %}
 
                             <!-- 目的地がスポットの場合 -->
                             {% if history.end_spot_label %}
                             <h2 class="post-title">目的地スポット: {{ history.end_spot_label }}</h2>
                             {% else %}
-                            <h2 class="post-title">着: {{ history.end_location }}</h2>
+                            <h2 class="post-title">目的地: {{ history.end_location }}</h2>
                             {% endif %}
 
                             <h3 class="post-subtitle">TravelMode : {{ history.travel_mode }}</h3>
@@ -84,42 +84,40 @@
                 <p>検索履歴が見つかりません。</p>
             {% endif %}
 
-            <!-- ページネーション処理 -->
-            {% if is_paginated %}
-            <ul class="pagination">
-            <!-- 前ページへのリンク -->
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-                <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            {% endif %}
-
-            <!-- ページ数表示 -->
-            {% for page_num in page_obj.paginator.page_range %}
-            {% if page_obj.number == page_num %}
-            <li class="page-item active">
-                <a class="page-link" href="#">{{ page_num }}</a>
-            </li>
-            {% else %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
-            </li>
-            {% endif %} {% endfor %}
-
-            <!-- 次ページへのリンク -->
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
-                <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            {% endif %}
-            </ul>
-            {% endif %}
+    <!-- ページネーション処理 -->
+    <ul class="pagination">
+        <!-- 前ページへのリンク -->
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+            <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    
+        <!-- ページ数表示 -->
+        {% for page_num in page_obj.paginator.page_range %}
+        {% if page_obj.number == page_num %}
+        <li class="page-item active">
+            <a class="page-link" href="#">{{ page_num }}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+        </li>
+        {% endif %} {% endfor %}
+    
+        <!-- 次ページへのリンク -->
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+                </ul>
+            </div>
         </div>
-    </div>
     <!--topへ戻る-->
     <a href="#" id="page-top">TOP</a>
 </div>

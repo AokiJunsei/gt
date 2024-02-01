@@ -936,10 +936,10 @@ def user_my_map(request):
 @login_required
 def account_history_view(request):
     # ログインしているユーザーの検索履歴を取得
-    search_history_list = SearchHistory.objects.filter(account=request.user.account).order_by('-search_datetime')  # 新しいものが先にくるようにする
+    search_history_list = SearchHistory.objects.filter(account=request.user.account).order_by('-search_datetime')
     
     # ページネーターの設定
-    paginator = Paginator(search_history_list, 5)  # 1ページに10項目を表示
+    paginator = Paginator(search_history_list, 5)  # 1ページに5項目を表示
     page = request.GET.get('page', 1)
     try:
         search_histories = paginator.page(page)
@@ -950,10 +950,11 @@ def account_history_view(request):
     
     # テンプレートに渡す
     return render(request, 'gt/user_log.html', {
-        'log_list': search_histories, 
+        'search_histories': search_histories, 
         'is_paginated': True if paginator.num_pages > 1 else False, 
         'page_obj': search_histories
     })
+
 
 
 # ログ詳細ビュー
@@ -1003,11 +1004,6 @@ def admin_user_info(request):
         'google_maps_api_key': api_key,
     }
     return render(request, 'admin_user_info.html', context)
-
-# メールorユーザーIDの変更
-@login_required
-def user_email_update_view(request):
-    return render(request,'user_email_change.html')
 
 # お店検索
 @login_required
