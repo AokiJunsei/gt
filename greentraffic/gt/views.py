@@ -29,27 +29,12 @@ from django.db.models import Count
 from django.db.models.functions import TruncMonth
 
 from django.conf import settings
-import boto3
-
 from django.views.decorators.http import require_http_methods
-
-# GoogleMapAPIキーを取得する関数
-def get_api_key():
-    ssm = boto3.client('ssm', region_name='us-east-1')
-    parameter = ssm.get_parameter(Name='google_maps_api_key', WithDecryption=True)
-    return parameter['Parameter']['Value']
-
-# ジョルダンAPIキーを取得する関数
-def get_train_api_key():
-    ssm = boto3.client('ssm', region_name='us-east-1')
-    parameter = ssm.get_parameter(Name='train_api_key', WithDecryption=True)
-    return parameter['Parameter']['Value']
 
 # 電車のfetchの関数
 @require_http_methods(["GET"])
 def fetch_jorudan_cheap_route(request):
     api_key = "J2vqRoi1ciaJzktP"
-    # api_key = get_train_api_key()  # ここで安全にAPIキーを取得
     # フロントエンドから渡されるクエリパラメータを取得
     start = request.GET.get('start')
     end = request.GET.get('end')
@@ -86,7 +71,6 @@ logger = logging.getLogger(__name__)
 # トップページのビュー(車)
 def top_page(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         "api_key" : api_key
@@ -96,7 +80,6 @@ def top_page(request):
 # 徒歩の検索
 def user_search_walk(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         "api_key" : api_key
@@ -106,7 +89,6 @@ def user_search_walk(request):
 # 自転車の検索
 def user_search_bike(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         "api_key" : api_key
@@ -116,7 +98,6 @@ def user_search_bike(request):
 # 電車最短検索のビュー
 def user_search_short(request):
     # APIキーを取得
-    # api_key = get_api_key()
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         "api_key" : api_key
@@ -126,7 +107,6 @@ def user_search_short(request):
 # 電車最安検索のビュー
 def user_search_cheap(request):
     # APIキーを取得
-    # api_key = get_api_key()
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         "api_key" : api_key,
@@ -136,7 +116,6 @@ def user_search_cheap(request):
 # シェアリング検索（車）のビュー
 def user_search_share_car_car(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         "api_key" : api_key
@@ -145,7 +124,6 @@ def user_search_share_car_car(request):
 # シェアリング検索（自転車）のビュー
 def user_search_share_car_bike(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         "api_key" : api_key
@@ -154,7 +132,6 @@ def user_search_share_car_bike(request):
 # シェアリング検索（徒歩）のビュー
 def user_search_share_car_walk(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         "api_key" : api_key
@@ -163,7 +140,6 @@ def user_search_share_car_walk(request):
 # シェアリング検索（車１）のビュー
 def user_search_share_bike_car(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         "api_key" : api_key
@@ -172,7 +148,6 @@ def user_search_share_bike_car(request):
 # シェアリング検索（自転車１）のビュー
 def user_search_share_bike_bike(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         "api_key" : api_key
@@ -181,7 +156,6 @@ def user_search_share_bike_bike(request):
 # シェアリング検索（徒歩１）のビュー
 def user_search_share_bike_walk(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         "api_key" : api_key
@@ -204,7 +178,6 @@ def admin_map_register(request):
     show_alert = False
     json_data = None
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
 
     if request.method == 'POST':
@@ -264,7 +237,6 @@ def admin_map_register(request):
 @login_required
 def admin_map_change(request,vehicle_type, pk):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     # 既存のインスタンスを取得するかどうか判断
     map_change = None
@@ -369,7 +341,6 @@ def admin_map_detail(request, pk, vehicle_type):
         map_detail = get_object_or_404(MapBike, pk=pk)
 
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         'map_detail': map_detail,
@@ -380,7 +351,6 @@ def admin_map_detail(request, pk, vehicle_type):
 # ジオコードAPIの関数
 def get_geocode(address):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"# 適切なAPIキーに置き換えてください
     params = {'address': address, 'key': api_key}
     response = requests.get('https://maps.googleapis.com/maps/api/geocode/json', params=params)
@@ -637,7 +607,6 @@ def user_spot_register(request):
     account = Account.objects.get(user=request.user)
     form = SpotForm(request.POST or None)
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
 
     if request.method == 'POST' and form.is_valid():
@@ -696,7 +665,6 @@ def user_spot_change(request, pk):
     account = Account.objects.get(user = request.user)
 
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
 
     if request.method == 'POST' and form.is_valid():
@@ -773,7 +741,6 @@ def user_spot_delete(request, pk):
 def user_spot_detail(request, pk):
     spot_detail = get_object_or_404(Spot, pk=pk)
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         'spot_detail': spot_detail,
@@ -827,7 +794,6 @@ def get_map_bikes(request):
 @login_required
 def user_my_map(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     account = Account.objects.get(user=request.user)
     # スポット情報を取得し、json_dataを適切にデコード
@@ -937,7 +903,7 @@ def user_my_map(request):
 def account_history_view(request):
     # ログインしているユーザーの検索履歴を取得
     search_history_list = SearchHistory.objects.filter(account=request.user.account).order_by('-search_datetime')
-    
+
     # ページネーターの設定
     paginator = Paginator(search_history_list, 5)  # 1ページに5項目を表示
     page = request.GET.get('page', 1)
@@ -947,7 +913,7 @@ def account_history_view(request):
         search_histories = paginator.page(1)
     except EmptyPage:
         search_histories = paginator.page(paginator.num_pages)
-    
+
     # テンプレートに渡す
     return render(request, 'gt/user_log.html', {
         'search_histories': search_histories, 
@@ -962,7 +928,6 @@ def account_history_view(request):
 def log_detail_view(request, pk):
     log_detail = get_object_or_404(SearchHistory, pk=pk)
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         'api_key' : api_key,
@@ -981,7 +946,6 @@ def log_delete_view(request, pk):
 @login_required
 def admin_user_info(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
 
     # 地理的分布の統計
@@ -1009,7 +973,6 @@ def admin_user_info(request):
 @login_required
 def user_my_map_shop(request):
     # APIキーを取得
-    # api_key = get_api_key() # 安全な場所からAPIキーを取得してください
     api_key = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
     context = {
         "api_key" : api_key
