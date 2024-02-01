@@ -76,7 +76,7 @@ var helpTexts = {
 	'login':'ログイン時のページに推移します。',
 	'user-delete':'ユーザー情報削除画面に推移します。',
 	'user-update':'ユーザー情報編集画面に推移します。',
-	'delete':'ユーザー情報を削除します。',
+	'delete-account-btn':'ユーザー情報を削除します。',
 	'update':'ユーザー情報の変更処理を実行します。',
 	'spot-detail':'スポット詳細画面に推移します。',
 	'spot-update':'スポット変更画面に推移します。',
@@ -235,7 +235,7 @@ window.addEventListener('load', function() {
 	'username', 'email', 'password', 'confirm_password', 
 	'last_name', 'first_name', 'zipcode', 'state', 'city', 
 	'address_1', 'address_2','back','enregister','userID',
-	'login-password','login','register1','user-update','user-delete','delete','update',
+	'login-password','login','register1','user-update','user-delete','delete-account-btn','update',
 	'spot-detail','spot-update','spot-delete','spot-register','page-top','spot-name','spot-address','saveButton',
 	'spot-change','log-re','log-detail','log-delete','admin-select','admin-change','admin-delete',
 	'admin-detail','admin_map_register','admin_user_info','Mymap-search-shop'
