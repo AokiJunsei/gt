@@ -392,7 +392,7 @@ class AccountRegistration(TemplateView):
 
 
             # アドレスから緯度経度を取得
-            full_address = f"{add_account_form.cleaned_data['state']} {add_account_form.cleaned_data['city']} {add_account_form.cleaned_data['address']}"
+            full_address = f"{add_account_form.cleaned_data['state']} {add_account_form.cleaned_data['city']} {add_account_form.cleaned_data['address_1']}"
             latitude, longitude = get_geocode(full_address)
 
             if latitude is None or longitude is None:
