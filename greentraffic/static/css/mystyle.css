@@ -482,7 +482,7 @@ footer.footer {
 .mode-selector {
   margin-top: 15px;
 }
-#waypoint1-group, #waypoint2-group, #waypoint-label {
+#waypoint1-group, #waypoint2-group {
   display: none;
 }
 .mode-Relay {
