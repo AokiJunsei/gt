@@ -45,7 +45,7 @@ def fetch_jorudan_cheap_route(request):
     departureTime = request.GET.get('departureTime')
     sort = request.GET.get('sort')
 
-    base_url = 'https://cloud.jorudan.biz/api/gv'
+    base_url = 'https://cloud.jorudan.biz/api/sr.cgi'
     params = {
         'ak': api_key,
         'f' : 1,
