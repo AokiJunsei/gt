@@ -109,16 +109,19 @@
       })
       .then(data => {
         //取得したルート情報を地図上に表示する
-        //displayRouteOnMap(data);
-        //displayRouteInfo(data)
-        //expandPanel();
+
+        // エラーコード2406をチェック
+        if (data.NorikaeBizApiResult.head.errorCode === "2406") {
+          alert("検索結果を取得できませんでした。");
+          throw new Error('検索結果を取得できませんでした。'); // これにより後続の処理が停止します。
+        }
 
         console.log(data)
+
         let coordinates = extractCoordinates(data);
         displayRouteOnMap(coordinates, map);
         displayRouteInfo(data);
         expandPanel();
-        //alert(JSON.stringify(data,null,2));
       })
       .catch(error => {
         console.error('Error:',error)
