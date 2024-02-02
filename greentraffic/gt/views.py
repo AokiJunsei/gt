@@ -571,7 +571,7 @@ def user_delete_view(request):
         user = request.user
         logout(request)  # ユーザーをログアウト
         user.delete()  # アカウントを削除
-        return redirect('gt:register')  # ログインページにリダイレクト
+        return redirect('gt:top')  # ログインページにリダイレクト
     else:
         return render(request, 'user_delete.html')
 
