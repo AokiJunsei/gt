@@ -128,33 +128,33 @@ function trainTF(){
     console.error("Map object is not initialized yet.");
     return;
   }
-  /*fetchRouteAndDisplayOnMap();*/
-	let coordinates = extractCoordinates(routeData);
-   	displayRouteOnMap(coordinates, map);
-   	displayRouteInfo(routeData);
-   	expandPanel();
+  	fetchRouteAndDisplayOnMap();
+	// let coordinates = extractCoordinates(routeData);
+   	// displayRouteOnMap(coordinates, map);
+   	// displayRouteInfo(routeData);
+   	// expandPanel();
 }
 
 /*リアルタイムで現在地を取得する*/
 function updateCurrentLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const currentLocation = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
+if (navigator.geolocation) {
+	navigator.geolocation.getCurrentPosition(
+	(position) => {
+		const currentLocation = {
+		lat: position.coords.latitude,
+		lng: position.coords.longitude,
+		};
 
-        /* 現在地のピンを打つ*/
-        updateCurrentLocationMarker(currentLocation);
-      },
-      () => {
-        console.error("Error getting current location");
-      }
-    );
-  } else {
-    console.error("Geolocation is not supported by this browser");
-  }
+		/* 現在地のピンを打つ*/
+		updateCurrentLocationMarker(currentLocation);
+	},
+	() => {
+		console.error("Error getting current location");
+	}
+	);
+} else {
+	console.error("Geolocation is not supported by this browser");
+}
 }
 
 function displayRouteInfo(routeData) {
