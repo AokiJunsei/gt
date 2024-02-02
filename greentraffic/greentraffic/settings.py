@@ -181,3 +181,6 @@ CORS_ALLOWED_ORIGINS = [
 
 GOOGLE_API_KEY = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
 JOULDAN_API_KEY = "J2vqRoi1ciaJzktP"
+
+STATIC_ROOT = 'usr/share/nginx/html/static'
+MEDIA_ROOT = 'usr/share/nginx/html/media'
