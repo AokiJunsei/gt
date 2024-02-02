@@ -71,6 +71,7 @@
     defer
   ></script>
 
+  <script src="{% static 'js/mapFunctionsTrain.js' %}"></script>
   <script>
     /*電車が選択された際にAPIをfetchする関数*/
     function fetchRouteAndDisplayOnMap() {
@@ -110,8 +111,13 @@
       })
       .then(data => {
         //取得したルート情報を地図上に表示する
-        displayRouteOnMap(data);
-        displayRouteInfo(data)
+        //displayRouteOnMap(data);
+        //displayRouteInfo(data)
+        //expandPanel();
+
+        let coordinates = extractCoordinates(data);
+        displayRouteOnMap(coordinates, map);
+        displayRouteInfo(data);
         expandPanel();
         //alert(JSON.stringify(data,null,2));
       })
@@ -122,7 +128,6 @@
   </script>
   <script src="{% static 'js/floatingPanel.js' %}"></script>
   <script src="{% static 'js/pageLoadingActions.js' %}"></script>
-  <script src="{% static 'js/mapFunctionsTrain.js' %}"></script>
   <script src="{% static 'js/helpicon.js' %}"></script>
 </body>
 {% endblock content %}
