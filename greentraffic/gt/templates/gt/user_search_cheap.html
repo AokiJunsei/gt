@@ -94,7 +94,9 @@
         sort: 3
       });
 
-      const url = `/fetch-jorudan-cheap-route/?${queryParams.toString()}`;
+      const url = new URL('/fetch-jorudan-cheap-route/', window.location.origin);
+      url.search = new URLSearchParams(queryParams).toString();
+
       fetch(url,{
         method : 'GET',
       })
