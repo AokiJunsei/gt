@@ -140,8 +140,17 @@ function showHelpText(elementId, event) {
     var screenHeight = window.innerHeight;
 
     // テキストの位置を調整
-	var posX = event.clientX || event.pageX;
+    var posX = event.clientX || event.pageX;
     var posY = event.clientY || event.pageY;
+
+    // 画面の左端または上端にテキストがはみ出さないように調整
+    if (posX - containerWidth < 0) {
+        posX += containerWidth;
+    }
+    if (posY - containerHeight < 0) {
+        posY += containerHeight;
+    }
+
     // 画面の右端または下端にテキストがはみ出さないように調整
     if (posX + containerWidth > screenWidth) {
         posX -= containerWidth;
@@ -151,12 +160,13 @@ function showHelpText(elementId, event) {
     }
 
     // テキストの位置を更新
-    helpContainer.style.left = posX - 5 + 'px';
+    helpContainer.style.left = posX + 'px';
     helpContainer.style.top = posY + 'px';
 
     // テキストを表示
     helpContainer.style.display = 'block';
 }
+
 
 // デバウンス関数の定義
 function debounce(func, wait, immediate) {
