@@ -925,7 +925,6 @@ label {
   white-space: nowrap; /* テキストを一行に収める */
   overflow: hidden; /* 余分なテキストを隠す */
   text-overflow: ellipsis; /* 切り詰めたテキストの末尾に省略記号を表示する */
-  white-space: pre-line; /* テキストの改行とスペースを保持する */
 }
 #help-text {
   font-size: 16px; /* フォントサイズを調整します */
@@ -946,6 +945,13 @@ label {
   z-index: 1000; /* 他の要素の上に表示 */
 }
 
+@media (max-width: 768px) {
+  #help-container {
+    /* 他のスタイル... */
+    white-space: pre-line; /* 改行は保持するが、スペースは削除 */
+    /* 他のスタイル... */
+  }
+}
 .error {
   color: red; /* 赤色に設定 */
 }
