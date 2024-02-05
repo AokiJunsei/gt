@@ -51,31 +51,24 @@ table.reg_form input::placeholder {
   width: 100%;
   white-space: nowrap; /* Prevent text wrapping inside the placeholder */
 }
+/* メディアクエリ: スマートフォンサイズ */
 @media (max-width: 768px) {
   table.reg_form,
-  table.reg_form tbody,
   table.reg_form tr,
   table.reg_form th,
   table.reg_form td {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
+    display: block;
+    width: 100%;
   }
 
   table.reg_form tr {
-      margin-bottom: 10px;
-      flex-direction: row;
-      justify-content: center;
+    margin-bottom: 10px;
   }
 
   table.reg_form th,
   table.reg_form td {
-      /* この部分を削除: display: block; */
-      text-align: center;
-      padding: 8px;
-      /* テーブルヘッダとデータを行ごとに分ける */
-      flex-basis: 100%;
+    text-align: left;
+    padding: 8px;
   }
 
   table.reg_form th {
@@ -205,17 +198,68 @@ footer.footer {
   z-index: 2; /* 他の要素より上に表示されるように */
 }
 
-/* メインコンテンツの下部にフッターの高さ分のスペースを確保 */
+table.reg_form {
+  width: 100%; /* テーブルの幅を100%に設定 */
+}
+/* 各テーブルセルのスタイル */
+table.reg_form td {
+  min-width: 100px; /* 最小幅を設定 */
+  max-width: 250px; /* 最大幅を設定 */
+  overflow: hidden; /* 内容がセルをはみ出さないようにする */
+  text-overflow: ellipsis; /* 長い文字列を省略形で表示 */
+  white-space: nowrap; /* 改行を防止 */
+  padding-right: 5px;
+}
+table.reg_form th {
+  padding-left: 5px;
+  white-space: nowrap; /* 改行を防止 */
+}
 
-@media screen and (max-width: 768px) {
-  table.reg_form {
-    width: auto;
+table.reg_form small {
+  white-space: nowrap; /* 改行を防止 */
+}
+table.reg_form td input,
+table.reg_form td select,
+table.reg_form td textarea {
+  width: 100%; /* Set the width relative to the parent container */
+  box-sizing: border-box; /* Include padding and border in the element's total width */
+}
+
+table.reg_form input::placeholder {
+  padding-left: 2px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: nowrap; /* Prevent text wrapping inside the placeholder */
+}
+/* メディアクエリ: スマートフォンサイズ */
+@media (max-width: 768px) {
+  table.reg_form,
+  table.reg_form tr,
+  table.reg_form th,
+  table.reg_form td {
     display: block;
-    overflow-x: auto; /* 横スクロールを許可 */
+    width: 80%; /* 幅を80%に設定して余白を作る */
+    margin: auto; /* 自動的にマージンを設定して中央配置 */
   }
-  table.reg_form td
-  {
-    white-space: normal; /* 折り返しを許可 */
+
+  table.reg_form tr {
+    margin-bottom: 10px;
+  }
+
+  table.reg_form th,
+  table.reg_form td {
+    text-align: left; /* 左寄せのテキスト */
+    padding: 8px;
+  }
+
+  table.reg_form th {
+    padding-top: 12px;
+  }
+
+  table.reg_form td {
+    border-top: 1px solid #ddd;
   }
 }
 
@@ -293,7 +337,7 @@ footer.footer {
 }
 .message {
   text-align: right;
-  margin-left: 50%; /* 左から50%のマージンを設定 */
+  margin-left: 40%; /* 左から70%のマージンを設定 */
   overflow: hidden; /* 内容がセルをはみ出さないようにする */
   white-space: nowrap; /* 改行を防止 */
 }
@@ -388,7 +432,7 @@ footer.footer {
 
 @media screen and (max-width: 800px) {
   #floating-panel {
-    left: 40%;
+    left: 50%;
   }
   #floating-panel h3 {
     display: none;
@@ -951,7 +995,8 @@ label {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 影 */
   z-index: 1000; /* 他の要素の上に表示 */
 }
-@media only screen and (max-width: 768px) {
+
+@media (max-width: 768px) {
   #help-container {
     /* 他のスタイル... */
     white-space: pre-line; /* 改行は保持するが、スペースは削除 */
