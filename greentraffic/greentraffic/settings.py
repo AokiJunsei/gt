@@ -90,11 +90,11 @@ WSGI_APPLICATION = 'greentraffic.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',  # RDSで作成したデータベース名
-        'USER': 'postgres',  # RDSで設定したユーザー名
-        'PASSWORD': '0801koBA',  # ユーザーのパスワード（セキュリティのために環境変数から取得する方法を推奨します）
-        'HOST': 'gt1.cxyaygg2ow37.us-east-1.rds.amazonaws.com',  # RDSのエンドポイント
-        'PORT': '5432',  # ポート番号
+        'NAME': os.environ.get('DJANGO_DB_NAME', 'default_db_name'),
+        'USER': os.environ.get('DJANGO_DB_USER', 'default_user'),
+        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD', 'default_password'),
+        'HOST': os.environ.get('DJANGO_DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DJANGO_DB_PORT', '5432'),
     }
 }
 
@@ -130,9 +130,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_HOST = 'smtp.googlemail.com' #これでもいける
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'gtgreen12345@gmail.com'
+EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_USER', 'default_email_user')
+EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_PASSWORD', 'default_email_password')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # send_mailのfromがNoneの場合自動で入る。
-EMAIL_HOST_PASSWORD = 'mkrw jaox mluk hwzw'
 LANGUAGE_CODE = 'ja'
 
 TIME_ZONE = 'Asia/Tokyo'
@@ -164,13 +164,12 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # SESSION_COOKIE_SECURE=False
 # CSRF_COOKIE_SECURE=False
 
-SECURE_SSL_REDIRECT=True
-SESSION_COOKIE_SECURE=True
-CSRF_COOKIE_SECURE=True
 SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '31536000'))  # 環境変数が設定されていない場合のデフォルト値
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
-
+SECURE_SSL_REDIRECT = os.environ.get('DJANGO_SECURE_SSL_REDIRECT', 'False') == 'True'
+SESSION_COOKIE_SECURE = os.environ.get('DJANGO_SESSION_COOKIE_SECURE', 'False') == 'True'
+CSRF_COOKIE_SECURE = os.environ.get('DJANGO_CSRF_COOKIE_SECURE', 'False') == 'True'
 LOGIN_URL = 'gt:user_login'
 LOGIN_REDIRECT_URL = 'gt:top'
 
@@ -179,8 +178,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
 ]
 
-GOOGLE_API_KEY = "AIzaSyCA1vE01xx2yAVPKik56CEUJbIqMD_Eum8"
-JOULDAN_API_KEY = "J2vqRoi1ciaJzktP"
+# Google API Key
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', 'your_default_google_api_key')
+
+# Jouldan API Key
+JOULDAN_API_KEY = os.environ.get('JOULDAN_API_KEY', 'your_default_jouldan_api_key')
+
 
 STATIC_ROOT = '/usr/share/nginx/html/static'
 MEDIA_ROOT = '/usr/share/nginx/html/media'
