@@ -286,7 +286,7 @@ footer.footer {
 }
 .message {
   text-align: right;
-  margin-left: 50%; /* 左から70%のマージンを設定 */
+  margin-left: 50%; /* 左から50%のマージンを設定 */
   overflow: hidden; /* 内容がセルをはみ出さないようにする */
   white-space: nowrap; /* 改行を防止 */
 }
@@ -381,7 +381,7 @@ footer.footer {
 
 @media screen and (max-width: 800px) {
   #floating-panel {
-    left: 50%;
+    left: 40%;
   }
   #floating-panel h3 {
     display: none;
