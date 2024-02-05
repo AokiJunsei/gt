@@ -925,7 +925,7 @@ label {
   white-space: nowrap; /* テキストを一行に収める */
   overflow: hidden; /* 余分なテキストを隠す */
   text-overflow: ellipsis; /* 切り詰めたテキストの末尾に省略記号を表示する */
-  white-space: pre-wrap; /* テキストの改行とスペースを保持する */
+  white-space: pre-line; /* テキストの改行とスペースを保持する */
 }
 #help-text {
   font-size: 16px; /* フォントサイズを調整します */
