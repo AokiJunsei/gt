@@ -51,7 +51,34 @@ table.reg_form input::placeholder {
   width: 100%;
   white-space: nowrap; /* Prevent text wrapping inside the placeholder */
 }
+/* メディアクエリ: スマートフォンサイズ */
+@media (max-width: 768px) {
+  .table.reg_form,
+  .table.reg_form tr,
+  .table.reg_form th,
+  .table.reg_form td {
+    display: block;
+    width: 100%;
+  }
 
+  .table.reg_form tr {
+    margin-bottom: 10px;
+  }
+
+  .table.reg_form th,
+  .table.reg_form td {
+    text-align: left;
+    padding: 8px;
+  }
+
+  .table.reg_form th {
+    padding-top: 12px;
+  }
+
+  .table.reg_form td {
+    border-top: 1px solid #ddd;
+  }
+}
 
 /* ボタンコンテナのスタイル */
 .button-container {
