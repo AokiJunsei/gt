@@ -240,8 +240,7 @@ table.reg_form input::placeholder {
   table.reg_form th,
   table.reg_form td {
     display: block;
-    width: 80%; /* 幅を80%に設定して余白を作る */
-    margin: auto; /* 自動的にマージンを設定して中央配置 */
+    width: 100%;
   }
 
   table.reg_form tr {
@@ -250,7 +249,7 @@ table.reg_form input::placeholder {
 
   table.reg_form th,
   table.reg_form td {
-    text-align: left; /* 左寄せのテキスト */
+    text-align: left;
     padding: 8px;
   }
 
