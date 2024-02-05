@@ -355,8 +355,6 @@ footer.footer {
 @media screen and (max-width: 800px) {
   #floating-panel {
     left: 50%;
-    max-width: 270px; /* 最大幅を設定 */
-    min-width: 270px;
   }
   #floating-panel h3 {
     display: none;
