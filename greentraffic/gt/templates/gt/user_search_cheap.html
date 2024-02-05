@@ -25,29 +25,17 @@
       <div class="input-group">
         <label>出: </label>
         <input type="text" id="start" placeholder="出発地を入力してください" />
-        <i id="current-location-icon" class="fas fa-compass" onclick="getCurrentLocation()"></i>
-      </div>
-      <div id="waypoint1-group" class="form-group">
-        <label id="waypoint1-label" for="waypoint1">中継地点１:</label>
-        <input type="text" id="waypoint1" placeholder="中継地点を入力してください">
-      </div>
-      <div id="waypoint2-group" class="form-group">
-        <label id="waypoint2-label" for="waypoint2">中継地点２:</label>
-        <input type="text" id="waypoint2" placeholder="中継地点を入力してください">
-      </div>
-      <!-- 中継地点を表示するボタン -->
-      <div class="mode-Relay" onclick="toggleWaypoints()">
-        <label>中継地点 </label>
-        <i id="swap-icon" class="fas fa-exchange-alt"></i>
       </div>
       <div class="input-group">
         <label>着: </label>
         <input type="text" id="end" placeholder="目的地を入力してください" />
-        <i id="swap-icon-updown" class="fas fa-exchange-alt" onclick="swapStartEnd()"></i><br>
       </div>
+      <i id="swap-icon-updown" class="fas fa-exchange-alt" onclick="swapStartEnd()"></i>
       <label>出発時刻: </label>
-      <input type="date" id="departure-date" />
-      <input type="time" id="departure-time" />
+      <div class="input-group">
+        <input type="date" id="departure-date" />
+        <input type="time" id="departure-time" />
+      </div>
       <div class="mode-selector">
         <button class="btn-border" onclick="fetchRouteAndDisplayOnMap()">検索</button>
       </div>
@@ -74,8 +62,6 @@
     /*電車が選択された際にAPIをfetchする関数*/
     function fetchRouteAndDisplayOnMap() {
       const start = document.getElementById("start").value;
-      const waypoint1 = document.getElementById("waypoint1").value;
-      const waypoint2 = document.getElementById("waypoint2").value;
       const end = document.getElementById("end").value;
       const departureDateInput = document.getElementById("departure-date").value;
       const departureTimeInput = document.getElementById("departure-time").value;
@@ -87,8 +73,6 @@
 
       const queryParams = new URLSearchParams({
         start: start,
-        waypoint1: waypoint1,
-        waypoint2: waypoint2,
         end: end,
         date: departureDate,
         time: departureTime,
@@ -129,7 +113,6 @@
     }
   </script>
   <script src="{% static 'js/floatingPanel.js' %}"></script>
-  <script src="{% static 'js/pageLoadingActions.js' %}"></script>
   <script src="{% static 'js/helpicon.js' %}"></script>
 </body>
 {% endblock content %}
