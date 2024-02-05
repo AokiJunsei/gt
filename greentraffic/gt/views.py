@@ -371,6 +371,7 @@ class AccountRegistration(TemplateView):
             "AccountCreate": False,
             "account_form": AccountForm(),
             "add_account_form": AddAccountForm(),
+            "error_message": None, 
         }
         return render(request, self.template_name, context=context)
 
