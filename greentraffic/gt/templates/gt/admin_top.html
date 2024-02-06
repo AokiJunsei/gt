@@ -153,7 +153,9 @@
                 </ul>
             </div>
         </div>
-</div>
+        <!--topへ戻る-->
+        <a id='page-top' href="#" onclick="scrollToTop(event)">TOP</a>
+    </div>
     {% comment %} 表示するリストを切り替える関数 {% endcomment %}
     <script>
         // ドロップダウンの変更を監視
@@ -169,6 +171,7 @@
         });
 
     </script>
+    <script src="{% static 'js/scrollToTop.js' %}"></script>
     <script src="{% static 'js/helpicon.js' %}"></script>
 
 </div>
