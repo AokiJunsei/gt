@@ -154,7 +154,7 @@
             </div>
         </div>
         <!--topへ戻る-->
-        <a id='page-top' href="#" id="page-top">TOP</a>
+        <a id='page-top' href="#" onclick="scrollToTop(event)">TOP</a>
     </div>
     {% comment %} 表示するリストを切り替える関数 {% endcomment %}
     <script>
@@ -171,6 +171,7 @@
         });
 
     </script>
+    <script src="{% static 'js/scrollToTop.js' %}"></script>
     <script src="{% static 'js/helpicon.js' %}"></script>
 
 </div>
