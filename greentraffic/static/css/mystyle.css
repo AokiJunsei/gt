@@ -231,6 +231,17 @@ table.reg_form input::placeholder {
   }
 } */
 
+@media screen and (max-width: 768px) {
+  table.reg_form {
+    width: auto;
+    display: block;
+    overflow-x: auto; /* 横スクロールを許可 */
+  }
+  table.reg_form td
+  {
+    white-space: normal; /* 折り返しを許可 */
+  }
+}
 
 /* ヘッダーiconの隣にスペースを確保 */
 .mr-2 {
