@@ -53,6 +53,7 @@ def fetch_jorudan_cheap_route(request):
         'eki1' : start,
         'eki2' : end,
         'kbn1' : 'R',
+        'kbn2' : 'R',
         'date' : departureDate,
         'time' : departureTime,
         'opt1' : 0,
