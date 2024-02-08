@@ -1,7 +1,6 @@
 from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,redirect
 
 from django.views.generic import TemplateView
-from .forms import AccountForm, AddAccountForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -28,7 +27,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Count
 from django.db.models.functions import TruncMonth
 
-from django.conf import settings
 from django.views.decorators.http import require_http_methods
 
 # 電車のfetchの関数
@@ -573,7 +571,7 @@ def user_delete_view(request):
         user = request.user
         logout(request)  # ユーザーをログアウト
         user.delete()  # アカウントを削除
-        return redirect('gt:top')  # ログインページにリダイレクト
+        return top_page(request)
     else:
         return render(request, 'user_delete.html')
 
