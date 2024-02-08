@@ -93,8 +93,8 @@
                 </div>
                 <hr class="my-4" />
                 <!--削除するためのモーダルウィンドウ -->
-                <div class="modal fade" id="deleteModal-{{ map.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ map.pk }}" aria-hidden="true">
-                    <div class="modal-dialog">
+                <div class="modal fade" id="deleteModal-{{ map.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ map.pk }}" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                             <h5 class="modal-title" id="deleteModalLabel-{{ map.pk }}">削除確認</h5>
