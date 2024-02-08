@@ -62,6 +62,7 @@
 
   </div>
 
+  <script src="{% static 'js/mapFunctions.js' %}"></script>
 
   <script async
     src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap&v=weekly"
@@ -102,7 +103,6 @@
     }
   </script>
   <!-- JavaScriptファイルへのリンク -->
-  <script src="{% static 'js/mapFunctions.js' %}"></script>
   <script src="{% static 'js/floatingPanel.js' %}"></script>
   <script src="{% static 'js/helpicon.js' %}"></script>
   <script src="{% static 'js/pageLoadingActions.js' %}"></script>
