@@ -503,7 +503,7 @@ def Login(request):
                 if request.user.username == 'admin':
                     return HttpResponseRedirect(reverse('gt:admin_top'))
                 else:
-                    return HttpResponseRedirect(reverse('gt:top'))
+                    return top_page(request)
             else:
                 error_message = "アカウントが有効ではありません"
         else:
@@ -520,7 +520,7 @@ def Login(request):
 @login_required
 def Logout(request):
     logout(request)
-    return HttpResponseRedirect(reverse('gt:top'))
+    return top_page(request)
 
 # ユーザー情報ビュー
 @login_required
